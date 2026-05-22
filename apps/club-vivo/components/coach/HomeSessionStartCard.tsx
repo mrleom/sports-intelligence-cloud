@@ -45,8 +45,9 @@ export function HomeSessionStartCard({
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Quick activity</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            Add one note or activity idea for a 20-minute game-like activity by default. Ask for a
-            session or full practice when you want the shared planner to build a longer plan.
+            Add one practical coaching note or activity idea for a focused 20-minute game-like
+            activity by default. Use Session Builder when you want the full Custom Build setup for a
+            longer plan.
           </p>
         </div>
 
@@ -63,8 +64,8 @@ export function HomeSessionStartCard({
           />
           {showPromptHelper ? (
             <span className="text-xs leading-5 text-slate-500">
-              Describe the quick activity you want, or add constraints like players, space,
-              equipment, or style.
+              Describe the quick activity you want, or add practical context like players, field
+              limits, equipment, player needs, constraints, or a creative game idea.
             </span>
           ) : null}
         </label>
