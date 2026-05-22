@@ -6,6 +6,8 @@ This is a product source-of-truth document for the next intended evolution of Cl
 
 It is not shipped runtime behavior yet. It defines direction, scope, and MVP intent for a soccer-only Training Prescription Layer that extends the existing Club Vivo Session Builder direction.
 
+Current Match-to-Match Prescription behavior is a frontend-only deterministic draft preview path. It should be read as product-shape validation for this direction, not as shipped backend prescription automation.
+
 ## 2. Purpose
 
 Define how Club Vivo evolves from a constraint-based Session Builder into a layer that helps coaches turn game and performance evidence into the next training objective, session, activity, or drill.
@@ -153,6 +155,9 @@ This document does not implement translation or require bilingual runtime behavi
 This direction does not yet include:
 
 - claiming shipped Training Prescription runtime behavior
+- claiming Match-to-Match Prescription is full backend prescription automation
+- claiming a public Training Brief API exists
+- claiming persisted prescription objects exist
 - replacing the existing Session Builder
 - creating a separate Training Prescription app, backend service, or tenancy path
 - supporting sports beyond soccer

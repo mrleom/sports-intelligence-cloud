@@ -24,10 +24,19 @@ The current foundation is:
 
 - soccer-only session generation
 - structured coach intake
+- Custom Build as the everyday coach-led Session Builder path
+- Full Session and Drill / Activity modes inside Custom Build
+- Full Session support for 45-120 minutes
+- Drill / Activity support for 15-25 minutes
+- Quick Activity as the separate fast activity lane
+- Match-to-Match Prescription as an advanced evidence-led draft path
+- frontend-only deterministic Match-to-Match preview behavior
 - tenant-safe authenticated access
 - validated session outputs
 - save and export paths
 - diagram-oriented activity output
+
+Match-to-Match Prescription currently establishes product shape only. It is not full prescription automation, does not expose a public Training Brief or prescription API, and does not introduce a new persistence model.
 
 Future evolution should extend this foundation rather than create a separate app, backend service, or tenancy path without a clear ADR.
 

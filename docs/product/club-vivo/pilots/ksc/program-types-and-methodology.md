@@ -173,7 +173,8 @@ During repeat use, the coach should eventually be able to:
 - select a team
 - inherit the team’s program context
 - inherit the team’s default methodology context
-- choose Full Session or Quick Drill direction
+- choose Custom Build or Match-to-Match Prescription direction
+- use Full Session or Drill / Activity inside Custom Build
 - adjust today’s objective, duration, and constraints
 
 This keeps the coach flow fast without making it rigid.

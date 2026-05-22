@@ -27,7 +27,12 @@ That means this document must stay aligned to the current repo reality:
 - team APIs already exist, and `/teams` is still the current team-management surface
 - the durable team model is still intentionally small, but now includes optional `programType` and optional `playerCount`
 - there is no teams UI route yet
-- Quick Drill is not yet a first-class product mode
+- Custom Build is the everyday coach-led Session Builder path
+- Custom Build includes Full Session and Drill / Activity modes
+- Full Session supports 45-120 minutes
+- Drill / Activity supports 15-25 minutes
+- Quick Activity remains the separate fast activity lane
+- Match-to-Match Prescription is an advanced evidence-led path with frontend-only deterministic draft preview behavior
 - coach profile is not yet a durable product surface
 - equipment profile is not yet a durable product surface
 - coach-admin workspace is not yet a durable product surface
@@ -173,20 +178,24 @@ Current Week 21 grounding:
 
 ---
 
-## Full Session vs Quick Drill direction
+## Custom Build and Match-to-Match direction
 
-Coach Workspace v1 should make session creation modes more explicit.
+Coach Workspace v1 should make the two current creation paths explicit.
 
 Frozen direction:
 
-- **Full Session** is the structured session-planning path
-- **Quick Drill** is the faster small-activity or drill-oriented path
+- **Custom Build** is the everyday coach-led builder.
+- Custom Build includes **Full Session** and **Drill / Activity** modes.
+- Full Session supports 45-120 minutes.
+- Drill / Activity supports 15-25 minutes.
+- **Quick Activity** remains the separate fast activity lane.
+- **Match-to-Match Prescription** is the advanced evidence-led draft path from last match to next match.
 
 Week 21 boundary:
 
-- Full Session remains closest to the current shipped behavior
-- Quick Drill is a frozen product direction only
-- Quick Drill should not be described as already shipped as a first-class runtime mode
+- Match-to-Match Prescription is currently frontend-only deterministic draft preview behavior.
+- It should not be described as full backend prescription automation.
+- It does not imply a public Training Brief API, persisted prescription objects, or a new backend service.
 
 ---
 
@@ -244,7 +253,8 @@ Coach Workspace v1 is not trying to do all of the following in Week 21:
 - redesign entitlements
 - redesign IAM or CDK
 - claim a shipped teams UI that does not yet exist
-- claim a shipped Quick Drill runtime mode that does not yet exist
+- claim full backend Match-to-Match prescription automation
+- claim a public Training Brief API or persisted prescription objects
 - claim a shipped coach-admin workspace that does not yet exist
 - turn Week 21 into a broad platform rewrite
 
