@@ -16,7 +16,9 @@ Week 21 keeps Session Builder as the active wedge, but hardens the product direc
 - returning-coach fast entry into session creation
 - team-level program context
 - team-level methodology defaults
-- visible Full Session vs Quick Drill direction
+- Custom Build as the everyday coach-led path
+- Full Session and Drill / Activity modes inside Custom Build
+- Match-to-Match Prescription as an advanced evidence-led draft path
 - coach-admin governance direction
 
 **Wedge message:**
@@ -39,6 +41,16 @@ Week 21 keeps Session Builder as the active wedge, but hardens the product direc
 4) **Save**: store sessions per team/coach (tenant-scoped).
 5) **Feedback loop**: “We ran it; here’s what worked.”
 6) **Coach Workspace direction**: guide first-time setup, then let returning coaches start from a team-aware session-builder flow.
+
+Current runtime shape:
+
+- **Custom Build** is the everyday coach-led builder.
+- Custom Build includes **Full Session** and **Drill / Activity** modes.
+- Full Session supports 45-120 minutes.
+- Drill / Activity supports 15-25 minutes.
+- **Quick Activity** remains the separate fast activity lane.
+- **Match-to-Match Prescription** is the advanced evidence-led draft path from last match to next match.
+- Match-to-Match Prescription is currently frontend-only deterministic draft preview behavior, not full backend prescription automation.
 
 ---
 
@@ -359,7 +371,8 @@ Week 21 keeps that foundation intact while moving the product direction from nar
 - faster returning-coach entry
 - team-aware generation context
 - methodology-aware defaults
-- Full Session vs Quick Drill direction
+- Custom Build with Full Session and Drill / Activity modes
+- Match-to-Match Prescription as a frontend-only deterministic draft preview path
 - coach-admin governance direction
 
 ---
