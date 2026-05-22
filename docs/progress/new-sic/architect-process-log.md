@@ -255,6 +255,48 @@ defer public route and persistence decisions
 
 This kept Training Prescription inside the existing Club Vivo / Session Builder path while preserving tenant, validation, observability, and review guardrails.
 
+### Phase 9 - Match-to-Match Feature Parking
+
+Match-to-Match Prescription was then parked as a future high-level intelligence feature.
+
+The WIP prototype is preserved for evidence only:
+
+- branch: `training-brief-server-action-prototype`
+- commit: `e406d33`
+- purpose: prototype evidence only, not shipped runtime truth
+
+Current `main` runtime truth remains:
+
+- Match-to-Match is frontend-only deterministic draft preview unless a future PR changes that.
+- Training Brief backend foundation exists as internal validator, handoff mapper, and candidate builder.
+- There is no public `/training-briefs` route.
+- There is no `/prescriptions` route.
+- There is no persistence.
+- There is no SessionPack generation from Training Brief.
+- There is no production Match-to-Match backend automation.
+
+The product lesson was important:
+
+Reasoning alone is not enough. SIC must convert evidence into practical training actions, drills, activities, session structures, coaching cues, success criteria, and match preparation logic.
+
+Match-to-Match should eventually answer the 7 football intelligence questions at a high standard, but those answers must lead to actual training prescriptions, not just explanation cards.
+
+The feature was parked because:
+
+- it is becoming a major intelligence feature
+- Session Builder core must be completed first
+- Spanish app experience must be completed
+- AI/RAG architecture should be introduced only after the product wedge is solid
+
+The next priority returns to:
+
+- finishing Session Builder core product
+- improving generated activities, drills, and session quality
+- Spanish translation/localization
+- preparing AI integration thoughtfully
+- adding RAG only if needed for a real methodology/session knowledge base
+- deployment and domain polish after the wedge is solid
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
@@ -265,12 +307,13 @@ The current SIC / Club Vivo product model is:
 - Club Workspace includes Coach Workspace.
 - Session Builder is the active runtime wedge.
 - Custom Build is the everyday coach-led Session Builder path.
-- Match-to-Match Prescription is the advanced evidence-led draft path.
+- Match-to-Match Prescription is a parked future high-level intelligence feature.
 - Quick Activity is the fast activity lane.
 - Training Brief backend foundation is internal-only validator, handoff mapper, and candidate builder code under Session Builder.
 - Equipment page owns equipment creation and equipment essentials.
 - Saved Sessions preserve generated plans and review/export continuity.
 - Training Prescription, Training Brief, DiagramSequence, and 7Q are evolving intelligence layers unless explicitly implemented.
+- Match-to-Match parking notes live in `docs/progress/new-sic/match-to-match/`.
 
 ## Current Runtime Truth
 
@@ -281,7 +324,7 @@ Currently shipped or represented in runtime:
 - deterministic/template-based session generation
 - Quick Activity fast generation path
 - Custom Build guided Session Builder path
-- frontend-only deterministic Match-to-Match draft preview
+- frontend-only deterministic Match-to-Match draft preview unless a future PR changes that
 - internal Training Brief validation, handoff mapping, and candidate draft building
 - duration-based deterministic activity allocation
 - deterministic SVG story diagrams
@@ -301,6 +344,7 @@ Not shipped as production runtime yet:
 - persisted prescription objects
 - frontend integration to the Training Brief candidate builder
 - SessionPack generation from Training Brief
+- production Match-to-Match backend automation
 - full Training Prescription backend brain
 - full editable diagram engine
 - AI-generated raw diagram images
@@ -346,6 +390,7 @@ The following guardrails remained consistent across the New SIC phases:
 - Future Training Prescription work must not introduce a separate app, backend service, auth path, or tenancy path without an explicit architecture decision.
 - Match-to-Match Prescription remains draft preview behavior until backend architecture, validation, observability, and persistence are intentionally designed.
 - Training Brief backend foundation must remain internal-first until a route/API, tenant context, observability, persistence, and frontend handoff decision is explicitly made.
+- Parked Match-to-Match prototype work must not be merged or described as shipped runtime truth without a new PR and implementation decision.
 
 ## Process Principles Established
 
@@ -360,6 +405,7 @@ The New SIC process established several working principles:
 - Do not overclaim future intelligence features as shipped runtime.
 - Keep product value ahead of platform expansion.
 - Use deterministic generation improvements as a safe bridge while the future AI/RAG architecture remains unbuilt.
+- Park major intelligence features when they start to outrun the core product wedge.
 
 ## Current Baseline Statement
 
@@ -371,8 +417,9 @@ The current baseline is:
 Club Vivo is a soccer-only coach-facing product inside SIC.
 Session Builder is the active runtime wedge.
 Custom Build is the everyday coach-led builder.
-Match-to-Match Prescription is the advanced evidence-led draft path.
+Match-to-Match Prescription is parked as a future high-level intelligence feature.
 The current brain is deterministic/template-based.
 Future Training Prescription intelligence still needs dedicated backend architecture.
 The first Training Brief backend foundation exists as internal validation, handoff mapping, and candidate draft code only.
+Match-to-Match is parked until Session Builder core, Spanish experience, and AI/RAG decisions are ready.
 ```
