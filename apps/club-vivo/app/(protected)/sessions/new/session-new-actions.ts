@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Buffer } from "node:buffer";
+import { createRequire } from "node:module";
 import { cookies } from "next/headers";
 
 import {
@@ -14,11 +15,22 @@ import { EQUIPMENT_HINTS_COOKIE, getEquipmentItems } from "../../../../lib/equip
 import { getCurrentUser } from "../../../../lib/get-current-user";
 import { formatEnvironmentLabel } from "../../../../lib/session-builder-context-hints";
 import { getWorkspaceCookieName } from "../../../../lib/workspace-local-cookies";
-import type { AnalyzeFormState, GenerateFormState } from "./session-new-flow";
+import type {
+  AnalyzeFormState,
+  GenerateFormState,
+  TrainingBriefCandidate,
+  TrainingBriefCandidateFormState
+} from "./session-new-flow";
 
 const SUPPORTED_IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_GENERATION_THEME_LENGTH = 60;
 const SUPPORTED_API_AGE_BANDS = new Set(["u6", "u8", "u10", "u12", "u14", "u16", "u18", "adult"]);
+const requireBackendModule = createRequire(import.meta.url);
+const { buildTrainingBriefCandidate } = requireBackendModule(
+  "../../../../../../services/club-vivo/api/src/domains/session-builder/training-brief-candidate.js"
+) as {
+  buildTrainingBriefCandidate: (input: unknown) => TrainingBriefCandidate;
+};
 
 function parseEquipment(rawValue: string) {
   return rawValue
@@ -275,6 +287,104 @@ function parseConfirmedProfile(rawValue: string) {
   }
 
   return JSON.parse(rawValue) as ConfirmedImageAnalysisProfile;
+}
+
+function buildTrainingBriefErrorMessage(error: unknown) {
+  if (error && typeof error === "object" && "code" in error) {
+    const validationError = error as {
+      code?: unknown;
+      details?: unknown;
+      message?: unknown;
+    };
+    const details =
+      validationError.details && typeof validationError.details === "object"
+        ? (validationError.details as Record<string, unknown>)
+        : {};
+
+    if (validationError.code === "missing_fields") {
+      return "Add last-match evidence before drafting an internal candidate preview.";
+    }
+    if (validationError.code === "unknown_fields") {
+      return "The Training Brief candidate request included unsupported fields.";
+    }
+    if (details.reason === "unsupported_age_band") {
+      return "Choose a supported team age band before drafting an internal candidate preview.";
+    }
+    if (details.reason === "unsupported_sport") {
+      return "Training Brief candidate previews are soccer-only right now.";
+    }
+
+    return typeof validationError.message === "string"
+      ? validationError.message
+      : "Training Brief candidate validation failed.";
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return "Training Brief candidate preview failed. Review the evidence and try again.";
+}
+
+export async function buildTrainingBriefCandidateAction(
+  _previousState: TrainingBriefCandidateFormState,
+  formData: FormData
+): Promise<TrainingBriefCandidateFormState> {
+  "use server";
+
+  const daysUntilNextMatch = String(formData.get("daysUntilNextMatch") || "").trim();
+  const observations = String(formData.get("observations") || "").trim();
+  const tacticalNotes = String(formData.get("tacticalNotes") || "").trim();
+  const coachNotes = String(formData.get("coachNotes") || "").trim();
+  const selectedTeamId = String(formData.get("selectedTeamId") || "").trim();
+  const ageBand = normalizeSupportedAgeBand(String(formData.get("ageBand") || "")) || "u14";
+  const environment = String(formData.get("environment") || "").trim();
+  const environmentLabel = String(formData.get("environmentLabel") || "").trim();
+  const durationMinutesRaw = String(formData.get("durationMinutes") || "").trim();
+  const nextGameObjective = String(formData.get("nextGameObjective") || "").trim();
+  const evidenceParts = [observations, tacticalNotes].filter(Boolean);
+  const evidenceSummary = evidenceParts.join("\n");
+  const durationMinutes = Number.parseInt(durationMinutesRaw, 10);
+  const contextNotes = [
+    daysUntilNextMatch ? `Days until next match: ${daysUntilNextMatch}` : "",
+    environmentLabel ? `Environment: ${environmentLabel}` : environment ? `Environment: ${environment}` : "",
+  ].filter(Boolean);
+  const combinedCoachNotes = [coachNotes, ...contextNotes].filter(Boolean).join("\n");
+  const values = {
+    daysUntilNextMatch,
+    observations,
+    tacticalNotes,
+    coachNotes,
+    selectedTeamId,
+    ageBand,
+    environment,
+    durationMinutes: Number.isInteger(durationMinutes) ? String(durationMinutes) : durationMinutesRaw,
+  };
+
+  try {
+    const candidate = buildTrainingBriefCandidate({
+      sport: "soccer",
+      ageBand,
+      durationMinutes: Number.isInteger(durationMinutes) ? durationMinutes : 60,
+      evidenceSummary,
+      ...(nextGameObjective ? { nextGameObjective } : {}),
+      ...(combinedCoachNotes ? { coachNotes: combinedCoachNotes } : {}),
+      availableEquipment: [],
+      context: {
+        ...(environmentLabel ? { space: environmentLabel } : {}),
+      },
+    });
+
+    return {
+      values,
+      candidate,
+    };
+  } catch (error) {
+    return {
+      values,
+      error: buildTrainingBriefErrorMessage(error),
+    };
+  }
 }
 
 export async function analyzeSessionImageAction(

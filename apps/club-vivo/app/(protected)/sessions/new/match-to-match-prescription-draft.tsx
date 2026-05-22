@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { type SessionBuilderMode } from "../../../../components/coach/ModeSelector";
 import { type SessionEnvironmentOption } from "../../../../components/coach/SessionBuilderTopBlock";
@@ -8,6 +9,7 @@ import {
   TeamSelector,
   type WorkspaceTeamOption
 } from "../../../../components/coach/TeamSelector";
+import { type TrainingBriefCandidateFormState } from "./session-new-flow";
 
 type DaysUntilNextMatch =
   | "6_plus_days"
@@ -35,6 +37,8 @@ type MatchToMatchPrescriptionDraftProps = {
   environment: string;
   environmentOptions: SessionEnvironmentOption[];
   onEnvironmentChange: (value: string) => void;
+  candidateState: TrainingBriefCandidateFormState;
+  candidateFormAction: (formData: FormData) => void;
   onUseOption: (values: {
     objective: string;
     constraints: string;
@@ -43,6 +47,20 @@ type MatchToMatchPrescriptionDraftProps = {
     mode: SessionBuilderMode;
   }) => void;
 };
+
+function DraftCandidateButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className="inline-flex rounded-full border border-transparent bg-teal-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+      disabled={pending}
+    >
+      {pending ? "Drafting candidate..." : "Draft prescription options"}
+    </button>
+  );
+}
 
 const RECOMMENDATION_LIBRARY: PrescriptionRecommendation[] = [
   {
@@ -147,6 +165,20 @@ function getDaysUntilNextMatchLabel(value: DaysUntilNextMatch) {
   }
 }
 
+function getDurationMinutesForTimeline(value: DaysUntilNextMatch) {
+  switch (value) {
+    case "6_plus_days":
+      return 75;
+    case "4_5_days":
+      return 60;
+    case "3_days":
+      return 45;
+    case "1_2_days":
+    case "congested":
+      return 30;
+  }
+}
+
 function buildEvidenceContext({
   daysUntilNextMatch,
   observations,
@@ -228,6 +260,8 @@ export function MatchToMatchPrescriptionDraft({
   environment,
   environmentOptions,
   onEnvironmentChange,
+  candidateState,
+  candidateFormAction,
   onUseOption
 }: MatchToMatchPrescriptionDraftProps) {
   const [daysUntilNextMatch, setDaysUntilNextMatch] =
@@ -245,10 +279,32 @@ export function MatchToMatchPrescriptionDraft({
     environment
   });
   const recommendations = getRecommendations(daysUntilNextMatch);
+  const selectedTeam = teams.find((team) => team.id === selectedTeamId);
+  const environmentLabel =
+    environmentOptions.find((option) => option.value === environment)?.label || environment;
+  const strongestRecommendation = recommendations[0];
+  const shouldUseLocalRecommendationObjective =
+    !normalizeDraftText(observations) && !normalizeDraftText(tacticalNotes);
+  const candidate = candidateState.candidate;
 
   return (
     <section className="grid gap-6">
-      <div className="rounded-3xl border border-slate-200 bg-white/70 p-5">
+      <form action={candidateFormAction} className="rounded-3xl border border-slate-200 bg-white/70 p-5">
+        <input type="hidden" name="sport" value="soccer" />
+        <input type="hidden" name="selectedTeamId" value={selectedTeamId} />
+        <input type="hidden" name="ageBand" value={selectedTeam?.ageBand || "u14"} />
+        <input
+          type="hidden"
+          name="durationMinutes"
+          value={String(getDurationMinutesForTimeline(daysUntilNextMatch))}
+        />
+        <input
+          type="hidden"
+          name="nextGameObjective"
+          value={shouldUseLocalRecommendationObjective ? strongestRecommendation?.focus || "" : ""}
+        />
+        <input type="hidden" name="environmentLabel" value={environmentLabel} />
+
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
@@ -276,6 +332,7 @@ export function MatchToMatchPrescriptionDraft({
           <label className="grid gap-2 text-sm text-slate-700">
             <span className="font-medium">Days until next match</span>
             <select
+              name="daysUntilNextMatch"
               value={daysUntilNextMatch}
               onChange={(event) =>
                 setDaysUntilNextMatch(event.target.value as DaysUntilNextMatch)
@@ -293,6 +350,7 @@ export function MatchToMatchPrescriptionDraft({
           <label className="grid gap-2 text-sm text-slate-700 lg:col-span-2">
             <span className="font-medium">Environment</span>
             <select
+              name="environment"
               value={environment}
               onChange={(event) => onEnvironmentChange(event.target.value)}
               className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
@@ -312,6 +370,7 @@ export function MatchToMatchPrescriptionDraft({
               Last match observations / performance evidence
             </span>
             <textarea
+              name="observations"
               value={observations}
               onChange={(event) => setObservations(event.target.value)}
               className="min-h-28 rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
@@ -322,6 +381,7 @@ export function MatchToMatchPrescriptionDraft({
           <label className="grid gap-2 text-sm text-slate-700">
             <span className="font-medium">Next opponent / tactical notes</span>
             <textarea
+              name="tacticalNotes"
               value={tacticalNotes}
               onChange={(event) => setTacticalNotes(event.target.value)}
               className="min-h-28 rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
@@ -332,6 +392,7 @@ export function MatchToMatchPrescriptionDraft({
           <label className="grid gap-2 text-sm text-slate-700 lg:col-span-2">
             <span className="font-medium">Coach notes</span>
             <textarea
+              name="coachNotes"
               value={coachNotes}
               onChange={(event) => setCoachNotes(event.target.value)}
               className="min-h-24 rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
@@ -342,19 +403,128 @@ export function MatchToMatchPrescriptionDraft({
 
         <div className="mt-5 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-slate-600">
-            Draft preview only. Full prescription logic will be wired later.
+            Internal candidate preview. Review before Session Builder handoff.
           </p>
-          <button
-            type="button"
-            onClick={() => setShowPreview(true)}
-            className="inline-flex rounded-full border border-transparent bg-teal-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-800"
-          >
-            Draft prescription options
-          </button>
+          <div onClick={() => setShowPreview(true)}>
+            <DraftCandidateButton />
+          </div>
         </div>
-      </div>
+        {candidateState.error ? (
+          <p className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {candidateState.error}
+          </p>
+        ) : null}
+      </form>
 
-      {showPreview ? (
+      {candidate ? (
+        <section className="rounded-3xl border border-teal-200 bg-teal-50/50 p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+                Internal candidate preview
+              </p>
+              <h3 className="mt-1 text-lg font-semibold text-slate-900">
+                {candidate.recommendedFocus}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-700">{candidate.valueStatement}</p>
+            </div>
+            <span className="w-fit rounded-full border border-teal-200 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wide text-teal-800">
+              Review required
+            </span>
+          </div>
+
+          <section className="mt-5 rounded-3xl border border-slate-200 bg-white/80 p-5">
+            <h4 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              Why this matters
+            </h4>
+            <p className="mt-2 text-sm leading-6 text-slate-700">{candidate.rationale}</p>
+          </section>
+
+          <section className="mt-4 rounded-3xl border border-slate-200 bg-white/80 p-5">
+            <h4 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              7Q football reasoning
+            </h4>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {candidate.sevenQuestionReasoning.map((item) => (
+                <article key={item.question} className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+                    {item.category}
+                  </p>
+                  <h5 className="mt-1 text-sm font-semibold text-slate-900">{item.question}</h5>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">{item.answer}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]">
+            <div className="grid gap-4">
+              {candidate.activityRecommendations.slice(0, 1).map((recommendation) => (
+                <article
+                  key={`${recommendation.title}-${recommendation.durationMinutes}`}
+                  className="rounded-3xl border border-slate-200 bg-white/80 p-5"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Recommended activity
+                  </p>
+                  <h4 className="mt-1 text-base font-semibold text-slate-900">
+                    {recommendation.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    {recommendation.objective}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">
+                      {recommendation.durationMinutes} min
+                    </span>
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">
+                      Diagram: {recommendation.diagramRequirement.preferredContract}
+                    </span>
+                  </div>
+                </article>
+              ))}
+
+              <article className="rounded-3xl border border-slate-200 bg-white/80 p-5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Success criteria / coach watch points
+                </p>
+                <ul className="mt-3 grid gap-2 text-sm leading-6 text-slate-700">
+                  {[...candidate.successCriteria, ...candidate.coachingEmphasis].slice(0, 5).map((item) => (
+                    <li key={item}>- {item}</li>
+                  ))}
+                </ul>
+              </article>
+            </div>
+
+            <aside className="rounded-3xl border border-slate-200 bg-white/80 p-5">
+              <h4 className="text-sm font-semibold text-slate-900">
+                Review before Session Builder handoff
+              </h4>
+              <p className="mt-2 text-sm leading-6 text-slate-700">
+                This does not create a saved prescription and does not use a public Training Brief
+                API. Generate only after reviewing the handoff in Custom Build.
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  onUseOption({
+                    objective: candidate.sessionBuilderHandoff.theme,
+                    constraints: candidate.sessionBuilderHandoff.coachNotes,
+                    environment,
+                    durationMin: String(candidate.sessionBuilderHandoff.durationMin),
+                    mode: candidate.sessionBuilderHandoff.sessionMode
+                  })
+                }
+                className="mt-4 inline-flex rounded-full border border-transparent bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+              >
+                Review in Custom Build
+              </button>
+            </aside>
+          </div>
+        </section>
+      ) : null}
+
+      {showPreview && !candidate ? (
         <section className="rounded-3xl border border-slate-200 bg-white/70 p-5">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">

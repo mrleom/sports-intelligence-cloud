@@ -45,12 +45,83 @@ export type SaveFormState = {
   error?: string;
 };
 
+export type TrainingBriefCandidate = {
+  candidateType: "training_brief_candidate";
+  version: "v1";
+  status: "draft";
+  source: "match_to_match_prescription";
+  requiresCoachReview: boolean;
+  recommendedFocus: string;
+  valueStatement: string;
+  rationale: string;
+  sevenQuestionReasoning: Array<{
+    question: string;
+    answer: string;
+    category: string;
+  }>;
+  successCriteria: string[];
+  coachingEmphasis: string[];
+  activityRecommendations: Array<{
+    title: string;
+    objective: string;
+    durationMinutes: number;
+    diagramRequirement: {
+      required: boolean;
+      reason: string;
+      preferredContract: string;
+    };
+    reviewRequired: boolean;
+  }>;
+  sessionBuilderHandoff: {
+    sport: string;
+    ageBand: string;
+    durationMin: number;
+    theme: string;
+    sessionMode: "full_session" | "quick_drill";
+    coachNotes: string;
+    equipment: string[];
+    handoffMeta: {
+      source: string;
+      trainingBriefVersion: string;
+      requiresCoachReview: boolean;
+      evidenceIncluded: boolean;
+      contextIncluded: boolean;
+      recommendedNextStep: string;
+    };
+  };
+  candidateMeta: {
+    createdBy: "system";
+    persistence: "not_persisted";
+    nextStep: "review_in_session_builder";
+    handoffReady: boolean;
+  };
+};
+
+export type TrainingBriefCandidateFormState = {
+  values: {
+    daysUntilNextMatch: string;
+    observations: string;
+    tacticalNotes: string;
+    coachNotes: string;
+    selectedTeamId: string;
+    ageBand: string;
+    environment: string;
+    durationMinutes: string;
+  };
+  candidate?: TrainingBriefCandidate;
+  error?: string;
+};
+
 type GenerateAction = (
   state: GenerateFormState,
   formData: FormData
 ) => Promise<GenerateFormState>;
 
 type AnalyzeAction = (state: AnalyzeFormState, formData: FormData) => Promise<AnalyzeFormState>;
+type TrainingBriefCandidateAction = (
+  state: TrainingBriefCandidateFormState,
+  formData: FormData
+) => Promise<TrainingBriefCandidateFormState>;
 type SaveAction = (state: SaveFormState, formData: FormData) => Promise<SaveFormState>;
 type SaveFormDispatch = (formData: FormData) => void;
 type PlanningPath = "custom" | "match_to_match";
@@ -308,25 +379,33 @@ function CandidateCard({
 export function NewSessionFlow({
   initialAnalyzeState,
   initialGenerateState,
+  initialTrainingBriefCandidateState,
   initialSaveState,
   teamOptions,
   initialEquipmentOptions,
   initialConstraints,
   analyzeAction,
+  trainingBriefCandidateAction,
   generateAction,
   saveAction
 }: {
   initialAnalyzeState: AnalyzeFormState;
   initialGenerateState: GenerateFormState;
+  initialTrainingBriefCandidateState: TrainingBriefCandidateFormState;
   initialSaveState: SaveFormState;
   teamOptions: WorkspaceTeamOption[];
   initialEquipmentOptions: string[];
   initialConstraints?: string;
   analyzeAction: AnalyzeAction;
+  trainingBriefCandidateAction: TrainingBriefCandidateAction;
   generateAction: GenerateAction;
   saveAction: SaveAction;
 }) {
   const [analyzeState, analyzeFormAction] = useActionState(analyzeAction, initialAnalyzeState);
+  const [trainingBriefCandidateState, trainingBriefCandidateFormAction] = useActionState(
+    trainingBriefCandidateAction,
+    initialTrainingBriefCandidateState
+  );
   const [generateState, generateFormAction] = useActionState(generateAction, initialGenerateState);
   const [saveState, saveFormAction] = useActionState(saveAction, initialSaveState);
   const [selectedTeamId, setSelectedTeamId] = useState(teamOptions[0]?.id ?? "");
@@ -502,6 +581,8 @@ export function NewSessionFlow({
           environment={environment}
           environmentOptions={environmentOptions}
           onEnvironmentChange={setEnvironment}
+          candidateState={trainingBriefCandidateState}
+          candidateFormAction={trainingBriefCandidateFormAction}
           onUseOption={({
             objective: nextObjective,
             constraints: nextConstraints,

@@ -5,10 +5,12 @@ import {
   NewSessionFlow,
   type AnalyzeFormState,
   type GenerateFormState,
-  type SaveFormState
+  type SaveFormState,
+  type TrainingBriefCandidateFormState
 } from "./session-new-flow";
 import {
   analyzeSessionImageAction,
+  buildTrainingBriefCandidateAction,
   generateSessionPackAction
 } from "./session-new-actions";
 import { COACH_TEAM_HINTS_COOKIE, getCoachTeams } from "../../../../lib/coach-team-hints";
@@ -40,6 +42,18 @@ const INITIAL_GENERATE_STATE: GenerateFormState = {
 };
 
 const INITIAL_SAVE_STATE: SaveFormState = {};
+const INITIAL_TRAINING_BRIEF_CANDIDATE_STATE: TrainingBriefCandidateFormState = {
+  values: {
+    daysUntilNextMatch: "6_plus_days",
+    observations: "",
+    tacticalNotes: "",
+    coachNotes: "",
+    selectedTeamId: "",
+    ageBand: "u14",
+    environment: "grass_field",
+    durationMinutes: "75"
+  }
+};
 
 function parseSearchParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -142,11 +156,13 @@ export default async function NewSessionPage({
       <NewSessionFlow
         initialAnalyzeState={INITIAL_ANALYZE_STATE}
         initialGenerateState={initialGenerateState}
+        initialTrainingBriefCandidateState={INITIAL_TRAINING_BRIEF_CANDIDATE_STATE}
         initialSaveState={INITIAL_SAVE_STATE}
         teamOptions={teamOptions}
         initialEquipmentOptions={initialEquipmentOptions}
         initialConstraints={initialConstraints}
         analyzeAction={analyzeSessionImageAction}
+        trainingBriefCandidateAction={buildTrainingBriefCandidateAction}
         generateAction={generateSessionPackAction}
         saveAction={saveGeneratedSessionAction}
       />

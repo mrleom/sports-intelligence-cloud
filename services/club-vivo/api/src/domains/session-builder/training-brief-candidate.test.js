@@ -144,6 +144,66 @@ test("buildTrainingBriefCandidate includes candidateMeta persistence and handoff
   });
 });
 
+test("buildTrainingBriefCandidate turns scoring evidence and weak opponent side into attacking focus", () => {
+  const candidate = buildTrainingBriefCandidate(
+    makeValidBrief({
+      evidenceSummary:
+        "we need to improve in scoring; we haven't been able to score in the last 3 games. the left side of the next team is weak.",
+      coachNotes: "make it game-like, very competitive.",
+      nextGameObjective: "Stabilize transition defending and protect central space",
+    })
+  );
+
+  assert.match(candidate.recommendedFocus, /Create and finish chances/i);
+  assert.match(candidate.recommendedFocus, /weak left side/i);
+  assert.doesNotMatch(candidate.recommendedFocus, /transition defending|central space/i);
+  assert.match(candidate.sessionBuilderHandoff.theme, /Create and finish chances/i);
+  assert.match(candidate.activityRecommendations[0].title, /Weak-Side Chance Creation Game/i);
+});
+
+test("buildTrainingBriefCandidate includes why-this-matters value statement", () => {
+  const candidate = buildTrainingBriefCandidate(
+    makeValidBrief({
+      evidenceSummary: "We have not scored in three games and need better chances.",
+    })
+  );
+
+  assert.equal(typeof candidate.valueStatement, "string");
+  assert.match(candidate.valueStatement, /valuable/i);
+  assert.match(candidate.rationale, /match evidence/i);
+});
+
+test("buildTrainingBriefCandidate includes seven question reasoning with seven answered items", () => {
+  const candidate = buildTrainingBriefCandidate(
+    makeValidBrief({
+      evidenceSummary:
+        "We need to improve scoring and the opponent's left side is weak.",
+    })
+  );
+
+  assert.equal(candidate.sevenQuestionReasoning.length, 7);
+  for (const item of candidate.sevenQuestionReasoning) {
+    assert.equal(typeof item.question, "string");
+    assert.equal(typeof item.answer, "string");
+    assert.equal(typeof item.category, "string");
+    assert.ok(item.question.length > 0);
+    assert.ok(item.answer.length > 0);
+  }
+});
+
+test("buildTrainingBriefCandidate includes success criteria and coach watch points", () => {
+  const candidate = buildTrainingBriefCandidate(
+    makeValidBrief({
+      evidenceSummary: "We have not scored in three games and need better chances.",
+    })
+  );
+
+  assert.ok(candidate.successCriteria.length >= 3);
+  assert.ok(candidate.coachingEmphasis.length >= 3);
+  assert.ok(candidate.successCriteria.every((item) => typeof item === "string" && item.length > 0));
+  assert.ok(candidate.coachingEmphasis.every((item) => typeof item === "string" && item.length > 0));
+});
+
 test("buildTrainingBriefCandidate rejects invalid Training Brief input through validator", () => {
   assertValidationError(
     () => buildTrainingBriefCandidate(makeValidBrief({ sport: "basketball" })),
