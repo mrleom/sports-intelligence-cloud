@@ -297,6 +297,32 @@ The next priority returns to:
 - adding RAG only if needed for a real methodology/session knowledge base
 - deployment and domain polish after the wedge is solid
 
+### Phase 10 - Session Builder Core Completion Audit
+
+After Match-to-Match was parked, the active focus returned to Session Builder core completion.
+
+The completion audit now lives at:
+
+- `docs/progress/new-sic/session-builder-core/completion-audit.md`
+
+The audit defines the current finish line:
+
+```text
+coach chooses Custom Build
+-> enters team/time/objective/context/environment/equipment
+-> generates a useful soccer full session or drill/activity
+-> understands it quickly
+-> reviews diagrams
+-> saves it
+-> returns to it later
+```
+
+The audit also establishes the next implementation queue, starting with:
+
+- `session-builder-copy-and-mode-polish`
+
+This audit did not change runtime behavior. It did not change frontend code, backend code, tests, package files, auth, tenancy, IAM/CDK, API Gateway, DynamoDB, Cognito, or infrastructure.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
