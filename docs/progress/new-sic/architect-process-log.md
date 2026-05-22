@@ -4,7 +4,7 @@
 
 This architect process log is the concise post-Week-21 record for New SIC.
 
-It summarizes the major architecture, product, runtime, deployment, and guardrail decisions captured across Closeout Summaries 1 through 9. The closeout summaries remain the detailed chronological evidence. This file is the high-level process record used to understand how the current SIC / Club Vivo baseline evolved.
+It summarizes the major architecture, product, runtime, deployment, and guardrail decisions captured across Closeout Summaries 1 through 10. The closeout summaries remain the detailed chronological evidence. This file is the high-level process record used to understand how the current SIC / Club Vivo baseline evolved.
 
 This document is not a roadmap, closeout summary, implementation checklist, or runtime claim. It is a compact architecture-process narrative.
 
@@ -21,6 +21,7 @@ This log is based on:
 - `docs/progress/new-sic/closeout-summary-7.md`
 - `docs/progress/new-sic/closeout-summary-8.md`
 - `docs/progress/new-sic/closeout-summary-9.md`
+- `docs/progress/new-sic/closeout-summary-10.md`
 
 ## Executive Architecture Timeline
 
@@ -206,6 +207,54 @@ The deterministic generator now allocates selected duration into exact activity 
 
 Equipment creation was removed from Session Builder and belongs in the Equipment page. Environment selection now uses curated soccer-related spaces.
 
+### Phase 8 - Training Brief Backend Foundation
+
+After the Match-to-Match draft flow, the next phase established the first backend foundation for future Training Prescription work without exposing a public API or changing runtime routes.
+
+The branch sequence was:
+
+- #47 `docs(product): align Club Vivo session builder paths`
+- #48 `fix(home): clarify quick activity planning note copy`
+- #49 `docs(architecture): design Training Prescription backend path`
+- #50 `feat(session-builder): add Training Brief input validator`
+- #51 `feat(session-builder): map Training Brief to session handoff`
+- #52 `feat(session-builder): build Training Brief candidate draft`
+
+Key outcomes:
+
+- long-lived product docs now align with Custom Build vs Match-to-Match Prescription
+- Home Quick Activity copy now matches practical planning context semantics
+- Training Prescription backend design was documented before implementation
+- Training Brief validation was added under the existing Session Builder domain
+- Training Brief handoff mapping was added under the existing Session Builder domain
+- Training Brief candidate draft building was added under the existing Session Builder domain
+- validator, handoff mapper, and candidate builder tests were added
+
+This phase deliberately stayed internal-first.
+
+It did not add:
+
+- `/training-briefs`
+- `/prescriptions`
+- public Training Brief API behavior
+- persisted Training Brief or prescription records
+- frontend integration to the backend candidate builder
+- SessionPack generation from Training Brief
+- a new backend service
+- a new app
+- auth, tenancy, IAM/CDK, API Gateway, DynamoDB, Cognito, or infrastructure changes
+
+The important architecture move was sequencing:
+
+```text
+validate first
+map to existing Session Builder handoff
+build reviewable candidate
+defer public route and persistence decisions
+```
+
+This kept Training Prescription inside the existing Club Vivo / Session Builder path while preserving tenant, validation, observability, and review guardrails.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
@@ -218,6 +267,7 @@ The current SIC / Club Vivo product model is:
 - Custom Build is the everyday coach-led Session Builder path.
 - Match-to-Match Prescription is the advanced evidence-led draft path.
 - Quick Activity is the fast activity lane.
+- Training Brief backend foundation is internal-only validator, handoff mapper, and candidate builder code under Session Builder.
 - Equipment page owns equipment creation and equipment essentials.
 - Saved Sessions preserve generated plans and review/export continuity.
 - Training Prescription, Training Brief, DiagramSequence, and 7Q are evolving intelligence layers unless explicitly implemented.
@@ -232,6 +282,7 @@ Currently shipped or represented in runtime:
 - Quick Activity fast generation path
 - Custom Build guided Session Builder path
 - frontend-only deterministic Match-to-Match draft preview
+- internal Training Brief validation, handoff mapping, and candidate draft building
 - duration-based deterministic activity allocation
 - deterministic SVG story diagrams
 - browser-local coach workspace hints scoped by signed-in user/tenant context where applicable
@@ -248,6 +299,8 @@ Not shipped as production runtime yet:
 - public Training Brief API
 - public Match-to-Match Prescription API
 - persisted prescription objects
+- frontend integration to the Training Brief candidate builder
+- SessionPack generation from Training Brief
 - full Training Prescription backend brain
 - full editable diagram engine
 - AI-generated raw diagram images
@@ -292,6 +345,7 @@ The following guardrails remained consistent across the New SIC phases:
 - Deterministic generation must not be described as RAG, FAISS, Bedrock production generation, or vector search.
 - Future Training Prescription work must not introduce a separate app, backend service, auth path, or tenancy path without an explicit architecture decision.
 - Match-to-Match Prescription remains draft preview behavior until backend architecture, validation, observability, and persistence are intentionally designed.
+- Training Brief backend foundation must remain internal-first until a route/API, tenant context, observability, persistence, and frontend handoff decision is explicitly made.
 
 ## Process Principles Established
 
@@ -320,4 +374,5 @@ Custom Build is the everyday coach-led builder.
 Match-to-Match Prescription is the advanced evidence-led draft path.
 The current brain is deterministic/template-based.
 Future Training Prescription intelligence still needs dedicated backend architecture.
+The first Training Brief backend foundation exists as internal validation, handoff mapping, and candidate draft code only.
 ```
