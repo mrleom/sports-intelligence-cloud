@@ -251,7 +251,8 @@ export function SessionBuilderTopBlock({
           <div>
             <h3 className="text-base font-semibold text-slate-900">Build mode</h3>
             <p className="mt-1 text-sm leading-6 text-slate-600">
-              Custom Build: Build a session or drill when you already know the focus.
+              Custom Build: coach-led planning for a full session or focused drill/activity when
+              you already know the focus.
             </p>
           </div>
           <ModeSelector value={mode} onChange={onModeChange} />

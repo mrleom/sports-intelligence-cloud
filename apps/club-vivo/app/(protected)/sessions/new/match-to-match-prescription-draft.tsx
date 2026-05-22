@@ -258,7 +258,8 @@ export function MatchToMatchPrescriptionDraft({
               Match-to-Match Prescription
             </h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">
-              SIC recommends training options from last-match evidence and the next-match timeline.
+              Frontend-only draft preview for future evidence-led planning. Review any idea in
+              Custom Build before generating.
             </p>
           </div>
 
@@ -342,7 +343,7 @@ export function MatchToMatchPrescriptionDraft({
 
         <div className="mt-5 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-slate-600">
-            Draft preview only. Full prescription logic will be wired later.
+            Draft preview only. No saved prescription or backend automation is created here.
           </p>
           <button
             type="button"
@@ -361,7 +362,7 @@ export function MatchToMatchPrescriptionDraft({
               Draft options for {getDaysUntilNextMatchLabel(daysUntilNextMatch)}
             </h3>
             <p className="mt-1 text-sm leading-6 text-slate-600">
-              Draft preview only. Full prescription logic will be wired later.
+              Draft preview only. Use an option in Custom Build before generating a session.
             </p>
           </div>
 

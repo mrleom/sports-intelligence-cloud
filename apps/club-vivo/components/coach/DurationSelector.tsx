@@ -26,8 +26,8 @@ export function DurationSelector({
         required
       />
       <span className="text-xs leading-5 text-slate-500">
-        Choose how long you have today. Full sessions run from 45 to 120 minutes. Drills run from
-        15 to 25 minutes.
+        Choose how long you have today. Full Sessions run from 45 to 120 minutes. Drill / Activity
+        runs from 15 to 25 minutes.
       </span>
     </label>
   );

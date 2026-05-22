@@ -35,8 +35,8 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
           />
           <span className="text-sm font-semibold text-slate-900">Full Session</span>
           <span className="text-xs leading-5 text-slate-600">
-            Standard 60-minute session with activation, two main activities, and a competitive
-            close.
+            Build a complete 45-120 minute practice with activation, main activities, and a
+            competitive finish.
           </span>
         </label>
 
@@ -56,9 +56,9 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
             onChange={() => onChange("quick_drill")}
             className="sr-only"
           />
-          <span className="text-sm font-semibold text-slate-900">Drill</span>
+          <span className="text-sm font-semibold text-slate-900">Drill / Activity</span>
           <span className="text-xs leading-5 text-slate-600">
-            Focused 20-minute activity or drill.
+            Build one focused 15-25 minute drill or game-like activity.
           </span>
         </label>
       </div>

@@ -451,8 +451,8 @@ export function NewSessionFlow({
         <div>
           <h2 className="text-lg font-semibold text-slate-900">How do you want to start?</h2>
           <p className="mt-1 text-sm leading-6 text-slate-600">
-            Choose a coach-led build when you already know the focus, or draft a match-to-match
-            plan from recent performance evidence.
+            Start with the everyday coach-led builder, or open the parked advanced draft preview
+            for match-to-match ideas.
           </p>
         </div>
 
@@ -461,12 +461,12 @@ export function NewSessionFlow({
             {
               value: "custom" as const,
               title: "Custom Build",
-              description: "Coach-led session or drill builder."
+              description: "Everyday coach-led full session or drill/activity builder."
             },
             {
               value: "match_to_match" as const,
               title: "Match-to-Match Prescription",
-              description: "Evidence-led planning from last match to next match."
+              description: "Advanced frontend draft preview for future intelligence."
             }
           ].map((option) => {
             const selected = planningPath === option.value;
@@ -682,7 +682,7 @@ export function NewSessionFlow({
 
           {workspaceMode === "quick_drill" ? (
             <p className="max-w-sm rounded-2xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-              Drill still uses the shared generation path. It is a lighter planning frame,
+              Drill / Activity uses the shared generation path. It is a focused planning frame,
               not a separate backend mode.
             </p>
           ) : null}
