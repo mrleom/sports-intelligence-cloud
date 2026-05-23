@@ -192,6 +192,27 @@ test("generatePack creates one 20-minute quick activity when requested", () => {
   assert.match(session.activities[0].description, /Regress:/);
 });
 
+test("generatePack first touch drill does not reference previous activities", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMin: 20,
+    theme: "first touch under pressure",
+    sessionMode: "drill",
+    coachNotes: "one focused game-like activity, quick rotations, players scan before receiving",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [session] = pack.sessions;
+  const [activity] = session.activities;
+
+  assert.equal(session.activities.length, 1);
+  assert.equal(activity.minutes, 20);
+  assert.doesNotMatch(activity.description, /Activity 1|previous activit/i);
+  assert.match(activity.description, /first touch|scan|pressure|rotate|rotation/i);
+});
+
 test("generatePack avoids goal-required wording when no goal equipment is selected", () => {
   const pack = generatePack({
     sport: "soccer",
@@ -231,6 +252,28 @@ test("generatePack uses selected Pugg goals directly without vague alternatives"
   assert.match(text, /pugg goals/i);
   assert.equal(/Pugg goals, small goals, target goals, or cone gates/i.test(text), false);
   assert.equal(/mini goals, target goals, or cone gates/i.test(text), false);
+});
+
+test("generatePack finishing with Pugg goals includes finishing-specific coaching detail", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMin: 25,
+    theme: "finishing",
+    sessionMode: "drill",
+    coachNotes: "use Pugg goals, lots of repetitions, competitive scoring",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "Pugg goals"],
+  });
+
+  const [session] = pack.sessions;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(session.activities.length, 1);
+  assert.deepEqual(session.equipment, ["balls", "cones", "pugg goals"]);
+  assert.match(text, /pugg goals/i);
+  assert.match(text, /shot|shoot|rebound|repetition|pressure|rotation|rotate/i);
+  assert.equal(/Pugg goals, small goals, target goals, or cone gates/i.test(text), false);
 });
 
 test("generatePack uses selected equipment in setup text", () => {
@@ -378,6 +421,48 @@ test("generatePack gives every full-session activity coach-ready sections", () =
   }
 });
 
+test("generatePack attacking overloads includes overload-specific coaching detail", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    coachNotes: "create wide overloads, decision to pass or dribble, finish with a game",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [session] = pack.sessions;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(session.activities.length, 4);
+  assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
+  assert.equal(session.objectiveTags.includes("overloads"), true);
+  assert.match(text, /overload|wide support|wide channels|free player|pass or dribble/i);
+});
+
+test("generatePack defending 1v1 includes defender-specific cues", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMin: 45,
+    theme: "defending 1v1",
+    sessionMode: "full_session",
+    coachNotes: "limited space, make it competitive, focus on angle, delay, and recovery",
+    sessionsCount: 1,
+    equipment: ["balls", "cones"],
+  });
+
+  const [session] = pack.sessions;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(session.activities.length, 3);
+  assert.deepEqual(session.activities.map((activity) => activity.minutes), [10, 20, 15]);
+  assert.match(text, /angle|delay|recover|side-on|body shape/i);
+  assert.equal(/full-size goals?/i.test(text), false);
+});
+
 test("generatePack full-session setup starts with direct grid or field dimensions", () => {
   const pack = generatePack({
     sport: "soccer",
@@ -401,6 +486,29 @@ test("generatePack full-session setup starts with direct grid or field dimension
   assert.match(setupLines[3], /^Setup: Field: 36x28 yards/i);
   assert.equal(/diameter/i.test(setupLines.join(" ")), false);
   assert.match(setupLines.join(" "), /balls, flat cones, pinnies/i);
+});
+
+test("generatePack possession under pressure has distinct Activity 2 and Activity 3 purposes", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMin: 90,
+    theme: "possession under pressure",
+    sessionMode: "full_session",
+    coachNotes: "build from rondo to directional possession to final game",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies", "mini goals"],
+  });
+
+  const [, activity2, activity3] = pack.sessions[0].activities;
+
+  assert.deepEqual(pack.sessions[0].activities.map((activity) => activity.minutes), [20, 25, 25, 20]);
+  assert.match(activity2.name, /rondo/i);
+  assert.match(activity3.name, /directional possession|targets/i);
+  assert.match(activity2.description, /rondo|split pass|escape pass|active pressure/i);
+  assert.match(activity3.description, /directional possession|target zones|counter/i);
+  assert.notEqual(activity2.name, activity3.name);
+  assert.notEqual(activity2.description, activity3.description);
 });
 
 test("generatePack full-session story progresses from theme intro to final game", () => {

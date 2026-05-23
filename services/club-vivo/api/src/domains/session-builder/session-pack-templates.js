@@ -251,6 +251,7 @@ function inferFocusTagsFromText(value) {
   add("defending", [/\bdefend(?:ing)?\b/, /\bdefensive\b/, /\bdeny\b/]);
   add("transition", [/\btransition(?:s)?\b/, /\bcounter(?: attack|attack|ing)?\b/, /\bregain\b/]);
   add("possession", [/\bpossession\b/, /\bkeep(?:ing)? the ball\b/, /\brondo\b/]);
+  add("overloads", [/\boverload(?:s|ing)?\b/, /\bfree player\b/, /\bnumbers up\b/]);
   add("pressing", [/\bpress(?:ing)?\b/]);
   add("pressure", [/\bpressure\b/, /\bpressur(?:e|ing)\b/]);
   add("finishing", [/\bfinish(?:ing)?\b/, /\bshoot(?:ing)?\b/, /\bscore\b/, /\bgoals?\b/]);
@@ -540,6 +541,107 @@ function getPromptSignalText(promptSignals) {
   );
 }
 
+function getThemeSpecificLanguage(promptSignals, phase) {
+  const text = getPromptSignalText(promptSignals);
+  const isSingleActivity = phase === "single";
+
+  if (text.includes("overload")) {
+    return {
+      setup:
+        phase === "progression"
+          ? "create a directional overload with a wide gate, a central defender, and a free player who can join late"
+          : "use wide channels and a central scoring lane so players can see the overload and the free player",
+      run:
+        phase === "progression"
+          ? "start with a 3v2 or 4v3, then release a recovering defender so attackers must decide whether to pass wide, dribble inside, or find the free player"
+          : "start each round with the ball wide, create a numbers-up moment, and ask the ball carrier to decide early between pass or dribble",
+      scoring:
+        "score by finding the free player before attacking a gate, or earn a bonus point when wide support creates the finish",
+      cues: "stretch wide, see the free player, commit the defender, decide pass or dribble, then attack the open space",
+      watch:
+        "wide players standing too close, the ball carrier forcing a dribble into pressure, or support arriving after the overload has gone",
+      progress: "add a recovering defender, require the free player to receive before scoring, or shorten the time to finish",
+      regress: "start 3v1, keep the free player fixed in a wide channel, or pause once to show the passing lane",
+    };
+  }
+
+  if (text.includes("defending 1v1") || (text.includes("defending") && text.includes("1v1"))) {
+    return {
+      setup:
+        "use a narrow 1v1 channel with a start cone, defender recovery line, and two cone-gate targets instead of full goals",
+      run:
+        phase === "progression"
+          ? "after the first 1v1, release a second ball or recovery runner so defenders must delay, recover, and defend the next action"
+          : "serve to the attacker, release the defender from an angle, and play until the attacker scores through a gate or the defender delays and wins it",
+      scoring:
+        "attackers score by dribbling through an end gate; defenders score by delaying for five seconds, forcing wide, or winning and countering",
+      cues: "approach side-on, curve the run, slow down under control, show away from danger, delay, and recover goal-side",
+      watch:
+        "defenders running straight past the ball, square body shape, diving in too early, or failing to recover after being beaten",
+      progress: "narrow the channel, start the defender from a recovery angle, or add a second attacker after the first touch",
+      regress: "widen the channel, let the defender shadow first, or give the defender a closer starting position",
+    };
+  }
+
+  if (text.includes("first touch")) {
+    return {
+      setup:
+        "use a receiving box with two pressure gates, a server line, defender line, and quick rotation spots",
+      run: isSingleActivity
+        ? "serve into the receiver, release pressure on the pass, and rotate server-receiver-defender after every rep"
+        : "serve into the receiver, release pressure on the pass, and reward the first touch that escapes into space",
+      scoring:
+        "receiver scores by scanning before the pass and taking the first touch through a gate; defender scores by forcing play out",
+      cues: "scan before the pass, receive side-on, push the first touch away from pressure, and play quickly",
+      watch:
+        "players watching only the ball, first touch stopping under feet, late pressure, or slow rotations",
+      progress: "release the defender earlier, reduce touches, or add a target pass after the escape",
+      regress: "delay the defender, increase the box, or allow one free first touch",
+    };
+  }
+
+  if (text.includes("possession under pressure")) {
+    return {
+      setup:
+        phase === "progression"
+          ? "build a directional possession field with two target zones, touchline outlets, and mini goals for the counter"
+          : "start with a rondo grid that has clear support angles, pressing defenders, and an escape target",
+      run:
+        phase === "progression"
+          ? "play directional possession toward target zones, then let defenders counter to mini goals immediately after a regain"
+          : "keep the ball under active pressure, score for split passes or escape passes, and rotate defenders quickly",
+      scoring:
+        phase === "progression"
+          ? "possession team scores by connecting to a target zone; defenders score by winning it and countering to mini goals"
+          : "score for five passes, a split pass, or an escape pass out of pressure",
+      cues: "scan early, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
+      watch:
+        "players hiding behind defenders, flat support, slow ball speed, or the first pass after pressure going into trouble",
+      progress: "reduce touch count, add a pressing trigger, or require a forward target pass after the escape",
+      regress: "add a neutral player, increase the grid, or let the possession team restart after three passes",
+    };
+  }
+
+  if (text.includes("finishing") || text.includes("shoot") || text.includes("pugg")) {
+    return {
+      setup:
+        "set a short finishing lane with a server, shooter, recovering defender, rebound cone, and the selected goal target",
+      run: isSingleActivity
+        ? "serve, shoot, follow the rebound, then rotate shooter-server-defender so players get repeated finishes under light pressure"
+        : "play quick finishing waves with one pressure touch, one shot, a rebound chase, and a clear rotation after each attempt",
+      scoring:
+        "score for clean shots on target, first-time finishes, rebounds followed in, or goals scored before the defender recovers",
+      cues: "set the ball out of feet, head steady, choose placement or power, follow rebounds, and shoot before pressure closes",
+      watch:
+        "players waiting in lines, shots from poor body shape, no rebound follow-up, or defenders arriving too late to matter",
+      progress: "release the defender sooner, require a first-time shot, or add a second ball for a rebound finish",
+      regress: "start unopposed, move the server closer, or give the shooter one setup touch before pressure starts",
+    };
+  }
+
+  return null;
+}
+
 function detectSoccerActivityArchetype(promptSignals) {
   const text = getPromptSignalText(promptSignals);
   const hasDuckDuckGoose =
@@ -649,7 +751,7 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   if (
     (archetype?.key === "duck-duck-goose-escape" ||
       archetype?.key === "duck-duck-goose-defending-gates") &&
-    phase === "main"
+    (phase === "main" || phase === "single")
   ) {
     return buildDuckDuckGooseEscapeDescription({ promptSignals, phase });
   }
@@ -663,16 +765,21 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   const equipmentText = describeEquipment(promptSignals?.equipment);
   const scoringTargets = getScoringTargets(promptSignals?.equipment);
   const style = getProgramStyle(promptSignals);
-  const noteText = coachNotes ? `Coach notes: ${coachNotes}.` : "";
+  const themeLanguage = getThemeSpecificLanguage(promptSignals, phase);
+  const noteText = coachNotes && !themeLanguage ? `Coach notes: ${coachNotes}.` : "";
   const phaseRun =
     phase === "final"
       ? "Run: apply the same theme from the session, restart like a real game, keep score, and coach briefly on balls out."
+      : phase === "single"
+        ? "Run: start with a clear serve or trigger, play short competitive rounds, keep score, and rotate roles after each repetition."
       : phase === "arrival"
         ? "Run: introduce the session theme, ball start, movement direction, and scoring idea before the main activities."
         : phase === "progression"
           ? "Run: progress from Activity 2 by adding transition, recovery, or a faster second decision."
-          : "Run: increase the pressure from Activity 1, start each round with a first pass, keep score, and rotate roles every 2-3 minutes.";
-  const baseSnippet = compactText(baseDescription, "").slice(0, 135).replace(/\s+\S*$/, "").trim();
+          : "Run: start each round with a first pass or coach serve, increase pressure, keep score, and rotate roles every 2-3 minutes.";
+  const baseSnippet = themeLanguage
+    ? ""
+    : compactText(baseDescription, "").slice(0, 135).replace(/\s+\S*$/, "").trim();
 
   const setupByPhase =
     phase === "final"
@@ -682,21 +789,61 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
         : phase === "progression"
           ? `Setup: Field: 24x20 yards with two end gates, one recovery line, and ${equipmentText}; use the same direction as Activity 2 with a counter target added`
           : `Setup: Grid: 20x18 yards with two end gates, two side gates, and ${equipmentText}; place spare balls beside the coach`;
+  const setupText = themeLanguage?.setup
+    ? `${setupByPhase}; ${themeLanguage.setup}`
+    : setupByPhase;
+  const runText = themeLanguage?.run ? `${phaseRun} ${themeLanguage.run}.` : phaseRun;
+  const scoringText = themeLanguage?.scoring
+    ? `Scoring: use ${scoringTargets}; ${themeLanguage.scoring}.`
+    : `Scoring: use ${scoringTargets}; rotate after scores, turnovers, or short rounds.`;
+  const cueText = themeLanguage?.cues || style.cues;
+  const watchText = themeLanguage?.watch || style.watch;
+  const progressText = themeLanguage?.progress || style.progress;
+  const regressText = themeLanguage?.regress || style.regress;
 
   return capDescription(
     [
-      `${setupByPhase}. Space note: use ${environment}; ${style.setup}.`,
+      themeLanguage ? `${setupText}.` : `${setupText}. Space note: use ${environment}; ${style.setup}.`,
       playerCount ? `Numbers: organize it${playerCount}.` : "",
       noteText.trim(),
-      `${phaseRun}${baseSnippet ? ` ${baseSnippet}.` : ""}`,
-      `Scoring: use ${scoringTargets}; rotate after scores, turnovers, or short rounds.`,
-      `Cues: ${style.cues}.`,
-      `Watch: ${style.watch}.`,
-      `Progress: ${style.progress}.`,
-      `Regress: ${style.regress}.`,
+      `${runText}${baseSnippet ? ` ${baseSnippet}.` : ""}`,
+      scoringText,
+      `Cues: ${cueText}.`,
+      `Watch: ${watchText}.`,
+      `Progress: ${progressText}.`,
+      `Regress: ${regressText}.`,
       `Challenge: reward the action that best supports ${objective}.`,
     ].join(" ")
   );
+}
+
+function refineActivityName(name, promptSignals, phase) {
+  const text = getPromptSignalText(promptSignals);
+
+  if (text.includes("overload")) {
+    if (phase === "main") return "Wide Overload Decision Game";
+    if (phase === "progression") return "Overload To Free Player Game";
+  }
+
+  if (text.includes("defending 1v1") || (text.includes("defending") && text.includes("1v1"))) {
+    if (phase === "main") return "1v1 Angle And Delay Gates";
+    if (phase === "progression") return "Recover And Delay 1v1";
+  }
+
+  if (text.includes("possession under pressure")) {
+    if (phase === "main") return "Rondo Under Pressure";
+    if (phase === "progression") return "Directional Possession To Targets";
+  }
+
+  if (text.includes("first touch")) {
+    return "First Touch Pressure Gates";
+  }
+
+  if (text.includes("finishing") || text.includes("shoot") || text.includes("pugg")) {
+    return "Pugg Goal Finishing Waves";
+  }
+
+  return name;
 }
 
 function pickMainActivity(activities, preferredIndex, fallbackName, fallbackDescription) {
@@ -797,7 +944,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
       name:
         archetype?.key === "duck-duck-goose-defending-gates"
           ? "3v3 Pressure and Cover Gates"
-          : archetype?.name || second.name,
+          : archetype?.name || refineActivityName(second.name, promptSignals, "main"),
       minutes: minutes[1],
       description:
         archetype?.key === "duck-duck-goose-defending-gates"
@@ -816,7 +963,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
       name:
         archetype?.key === "duck-duck-goose-defending-gates"
           ? "Recover, Delay, Win It Back"
-          : third.name,
+          : refineActivityName(third.name, promptSignals, "progression"),
       minutes: minutes[2],
       description:
         archetype?.key === "duck-duck-goose-defending-gates"
@@ -835,7 +982,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
       name:
         archetype?.key === "duck-duck-goose-defending-gates"
           ? "Defend, Counter, Reset"
-          : fourth.name,
+          : refineActivityName(fourth.name, promptSignals, "progression"),
       minutes: minutes[3],
       description:
         archetype?.key === "duck-duck-goose-defending-gates"
@@ -892,7 +1039,7 @@ function normalizeQuickActivityShape({ session, promptSignals }) {
         name: archetype?.name || compactText(main.name, "Quick activity"),
         minutes: session.durationMin,
         description: buildCoachReadyDescription({
-          phase: "main",
+          phase: "single",
           promptSignals,
           baseDescription: `Use a playful game-like rule${playerCount}. If the idea is tag-based, connect it to soccer by having the chaser trigger a ball action, gate score, or transition moment.`,
         }),
@@ -922,7 +1069,7 @@ function normalizeDrillShape({ session, promptSignals }) {
         name: archetype?.name || compactText(main.name, "Main activity"),
         minutes: session.durationMin,
         description: buildCoachReadyDescription({
-          phase: "main",
+          phase: "single",
           promptSignals,
           baseDescription: `Run short competitive rounds${playerCount}, keep score, and repeat the key action often enough for a later diagram-ready setup.`,
         }),
@@ -1120,7 +1267,7 @@ function templateQuickOneDrill({ sport, ageBand, durationMin, theme, equipment, 
       ? `${promptSignals.playerCount} players`
       : "the group";
   const description = buildCoachReadyDescription({
-    phase: "main",
+    phase: "single",
     promptSignals,
     baseDescription: `Run a game-like challenge for ${playerCount}. Use scoring for the focus action, quick positive restarts, and rotations so every player gets repeated decisions.`,
   });
