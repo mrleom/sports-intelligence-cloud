@@ -331,6 +331,14 @@ The fixtures were added as a docs-only evaluation baseline for repeatable coach 
 No generation behavior changed. The next step is to run and evaluate the fixtures before changing
 Session Builder templates.
 
+The fixture evaluation now lives at:
+
+- `docs/progress/new-sic/session-builder-core/output-quality-evaluation.md`
+
+The output quality fixtures were evaluated against the current deterministic generator. No
+generation behavior changed. The evaluation identifies concrete template improvement targets, and
+the next implementation slice should be Session Builder output quality improvements.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
