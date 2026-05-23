@@ -348,6 +348,15 @@ behavior changed in the recheck branch. The recheck shows stronger fixture-speci
 language and identifies diagram review polish, save/export structure, and mixed-age handling as the
 next concrete quality targets.
 
+The soccer diagram language research note now lives at:
+
+- `docs/progress/new-sic/session-builder-core/diagram-language-research.md`
+
+Visual smoke testing showed that diagrams improved but still need a soccer-native diagram language.
+Current diagram implementation should pause before merge. The next work should clarify diagram
+language and then continue with symbol system polish. No runtime behavior changed in this research
+branch.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
