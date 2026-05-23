@@ -323,6 +323,14 @@ The audit also establishes the next implementation queue, starting with:
 
 This audit did not change runtime behavior. It did not change frontend code, backend code, tests, package files, auth, tenancy, IAM/CDK, API Gateway, DynamoDB, Cognito, or infrastructure.
 
+The follow-on output quality fixture baseline now lives at:
+
+- `docs/progress/new-sic/session-builder-core/output-quality-fixtures.md`
+
+The fixtures were added as a docs-only evaluation baseline for repeatable coach prompt scenarios.
+No generation behavior changed. The next step is to run and evaluate the fixtures before changing
+Session Builder templates.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
