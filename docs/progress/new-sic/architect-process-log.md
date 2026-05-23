@@ -339,6 +339,15 @@ The output quality fixtures were evaluated against the current deterministic gen
 generation behavior changed. The evaluation identifies concrete template improvement targets, and
 the next implementation slice should be Session Builder output quality improvements.
 
+The post-improvement output quality recheck now lives at:
+
+- `docs/progress/new-sic/session-builder-core/output-quality-recheck.md`
+
+The same six fixtures were re-evaluated after deterministic template improvements. No generation
+behavior changed in the recheck branch. The recheck shows stronger fixture-specific template
+language and identifies diagram review polish, save/export structure, and mixed-age handling as the
+next concrete quality targets.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
