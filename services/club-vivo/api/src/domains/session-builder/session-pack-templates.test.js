@@ -503,6 +503,7 @@ test("generatePack attacking overload fixture aligns activity story with diagram
 
   const [activity1, activity2, activity3, activity4] = pack.sessions[0].activities;
   const allDescriptions = pack.sessions[0].activities.map((activity) => activity.description).join(" ");
+  const activityNames = pack.sessions[0].activities.map((activity) => activity.name);
   const forbiddenOutputFragments = [
     ["essentials /", "builder choice"].join(" "),
     ["builder", "choice"].join(" "),
@@ -512,13 +513,22 @@ test("generatePack attacking overload fixture aligns activity story with diagram
     ["scoring", "idea"].join(" "),
     ["group can", "grow into"].join(" "),
     [".", "Coach"].join(" "),
-    ["Attacking", ":"].join("")
+    ["Attacking", ":"].join(""),
+    "Ball mastery arrival game",
+    "Overload To Free Player Game",
+    "Small-Sided Competitive Final Game"
   ];
 
   for (const fragment of forbiddenOutputFragments) {
-    assert.equal(allDescriptions.includes(fragment), false);
+    assert.equal(`${activityNames.join(" ")} ${allDescriptions}`.includes(fragment), false);
   }
   assert.doesNotMatch(allDescriptions, /(?:^|\s)Coach:(?:\s|$)/);
+  assert.deepEqual(activityNames, [
+    "Overload Gates Activation",
+    "Wide Overload Decision Game",
+    "Overload Recovery Counter Game",
+    "Overload Gate Battle Final Game",
+  ]);
 
   assert.match(activity1.description, /Grid: 18x16 yards/i);
   assert.match(activity1.description, /four cone gates near the corners/i);
@@ -547,6 +557,9 @@ test("generatePack attacking overload fixture aligns activity story with diagram
   assert.match(activity4.description, /Constraint:/);
   assert.match(activity4.description, /Win condition:/);
   assert.match(activity4.description, /Focus:/);
+  assert.match(activity4.description, /first team to three goals/i);
+  assert.match(activity4.description, /winner stays on|quick rematch/i);
+  assert.doesNotMatch(activity4.description, /No description provided/i);
   assert.doesNotMatch(activity4.description, /Progress:|Regress:|Cues:|Watch:|How to run|Rules/i);
   assert.equal(activity4.description.length < 600, true);
 });
@@ -636,9 +649,11 @@ test("generatePack Activity 3 in a four-activity full session remains a diagramm
   const [, , activity3, activity4] = pack.sessions[0].activities;
 
   assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
+  assert.equal(activity3.name, "Overload Recovery Counter Game");
   assert.doesNotMatch(activity3.description, /real .*Final Game|real .*Tournament/i);
   assert.match(activity3.description, /progress from Activity 2|recovering defender|second decision|free player/i);
-  assert.match(activity4.name, /Final Game|Tournament|Competitive/i);
+  assert.equal(activity4.name, "Overload Gate Battle Final Game");
+  assert.doesNotMatch(activity4.description, /No description provided/i);
 });
 
 test("generatePack possession under pressure has distinct Activity 2 and Activity 3 purposes", () => {
@@ -714,6 +729,9 @@ test("generatePack final Activity 4 stays compact and competitive", () => {
   assert.match(activity4.description, /Format:/i);
   assert.match(activity4.description, /Teams:/i);
   assert.match(activity4.description, /visible score|bonus point|competitive|game flow/i);
+  assert.match(activity4.description, /first team to three goals/i);
+  assert.match(activity4.description, /winner stays on|quick rematch/i);
+  assert.doesNotMatch(activity4.description, /No description provided/i);
   assert.doesNotMatch(activity4.description, /Progress:|Regress:|Cues:|Watch:/i);
   assert.equal(activity4.description.length < 600, true);
 });

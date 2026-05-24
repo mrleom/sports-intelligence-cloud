@@ -38,14 +38,24 @@ type LegendKey =
   | "coneGate"
   | "miniGoal"
   | "puggGoal"
+  | "freePlayer"
+  | "activityArea"
   | "wideChannel"
+  | "counterGate"
+  | "recoveryLine"
+  | "targetGate"
+  | "attackerDribbleLine"
+  | "defenderPressureLine"
+  | "passFreePlayerLine"
+  | "supportRunLine"
+  | "recoveryDefenderLine"
   | "zone";
 
 type PlayerRole = "coached" | "opposition" | "neutral";
 type ArrowAction = "ball" | "run" | "pressure" | "carry" | "rotation";
 
 type DiagramToken =
-  | { type: "zone"; x: number; y: number; width: number; height: number; label?: string; tone?: "wide" | "target" | "pressure" | "finish" }
+  | { type: "zone"; x: number; y: number; width: number; height: number; label?: string; tone?: "wide" | "target" | "pressure" | "finish" | "recovery" }
   | { type: "player"; role: PlayerRole; x: number; y: number; label?: string }
   | { type: "ball"; x: number; y: number }
   | { type: "cone"; x: number; y: number; label?: string }
@@ -64,24 +74,50 @@ type DiagramPanel = {
 const LEGEND_GROUP_ORDER: LegendGroup[] = ["roles", "movement", "equipment", "space"];
 
 const LEGEND_META: Record<LegendKey, { group: LegendGroup; label: string }> = {
-  coachedPlayer: { group: "roles", label: "Blue = coached team" },
-  oppositionPlayer: { group: "roles", label: "Red = opposition/defender" },
-  neutralPlayer: { group: "roles", label: "Gray = neutral/support" },
+  coachedPlayer: { group: "roles", label: "Blue player = coached team / blue team" },
+  oppositionPlayer: { group: "roles", label: "Red player = opposition / defender" },
+  neutralPlayer: { group: "roles", label: "Gray player = neutral / free player" },
   ball: { group: "equipment", label: "Ball" },
-  ballAction: { group: "movement", label: "Solid green = pass/shot" },
-  coachedRun: { group: "movement", label: "Blue dashed = support/recovery run" },
-  defenderPressure: { group: "movement", label: "Red dashed = pressure/recovery" },
-  dribbleCarry: { group: "movement", label: "Dotted green = dribble/carry" },
-  rotationReset: { group: "movement", label: "Curved arrow = reset/rotation" },
+  ballAction: { group: "movement", label: "Solid line = pass / shot / ball action" },
+  coachedRun: { group: "movement", label: "Dashed line = support / recovery run" },
+  defenderPressure: { group: "movement", label: "Dashed line = pressure / recovery" },
+  dribbleCarry: { group: "movement", label: "Dotted line = dribble / carry" },
+  rotationReset: { group: "movement", label: "Curved line = rotation / reset" },
   cone: { group: "equipment", label: "Yellow = cone/equipment" },
-  coneGate: { group: "equipment", label: "Cone gate" },
+  coneGate: { group: "equipment", label: "Cone gate = scoring gate" },
   miniGoal: { group: "equipment", label: "Mini goal" },
   puggGoal: { group: "equipment", label: "Pugg goal" },
-  wideChannel: { group: "space", label: "Dashed box = wide channel" },
-  zone: { group: "space", label: "Dashed box = target zone" }
+  freePlayer: { group: "roles", label: "Gray player = free player" },
+  activityArea: { group: "space", label: "Activity area = marked working space" },
+  wideChannel: { group: "space", label: "Wide channel = free-player lane" },
+  counterGate: { group: "space", label: "Counter gate = defender counter target" },
+  recoveryLine: { group: "space", label: "Recovery line = defender release line" },
+  targetGate: { group: "space", label: "Target gate = attacking target" },
+  attackerDribbleLine: { group: "movement", label: "Blue dotted line = attacker dribbles to gate" },
+  defenderPressureLine: { group: "movement", label: "Red dashed line = defender pressures" },
+  passFreePlayerLine: { group: "movement", label: "Blue solid line = pass to free player" },
+  supportRunLine: { group: "movement", label: "Blue dashed line = support run" },
+  recoveryDefenderLine: { group: "movement", label: "Red dashed line = recovery defender releases" },
+  zone: { group: "space", label: "Activity area" }
 };
 const LEGEND_KEY_ORDER = Object.keys(LEGEND_META) as LegendKey[];
-const FOUNDATIONAL_LOCAL_LEGEND_KEYS: LegendKey[] = ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball"];
+const GLOBAL_LEGEND_KEYS: LegendKey[] = [
+  "coachedPlayer",
+  "oppositionPlayer",
+  "neutralPlayer",
+  "ball",
+  "cone",
+  "ballAction",
+  "coachedRun",
+  "defenderPressure",
+  "dribbleCarry"
+];
+const FOUNDATIONAL_LOCAL_LEGEND_KEYS: LegendKey[] = [
+  ...GLOBAL_LEGEND_KEYS,
+  "rotationReset",
+  "miniGoal",
+  "puggGoal"
+];
 
 function normalizeText(value: string | undefined) {
   return String(value || "").toLowerCase();
@@ -176,54 +212,40 @@ function buildAttackingOverloadPanels(activityIndex: number): DiagramPanel[] {
     return [
       {
         title: "Setup",
-        caption: inferredCaption("start central, keep the wide player visible, and add a recovering defender to create the second decision."),
-        legend: ["neutralPlayer", "ball", "coneGate", "wideChannel"],
+        caption: inferredCaption("start central, keep the wide free player visible, and release a recovering defender from the recovery line."),
+        legend: ["wideChannel", "targetGate", "counterGate", "recoveryLine"],
         tokens: [
-          { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
-          { type: "gate", x: 140, y: 52, rotate: 90 },
-          { type: "player", role: "coached", x: 65, y: 53 },
-          { type: "player", role: "coached", x: 80, y: 75 },
-          { type: "player", role: "neutral", x: 120, y: 40 },
-          { type: "player", role: "opposition", x: 88, y: 50 },
-          { type: "player", role: "opposition", x: 104, y: 70 },
-          { type: "ball", x: 65, y: 53 },
-          { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+          { type: "zone", x: 20, y: 16, width: 92, height: 72, tone: "target" },
+          { type: "zone", x: 113, y: 16, width: 25, height: 72, tone: "wide" },
+          { type: "zone", x: 96, y: 17, width: 2, height: 70, tone: "recovery" },
+          { type: "gate", x: 141, y: 40, rotate: 90 },
+          { type: "gate", x: 22, y: 70, rotate: 90 },
+          { type: "player", role: "coached", x: 56, y: 53 },
+          { type: "player", role: "coached", x: 75, y: 74 },
+          { type: "player", role: "neutral", x: 122, y: 40 },
+          { type: "player", role: "opposition", x: 84, y: 51 },
+          { type: "player", role: "opposition", x: 103, y: 69 },
+          { type: "ball", x: 66, y: 56 }
         ]
       },
       {
         title: "Action",
-        caption: inferredCaption("the first pass finds the wide free player while support arrives underneath and pressure shifts across."),
-        legend: ["neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "wideChannel"],
+        caption: inferredCaption("the first decision finds the free player while the recovery defender releases from the line; the counter gate is ready if defenders win it."),
+        legend: ["wideChannel", "targetGate", "counterGate", "recoveryLine", "passFreePlayerLine", "recoveryDefenderLine"],
         tokens: [
-          { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
-          { type: "player", role: "coached", x: 67, y: 53 },
-          { type: "player", role: "coached", x: 82, y: 75 },
-          { type: "player", role: "neutral", x: 120, y: 40 },
-          { type: "player", role: "opposition", x: 88, y: 50 },
-          { type: "player", role: "opposition", x: 105, y: 68 },
-          { type: "ball", x: 67, y: 53 },
-          { type: "arrow", d: "M70 52 C86 47, 103 43, 118 40", action: "ball" },
-          { type: "arrow", d: "M82 75 C91 65, 100 57, 111 49", action: "run" },
-          { type: "arrow", d: "M88 50 C96 48, 105 44, 116 41", action: "pressure" },
-          { type: "arrow", d: "M105 68 C101 61, 96 56, 89 52", action: "pressure" }
-        ]
-      },
-      {
-        title: "Score / Reset",
-        caption: inferredCaption("the wide player chooses the finish lane or cutback, then the group rotates for the next overload."),
-        legend: ["neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "rotationReset", "coneGate", "zone"],
-        tokens: [
-          { type: "zone", x: 82, y: 30, width: 36, height: 43, label: "Lane", tone: "finish" },
-          { type: "gate", x: 140, y: 52, rotate: 90 },
-          { type: "player", role: "neutral", x: 120, y: 32, label: "F" },
-          { type: "player", role: "coached", x: 111, y: 52 },
-          { type: "player", role: "opposition", x: 98, y: 50 },
-          { type: "player", role: "opposition", x: 106, y: 67 },
-          { type: "ball", x: 120, y: 32 },
-          { type: "arrow", d: "M121 34 C126 41, 133 47, 140 52", action: "ball" },
-          { type: "arrow", d: "M111 52 C119 52, 128 52, 138 52", action: "run" },
-          { type: "arrow", d: "M98 50 C106 45, 114 39, 120 34", action: "pressure" },
-          { type: "arrow", d: "M111 62 C86 93, 52 79, 65 55", action: "rotation", label: "Rotate" }
+          { type: "zone", x: 20, y: 16, width: 92, height: 72, tone: "target" },
+          { type: "zone", x: 113, y: 16, width: 25, height: 72, tone: "wide" },
+          { type: "zone", x: 96, y: 17, width: 2, height: 70, tone: "recovery" },
+          { type: "gate", x: 141, y: 40, rotate: 90 },
+          { type: "gate", x: 22, y: 70, rotate: 90 },
+          { type: "player", role: "coached", x: 58, y: 53 },
+          { type: "player", role: "coached", x: 82, y: 74 },
+          { type: "player", role: "neutral", x: 123, y: 40 },
+          { type: "player", role: "opposition", x: 86, y: 50 },
+          { type: "player", role: "opposition", x: 104, y: 67 },
+          { type: "ball", x: 67, y: 56 },
+          { type: "arrow", d: "M70 55 C84 48, 104 42, 120 40", action: "ball" },
+          { type: "arrow", d: "M104 67 C101 59, 99 51, 97 43", action: "pressure" }
         ]
       }
     ];
@@ -233,34 +255,33 @@ function buildAttackingOverloadPanels(activityIndex: number): DiagramPanel[] {
     {
       title: "Setup",
       caption: inferredCaption("set a wide channel, central ball start, central defender, and visible free player before the overload starts."),
-      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "wideChannel"],
+        legend: ["freePlayer", "wideChannel", "targetGate"],
       tokens: [
-        { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+        { type: "zone", x: 24, y: 16, width: 89, height: 72, tone: "target" },
+        { type: "zone", x: 113, y: 16, width: 25, height: 72, tone: "wide" },
         { type: "gate", x: 140, y: 52, rotate: 90 },
         { type: "player", role: "coached", x: 66, y: 53 },
         { type: "player", role: "coached", x: 78, y: 74 },
         { type: "player", role: "neutral", x: 119, y: 40 },
         { type: "player", role: "opposition", x: 91, y: 52 },
-        { type: "ball", x: 66, y: 53 },
-        { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+        { type: "ball", x: 75, y: 56 }
       ]
     },
     {
       title: "Action",
-      caption: inferredCaption("the ball carrier reads pressure, then passes to the free player or dribbles into open space."),
-      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "ballAction", "coachedRun", "defenderPressure", "dribbleCarry", "wideChannel"],
+      caption: inferredCaption("the ball carrier commits the defender and passes to the free player; the support runner stays visible underneath."),
+        legend: ["freePlayer", "wideChannel", "targetGate", "passFreePlayerLine", "supportRunLine"],
       tokens: [
-        { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+        { type: "zone", x: 24, y: 16, width: 89, height: 72, tone: "target" },
+        { type: "zone", x: 113, y: 16, width: 25, height: 72, tone: "wide" },
+        { type: "gate", x: 140, y: 52, rotate: 90 },
         { type: "player", role: "coached", x: 67, y: 53 },
         { type: "player", role: "coached", x: 79, y: 77 },
         { type: "player", role: "neutral", x: 119, y: 40 },
         { type: "player", role: "opposition", x: 90, y: 51 },
-        { type: "ball", x: 67, y: 53 },
-        { type: "arrow", d: "M70 52 C86 47, 101 43, 116 40", action: "ball" },
-        { type: "arrow", d: "M68 58 C82 67, 96 66, 110 57", action: "carry" },
-        { type: "arrow", d: "M79 77 C89 68, 100 59, 113 50", action: "run" },
-        { type: "arrow", d: "M90 51 C83 51, 76 52, 70 54", action: "pressure" },
-        { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+        { type: "ball", x: 76, y: 56 },
+        { type: "arrow", d: "M79 55 C91 48, 104 42, 116 40", action: "ball" },
+        { type: "arrow", d: "M80 77 C89 70, 99 62, 111 55", action: "run" }
       ]
     },
     {
@@ -508,31 +529,34 @@ function buildActivationPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("start in a compact grid with cone gates visible and players ready to react."),
-      legend: ["coachedPlayer", "oppositionPlayer", "ball", "coneGate", "zone"],
+      caption: inferredCaption("start with the simplest activation gate duel: one attacker, one defender, four scoring gates, then progress numbers in the activity text."),
+      legend: ["activityArea", "coneGate"],
       tokens: [
-        { type: "zone", x: 24, y: 18, width: 112, height: 69, label: "Grid", tone: "target" },
-        { type: "gate", x: 28, y: 28 },
-        { type: "gate", x: 132, y: 77 },
-        { type: "player", role: "coached", x: 50, y: 34 },
-        { type: "player", role: "coached", x: 55, y: 70 },
-        { type: "player", role: "opposition", x: 105, y: 44 },
-        { type: "player", role: "opposition", x: 109, y: 73 },
-        { type: "ball", x: 50, y: 34 }
+        { type: "zone", x: 24, y: 18, width: 112, height: 69, tone: "target" },
+        { type: "gate", x: 31, y: 29 },
+        { type: "gate", x: 129, y: 29 },
+        { type: "gate", x: 31, y: 77 },
+        { type: "gate", x: 129, y: 77 },
+        { type: "player", role: "coached", x: 62, y: 53 },
+        { type: "player", role: "opposition", x: 91, y: 57 },
+        { type: "ball", x: 70, y: 56 }
       ]
     },
     {
       title: "Action",
-      caption: inferredCaption("coach call starts a reaction, a carry, and a chase toward the scoring gate."),
-      legend: ["coachedPlayer", "oppositionPlayer", "ball", "defenderPressure", "dribbleCarry", "coneGate", "zone"],
+      caption: inferredCaption("one attacker carries through a scoring gate while the defender pressures under control."),
+      legend: ["activityArea", "coneGate", "attackerDribbleLine", "defenderPressureLine"],
       tokens: [
-        { type: "zone", x: 24, y: 18, width: 112, height: 69, label: "Grid", tone: "target" },
-        { type: "gate", x: 132, y: 77 },
-        { type: "player", role: "coached", x: 72, y: 50 },
-        { type: "player", role: "opposition", x: 98, y: 61 },
-        { type: "ball", x: 72, y: 50 },
-        { type: "arrow", d: "M74 51 C88 56, 105 66, 132 77", action: "carry" },
-        { type: "arrow", d: "M98 61 C91 58, 82 54, 74 51", action: "pressure" }
+        { type: "zone", x: 24, y: 18, width: 112, height: 69, tone: "target" },
+        { type: "gate", x: 31, y: 29 },
+        { type: "gate", x: 129, y: 29 },
+        { type: "gate", x: 31, y: 77 },
+        { type: "gate", x: 129, y: 77 },
+        { type: "player", role: "coached", x: 72, y: 52 },
+        { type: "player", role: "opposition", x: 95, y: 62 },
+        { type: "ball", x: 81, y: 55 },
+        { type: "arrow", d: "M83 56 C96 62, 110 69, 126 76", action: "carry" },
+        { type: "arrow", d: "M95 62 C91 60, 87 58, 83 56", action: "pressure" }
       ]
     }
   ];
@@ -735,10 +759,28 @@ function ZoneBox({
   width: number;
   height: number;
   label?: string;
-  tone?: "wide" | "target" | "pressure" | "finish";
+  tone?: "wide" | "target" | "pressure" | "finish" | "recovery";
 }) {
-  const fill = tone === "wide" ? "#dbeafe" : tone === "pressure" ? "#fee2e2" : tone === "finish" ? "#dcfce7" : "#f1f5f9";
-  const stroke = tone === "wide" ? "#60a5fa" : tone === "pressure" ? "#f87171" : tone === "finish" ? "#22c55e" : "#94a3b8";
+  const fill =
+    tone === "wide"
+      ? "#dbeafe"
+      : tone === "pressure"
+        ? "#fee2e2"
+        : tone === "finish"
+          ? "#dcfce7"
+          : tone === "recovery"
+            ? "#fef3c7"
+            : "#f1f5f9";
+  const stroke =
+    tone === "wide"
+      ? "#60a5fa"
+      : tone === "pressure"
+        ? "#f87171"
+        : tone === "finish"
+          ? "#22c55e"
+          : tone === "recovery"
+            ? "#f59e0b"
+            : "#94a3b8";
 
   return (
     <g>
@@ -776,9 +818,9 @@ function ArrowPath({
   markerBaseId: string;
 }) {
   const color =
-    action === "pressure" ? "#ef4444" : action === "run" ? "#2563eb" : action === "rotation" ? "#64748b" : "#0f766e";
+    action === "pressure" ? "#ef4444" : action === "rotation" ? "#64748b" : "#2563eb";
   const dash = action === "pressure" || action === "run" ? "3 3" : action === "carry" ? "1.2 3" : undefined;
-  const markerSuffix = action === "pressure" ? "red" : action === "run" ? "blue" : action === "rotation" ? "slate" : "green";
+  const markerSuffix = action === "pressure" ? "red" : action === "rotation" ? "slate" : "blue";
 
   return (
     <path
@@ -856,9 +898,6 @@ function renderToken(token: DiagramToken, markerBaseId: string) {
 function DiagramMarkers({ markerBaseId }: { markerBaseId: string }) {
   return (
     <defs>
-      <marker id={`${markerBaseId}-green`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
-        <path d="M0,1 L5.5,3 L0,5 Z" fill="#0f766e" />
-      </marker>
       <marker id={`${markerBaseId}-blue`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
         <path d="M0,1 L5.5,3 L0,5 Z" fill="#2563eb" />
       </marker>
@@ -898,15 +937,15 @@ function DiagramBoard({
 
 function LegendSymbol({ item }: { item: LegendKey }) {
   if (item === "coachedPlayer") {
-    return <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />;
+    return <PlayerLegendSymbol fill="#2563eb" />;
   }
 
   if (item === "oppositionPlayer") {
-    return <span className="h-2.5 w-2.5 rounded-full bg-red-500" />;
+    return <PlayerLegendSymbol fill="#ef4444" />;
   }
 
-  if (item === "neutralPlayer") {
-    return <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />;
+  if (item === "neutralPlayer" || item === "freePlayer") {
+    return <PlayerLegendSymbol fill="#94a3b8" />;
   }
 
   if (item === "ball") {
@@ -921,7 +960,7 @@ function LegendSymbol({ item }: { item: LegendKey }) {
     );
   }
 
-  if (item === "coneGate") {
+  if (item === "coneGate" || item === "targetGate" || item === "counterGate") {
     return (
       <span className="inline-flex items-center gap-0.5">
         <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
@@ -939,20 +978,55 @@ function LegendSymbol({ item }: { item: LegendKey }) {
     );
   }
 
-  if (item === "wideChannel" || item === "zone") {
-    return <span className="h-3 w-5 rounded-sm border border-dashed border-slate-400 bg-slate-100" />;
+  if (item === "activityArea" || item === "wideChannel" || item === "zone") {
+    return item === "wideChannel"
+      ? <span className="h-3 w-5 rounded-sm border border-dashed border-blue-400 bg-blue-50" />
+      : <span className="h-3 w-5 rounded-sm border border-dashed border-slate-400 bg-slate-100" />;
+  }
+
+  if (item === "recoveryLine") {
+    return <span className="h-4 w-px border-l border-dashed border-amber-500" />;
   }
 
   const color =
-    item === "defenderPressure" ? "#ef4444" : item === "coachedRun" ? "#2563eb" : item === "rotationReset" ? "#64748b" : "#0f766e";
+    item === "defenderPressure" || item === "defenderPressureLine" || item === "recoveryDefenderLine"
+      ? "#ef4444"
+      : item === "rotationReset"
+        ? "#64748b"
+        : "#2563eb";
   const dash =
-    item === "defenderPressure" || item === "coachedRun" ? "3 3" : item === "dribbleCarry" ? "1.2 3" : undefined;
+    item === "defenderPressure" ||
+    item === "coachedRun" ||
+    item === "defenderPressureLine" ||
+    item === "supportRunLine" ||
+    item === "recoveryDefenderLine"
+      ? "3 3"
+      : item === "dribbleCarry" || item === "attackerDribbleLine"
+        ? "1.2 3"
+        : undefined;
   const path = item === "rotationReset" ? "M4 10 C11 2, 22 2, 29 8" : "M2 7 H28";
 
   return (
     <svg viewBox="0 0 34 14" aria-hidden="true" className="h-3.5 w-10">
       <path d={path} fill="none" stroke={color} strokeDasharray={dash} strokeLinecap="round" strokeWidth="1.6" />
       <path d="M27 4 L32 7 L27 10" fill="none" stroke={color} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function PlayerLegendSymbol({ fill }: { fill: string }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4 shrink-0">
+      <circle cx="8" cy="8" r="5.4" fill={fill} stroke="white" strokeWidth="1.4" />
+      <circle cx="8" cy="6.45" r="1.25" fill="white" opacity="0.9" />
+      <path
+        d="M5.25 9.75 C6.6 11, 9.4 11, 10.75 9.75"
+        fill="none"
+        stroke="white"
+        strokeLinecap="round"
+        strokeWidth="0.9"
+        opacity="0.9"
+      />
     </svg>
   );
 }
@@ -1002,6 +1076,9 @@ function PanelCard({
 }
 
 function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
+  const description = activity?.description?.trim() ||
+    "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
+
   return (
     <div className="rounded-2xl border border-teal-100 bg-teal-50/50 p-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-teal-800">
@@ -1011,8 +1088,7 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
         {activity?.name || "Competitive close"}
       </h5>
       <p className="mt-2 text-xs leading-5 text-slate-600">
-        Use the activity text to set teams, scoring, restarts, and the final constraint. Keep this
-        block game-like and competitive.
+        {description}
       </p>
     </div>
   );

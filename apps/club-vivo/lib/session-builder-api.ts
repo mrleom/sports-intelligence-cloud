@@ -792,7 +792,7 @@ function buildAttackingOverloadActivities(session: GeneratedSession, input: Gene
       name: "Overload Gate Battle Final Game",
       minutes: minutes[3],
       description:
-        "Format: small-sided gate battle on a 36x28 yard field. Teams: balanced blue and red teams with quick restarts. Scoring: one point for a goal through a gate and one bonus point for finding a wide player or support run first. Constraint: the bonus only counts when the overload creates the chance. Win condition: first team to three goals, then reset for a rematch. Focus: keep it competitive, reward brave attacking decisions, and let the game flow."
+        "Format: small-sided gate battle on a 36x28 yard field with fast restarts. Teams: balanced blue and red teams, with winner staying on or a quick rematch after each round. Scoring: one point through a gate and one bonus point for finding a wide player or support run first. Constraint: the bonus only counts when the overload creates the chance. Win condition: first team to three goals. Focus: keep it competitive, reward brave attacking decisions, and let the game flow."
     }
   ];
 }

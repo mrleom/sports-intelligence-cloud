@@ -860,7 +860,7 @@ function refineActivityName(name, promptSignals, phase) {
 
   if (text.includes("overload")) {
     if (phase === "main") return "Wide Overload Decision Game";
-    if (phase === "progression") return "Overload To Free Player Game";
+    if (phase === "progression") return "Overload Recovery Counter Game";
   }
 
   if (text.includes("defending 1v1") || (text.includes("defending") && text.includes("1v1"))) {
@@ -896,8 +896,10 @@ function buildFinalGameName({ promptSignals, ageBand }) {
   const playerCount = Number.isInteger(promptSignals?.playerCount) ? promptSignals.playerCount : null;
   const normalizedAgeBand = normalizeTheme(ageBand);
   const archetype = detectSoccerActivityArchetype(promptSignals);
+  const promptText = getPromptSignalText(promptSignals);
 
   if (archetype?.key === "duck-duck-goose-defending-gates") return "Defending Gates Tournament";
+  if (promptText.includes("overload")) return "Overload Gate Battle Final Game";
   if (playerCount && playerCount >= 22) return "11v11 Defending Tournament";
   if (playerCount && playerCount >= 18) return "9v9 Gate Battle Final Game";
   if (playerCount && playerCount >= 14) return "7v7 Gate Battle Final Game";
@@ -922,11 +924,11 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
   return capDescription(
     [
       `Format: ${gameName} on a 36x28 yard field with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
-      "Teams: keep teams balanced and rotate quickly if one side wins two rounds in a row.",
+      "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
       `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
       "Constraint: the attacking team must find a wide player or support run before the bonus point counts.",
-      "Win condition: first team to three goals, then reset for a short rematch.",
-      "Focus: keep it competitive, coach briefly on balls out, and let the game flow.",
+      "Win condition: first team to three goals.",
+      "Focus: fast restarts, brave overload decisions, competitive energy, and game flow.",
     ].join(" ")
   );
 }
@@ -1042,7 +1044,11 @@ function normalizeFullSessionShape({ session, promptSignals }) {
     activities: [
       {
         ...first,
-        name: archetype?.key === "duck-duck-goose-defending-gates" ? "Chase, Delay, Escape" : first.name,
+        name: archetype?.key === "duck-duck-goose-defending-gates"
+          ? "Chase, Delay, Escape"
+          : getPromptSignalText(promptSignals).includes("overload")
+            ? "Overload Gates Activation"
+            : first.name,
         minutes: minutes[0],
         description: buildCoachReadyDescription({
           phase: archetype?.key === "duck-duck-goose-defending-gates" ? "main" : "arrival",

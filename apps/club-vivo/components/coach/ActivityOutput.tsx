@@ -212,6 +212,25 @@ function mergeDuplicateSections(sections: ActivitySection[]) {
   return merged;
 }
 
+function isFinalGameActivity(activity: ActivityOutputActivity) {
+  return /final game|gate battle final|competitive final|tournament/i.test(activity.name);
+}
+
+function buildFallbackSections(activity: ActivityOutputActivity): ActivitySection[] {
+  if (!isFinalGameActivity(activity)) {
+    return [];
+  }
+
+  return [
+    { label: "Format", text: "Small-sided gate battle with fast restarts." },
+    { label: "Teams", text: "Balanced blue and red teams; winner stays on or reset for a quick rematch." },
+    { label: "Rules / scoring", text: "Score through gates, with a bonus for finding a wide player or support run first." },
+    { label: "Constraint", text: "The bonus only counts when the overload creates the chance." },
+    { label: "Win condition", text: "First team to three goals." },
+    { label: "Focus", text: "Keep it competitive, fun, and flowing." }
+  ];
+}
+
 export function ActivityOutput({
   activity,
   activityIndex,
@@ -232,6 +251,7 @@ export function ActivityOutput({
   const sections = mergeDuplicateSections(
     buildActivitySections(activity.description, objective, objectiveTags)
   );
+  const displaySections = sections.length > 0 ? sections : buildFallbackSections(activity);
   const durationLabel = timing?.durationLabel || `${activity.minutes} minutes`;
 
   return (
@@ -263,9 +283,9 @@ export function ActivityOutput({
             </div>
           </div>
 
-          {sections.length > 0 ? (
+          {displaySections.length > 0 ? (
             <div className={`mt-4 grid ${compact ? "gap-2" : "gap-3"}`}>
-              {sections.map((section, sectionIndex) => (
+              {displaySections.map((section, sectionIndex) => (
                 <section
                   key={`${section.label}-${sectionIndex}`}
                   className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3"
