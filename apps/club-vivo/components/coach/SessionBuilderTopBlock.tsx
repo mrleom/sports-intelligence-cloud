@@ -13,6 +13,8 @@ type SessionEnvironmentOption = {
   label: string;
 };
 
+type WorkGroupMode = "team" | "age_band";
+
 type SessionBuilderTopBlockProps = {
   formAction: (formData: FormData) => void;
   confirmedProfileJson: string;
@@ -20,10 +22,13 @@ type SessionBuilderTopBlockProps = {
   teams: WorkspaceTeamOption[];
   selectedTeamId: string;
   onTeamChange: (teamId: string) => void;
+  workGroupMode: WorkGroupMode;
+  onWorkGroupModeChange: (mode: WorkGroupMode) => void;
   mode: SessionBuilderMode;
   onModeChange: (mode: SessionBuilderMode) => void;
   sport: string;
   ageBand: string;
+  onAgeBandChange: (value: string) => void;
   durationMin: string;
   onDurationMinChange: (value: string) => void;
   minimumDuration: number;
@@ -119,6 +124,15 @@ const OBJECTIVE_FOCUS_OPTIONS: Record<string, string[]> = {
 };
 
 const PRIMARY_OBJECTIVE_OPTIONS = Object.keys(OBJECTIVE_FOCUS_OPTIONS);
+const AGE_BAND_OPTIONS = [
+  { value: "u8", label: "U8" },
+  { value: "u10", label: "U10" },
+  { value: "u12", label: "U12" },
+  { value: "u14", label: "U14" },
+  { value: "u16", label: "U16" },
+  { value: "u18", label: "U18" },
+  { value: "adult", label: "Adult" }
+];
 
 function buildGuidedObjective({
   primary,
@@ -158,10 +172,13 @@ export function SessionBuilderTopBlock({
   teams,
   selectedTeamId,
   onTeamChange,
+  workGroupMode,
+  onWorkGroupModeChange,
   mode,
   onModeChange,
   sport,
   ageBand,
+  onAgeBandChange,
   durationMin,
   onDurationMinChange,
   minimumDuration,
@@ -230,7 +247,8 @@ export function SessionBuilderTopBlock({
     <form action={formAction} className="club-vivo-shell rounded-[2rem] border p-6 backdrop-blur">
       <input type="hidden" name="sport" value={sport} />
       <input type="hidden" name="ageBand" value={ageBand} />
-      <input type="hidden" name="teamId" value={selectedTeamId} />
+      <input type="hidden" name="workGroupMode" value={workGroupMode} />
+      <input type="hidden" name="teamId" value={workGroupMode === "team" ? selectedTeamId : ""} />
       <input type="hidden" name="teamName" value={selectedTeamName} />
       <input type="hidden" name="teamAgeBand" value={selectedTeamAgeBand || ""} />
       <input type="hidden" name="teamProgramType" value={selectedTeamProgramType || ""} />
@@ -261,12 +279,84 @@ export function SessionBuilderTopBlock({
         <div className="grid gap-5 lg:grid-cols-2">
           <section className="grid gap-4 rounded-3xl border border-slate-200 bg-white/70 p-5">
             <div>
-              <h3 className="text-base font-semibold text-slate-900">Team</h3>
+              <h3 className="text-base font-semibold text-slate-900">Work group</h3>
               <p className="mt-1 text-sm leading-6 text-slate-600">
-                Choose the team you are planning for today.
+                Choose a specific team, or plan by age band.
               </p>
             </div>
-            <TeamSelector teams={teams} value={selectedTeamId} onChange={onTeamChange} />
+            <fieldset className="grid gap-3">
+              <legend className="sr-only">Work group</legend>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label
+                  className={[
+                    "grid cursor-pointer gap-2 rounded-2xl border px-4 py-3 transition",
+                    workGroupMode === "team"
+                      ? "border-teal-700 bg-teal-50/70"
+                      : "border-slate-200 bg-white hover:bg-slate-50",
+                    teams.length === 0 ? "cursor-not-allowed opacity-60" : ""
+                  ].join(" ")}
+                >
+                  <input
+                    type="radio"
+                    name="workGroupChoice"
+                    value="team"
+                    checked={workGroupMode === "team"}
+                    onChange={() => onWorkGroupModeChange("team")}
+                    disabled={teams.length === 0}
+                    className="sr-only"
+                  />
+                  <span className="text-sm font-semibold text-slate-900">Team</span>
+                  <span className="text-xs leading-5 text-slate-600">
+                    Use a saved team name, age band, and team context.
+                  </span>
+                </label>
+
+                <label
+                  className={[
+                    "grid cursor-pointer gap-2 rounded-2xl border px-4 py-3 transition",
+                    workGroupMode === "age_band"
+                      ? "border-teal-700 bg-teal-50/70"
+                      : "border-slate-200 bg-white hover:bg-slate-50"
+                  ].join(" ")}
+                >
+                  <input
+                    type="radio"
+                    name="workGroupChoice"
+                    value="age_band"
+                    checked={workGroupMode === "age_band"}
+                    onChange={() => onWorkGroupModeChange("age_band")}
+                    className="sr-only"
+                  />
+                  <span className="text-sm font-semibold text-slate-900">Age band</span>
+                  <span className="text-xs leading-5 text-slate-600">
+                    Plan without choosing or creating a saved team.
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            {workGroupMode === "team" ? (
+              <TeamSelector teams={teams} value={selectedTeamId} onChange={onTeamChange} required />
+            ) : (
+              <label className="grid gap-2 text-sm text-slate-700">
+                <span className="font-medium">Age band</span>
+                <select
+                  value={ageBand}
+                  onChange={(event) => onAgeBandChange(event.target.value)}
+                  className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
+                  required
+                >
+                  {AGE_BAND_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-xs leading-5 text-slate-500">
+                  Choose the age band for this standalone planning group.
+                </span>
+              </label>
+            )}
           </section>
 
           <section className="grid gap-4 rounded-3xl border border-slate-200 bg-white/70 p-5">
@@ -345,7 +435,7 @@ export function SessionBuilderTopBlock({
           ) : null}
 
           <label className="grid gap-2 text-sm text-slate-700">
-            <span className="font-medium">Coaching note / activity idea</span>
+            <span className="font-medium">Coaching note / activity idea (optional)</span>
             <textarea
               name="constraints"
               value={constraints}

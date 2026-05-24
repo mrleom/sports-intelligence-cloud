@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { CoachPageHeader } from "../../../../components/coach/CoachPageHeader";
 import { ActivityOutput } from "../../../../components/coach/ActivityOutput";
@@ -18,14 +19,10 @@ import {
 import { getCurrentUser } from "../../../../lib/get-current-user";
 import {
   SESSION_BUILDER_CONTEXT_HINTS_COOKIE,
-  buildBuilderSessionDetailTitle,
   formatEnvironmentLabel,
   parseSessionBuilderContextHints
 } from "../../../../lib/session-builder-context-hints";
-import {
-  buildBuilderSessionLabel,
-  buildBuilderSessionShapeSummary
-} from "../../../../lib/builder-session-label";
+import { buildBuilderSessionLabel } from "../../../../lib/builder-session-label";
 import { getCurrentUserIdentity } from "../../../../lib/get-current-user-identity";
 import {
   SESSION_ORIGIN_HINTS_COOKIE,
@@ -70,6 +67,161 @@ function formatEquipmentCount(value: number) {
 
 function formatEquipmentUsed(equipment: string[]) {
   return equipment.length > 0 ? equipment.join(", ") : "Use the simplest field setup that fits the activity.";
+}
+
+function formatAgeBandDisplay(value: string) {
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized.startsWith("u")) {
+    return normalized.toUpperCase();
+  }
+
+  return normalized
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function buildSessionFlowSummary(activities: SessionDetail["activities"]) {
+  const steps = activities
+    .map((activity) => activity.name.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+  return steps.length > 0 ? steps.join(" -> ") : "No saved session flow available.";
+}
+
+function buildFieldPlanTitle({
+  modeLabel,
+  focusLabel,
+  ageBand
+}: {
+  modeLabel: string;
+  focusLabel: string;
+  ageBand: string;
+}) {
+  const ageBandLabel = formatAgeBandDisplay(ageBand);
+  const normalizedFocus = focusLabel.replace(/\s+/g, " ").trim();
+
+  if (normalizedFocus) {
+    return `${modeLabel}: ${[normalizedFocus, ageBandLabel].filter(Boolean).join(" ")}`;
+  }
+
+  return [modeLabel, ageBandLabel].filter(Boolean).join(" ");
+}
+
+function PlayerLegendSymbol({ fill }: { fill: string }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
+      <circle cx="8" cy="8" r="5.4" fill={fill} stroke="white" strokeWidth="1.4" />
+      <circle cx="8" cy="6.45" r="1.25" fill="white" opacity="0.9" />
+      <path
+        d="M5.25 9.75 C6.6 11, 9.4 11, 10.75 9.75"
+        fill="none"
+        stroke="white"
+        strokeLinecap="round"
+        strokeWidth="0.9"
+        opacity="0.9"
+      />
+    </svg>
+  );
+}
+
+function BallLegendSymbol() {
+  return (
+    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-900 bg-white">
+      <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
+    </span>
+  );
+}
+
+function ConeLegendSymbol() {
+  return <span className="h-3.5 w-3.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />;
+}
+
+function LineLegendSymbol({ dash, curved = false }: { dash?: string; curved?: boolean }) {
+  const path = curved ? "M4 12 C11 3, 24 3, 32 10" : "M3 9 H33";
+
+  return (
+    <svg viewBox="0 0 36 18" aria-hidden="true" className="h-5 w-10 shrink-0">
+      <path
+        d={path}
+        fill="none"
+        stroke="#334155"
+        strokeDasharray={dash}
+        strokeLinecap="round"
+        strokeWidth="1.9"
+      />
+      <path
+        d="M29 6 L34 9 L29 12"
+        fill="none"
+        stroke="#334155"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.9"
+      />
+    </svg>
+  );
+}
+
+function DiagramLegendItem({
+  symbol,
+  label
+}: {
+  symbol: ReactNode;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2">
+      {symbol}
+      <span className="text-xs leading-5 text-slate-700">{label}</span>
+    </div>
+  );
+}
+
+function DiagramLegendCard() {
+  return (
+    <section className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        Diagram legend
+      </h3>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+        <DiagramLegendItem
+          symbol={<PlayerLegendSymbol fill="#2563eb" />}
+          label="Blue player = coached team"
+        />
+        <DiagramLegendItem
+          symbol={<PlayerLegendSymbol fill="#ef4444" />}
+          label="Red player = opponent / defender"
+        />
+        <DiagramLegendItem
+          symbol={<PlayerLegendSymbol fill="#94a3b8" />}
+          label="Gray player = neutral / free player"
+        />
+        <DiagramLegendItem symbol={<BallLegendSymbol />} label="Ball = ball" />
+        <DiagramLegendItem symbol={<ConeLegendSymbol />} label="Yellow circle = cone / equipment" />
+        <DiagramLegendItem
+          symbol={<LineLegendSymbol />}
+          label="Solid line = pass / shot / ball action"
+        />
+        <DiagramLegendItem
+          symbol={<LineLegendSymbol dash="1.2 3" />}
+          label="Dotted line = dribble / carry"
+        />
+        <DiagramLegendItem
+          symbol={<LineLegendSymbol dash="4 3" />}
+          label="Dashed line = movement / support / recovery / pressure"
+        />
+        <DiagramLegendItem
+          symbol={<LineLegendSymbol curved />}
+          label="Curved line = curved run / rotation / reset"
+        />
+      </div>
+      <p className="mt-3 text-xs leading-5 text-slate-500">
+        Line color follows the acting player.
+      </p>
+    </section>
+  );
 }
 
 function buildActivityTimings(activities: SessionDetail["activities"]) {
@@ -191,15 +343,6 @@ export default async function SessionDetailPage({
       ? coachIdentity || "Signed-in coach"
       : session.createdBy ?? "Unavailable";
   const builderModeLabel = origin ? getSessionOriginLabel(origin) : "Session";
-  const builderDetailTitle = isBuilderSession
-    ? buildBuilderSessionDetailTitle({
-        buildModeLabel: builderModeLabel,
-        objective: builderContext?.objective,
-        sessionLabel: builderContext?.sessionLabel,
-        teamName: builderContext?.teamName,
-        ageBand: session.ageBand
-      })
-    : null;
   const builderSessionLabel = isBuilderSession
     ? buildBuilderSessionLabel({
         objective: builderContext?.objective,
@@ -207,13 +350,13 @@ export default async function SessionDetailPage({
         activities: session.activities
       })
     : null;
-  const builderSessionShapeSummary = isBuilderSession
-    ? buildBuilderSessionShapeSummary(session.activities)
+  const builderSessionFlowSummary = isBuilderSession
+    ? buildSessionFlowSummary(session.activities)
     : null;
   const pageTitle = isQuickSession
     ? displayQuickSessionTitle
     : isBuilderSession
-      ? builderDetailTitle || builderModeLabel
+      ? builderModeLabel
       : `${session.sport} / ${session.ageBand}`;
   const pageBadge = isQuickSession
     ? "Quick Activity Output"
@@ -225,18 +368,13 @@ export default async function SessionDetailPage({
     : isBuilderSession
       ? `Session Builder - ${builderModeLabel}`
       : "Saved Session";
-  const plannedActivitiesMinutes = session.activities.reduce(
-    (total, activity) => total + activity.minutes,
-    0
-  );
   const activityTimings = buildActivityTimings(session.activities);
   const activityCountLabel = formatActivityCount(session.activities.length);
   const headerDescription = isQuickSession
     ? `Coach-ready saved output from Quick Activity with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`
     : isBuilderSession
-      ? `Coach-ready saved output from Session Builder with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`
+      ? undefined
       : `Saved session output with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`;
-  const outputSummary = `${activityCountLabel} / ${formatMinuteLabel(plannedActivitiesMinutes)} activity plan / ${formatMinuteLabel(session.durationMin)} session window`;
   const environmentLabel = isBuilderSession
     ? formatEnvironmentLabel(builderContext?.environment)
     : "";
@@ -245,14 +383,18 @@ export default async function SessionDetailPage({
     : isBuilderSession
       ? builderSessionLabel || builderContext?.objective || ""
       : session.objectiveTags.join(", ");
-  const contextLabel = [
-    isBuilderSession ? builderContext?.teamName : undefined,
-    isBuilderSession && environmentLabel !== "Not set" ? environmentLabel : undefined
-  ]
+  const contextLabel = [isBuilderSession ? builderContext?.teamName : undefined]
     .filter((value): value is string => Boolean(value))
     .join(" / ");
   const equipmentCountLabel = formatEquipmentCount(session.equipment.length);
   const equipmentUsedLabel = formatEquipmentUsed(session.equipment);
+  const fieldPlanTitle = isBuilderSession
+    ? buildFieldPlanTitle({
+        modeLabel: builderModeLabel,
+        focusLabel: builderSessionLabel || builderContext?.objective || "",
+        ageBand: session.ageBand
+      })
+    : pageTitle;
 
   async function exportSessionPdfAction(
     _previousState: {
@@ -455,27 +597,27 @@ export default async function SessionDetailPage({
 
       <section className="club-vivo-shell rounded-[2rem] border p-8 backdrop-blur">
         <section className="mb-8 rounded-[1.75rem] border border-slate-200 bg-white/80 p-5">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Coach-ready field plan
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-                {pageTitle}
-              </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
-                {outputSummary}
-              </p>
-              <p className="mt-2 text-xs text-slate-500">
-                Saved {formatCreatedAt(session.createdAt)}
-              </p>
+          <div className="grid gap-5">
+            <div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Coach-ready field plan
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                  {fieldPlanTitle}
+                </h2>
+                <p className="mt-2 text-xs text-slate-500">
+                  Saved {formatCreatedAt(session.createdAt)}
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4 lg:w-[28rem]">
+            <div className={isBuilderSession ? "grid gap-4 xl:grid-cols-[minmax(0,1fr)_28rem]" : "grid gap-4"}>
+              <section className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                At a glance
+                  At a glance
               </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Source
@@ -494,7 +636,7 @@ export default async function SessionDetailPage({
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Activity Count
+                      Activities
                   </p>
                   <p className="mt-1 text-sm font-medium text-slate-900">{activityCountLabel}</p>
                 </div>
@@ -511,34 +653,54 @@ export default async function SessionDetailPage({
                 {contextLabel ? (
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Team / Context
+                        Work group
                     </p>
                     <p className="mt-1 text-sm font-medium text-slate-900">{contextLabel}</p>
                   </div>
                 ) : null}
 
-                {session.equipment.length > 0 ? (
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Equipment Used
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-slate-900">{equipmentCountLabel}</p>
-                  </div>
-                ) : null}
-              </div>
+                  {isBuilderSession && environmentLabel ? (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Environment
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-slate-900">{environmentLabel}</p>
+                    </div>
+                  ) : null}
 
-              {session.equipment.length > 0 ? (
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
-                  {session.equipment.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
+                  {isBuilderSession && builderSessionFlowSummary ? (
+                    <div className="sm:col-span-2 xl:col-span-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Session flow
+                      </p>
+                      <p className="mt-1 text-sm font-medium leading-6 text-slate-900">
+                        {builderSessionFlowSummary}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  {session.equipment.length > 0 ? (
+                    <div className="sm:col-span-2 xl:col-span-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Equipment used
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-slate-900">{equipmentCountLabel}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {session.equipment.map((item) => (
+                          <span
+                            key={item}
+                            className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+              </div>
+              </section>
+
+              {isBuilderSession ? <DiagramLegendCard /> : null}
             </div>
           </div>
         </section>
@@ -554,7 +716,6 @@ export default async function SessionDetailPage({
                 Use this sequence on the field, moving from one activity to the next by time block.
               </p>
             </div>
-            <p className="text-sm font-medium text-slate-600">{outputSummary}</p>
           </div>
 
           <div className="mt-5 grid gap-4">
@@ -581,92 +742,12 @@ export default async function SessionDetailPage({
           </div>
         </article>
 
-        {isBuilderSession ? (
-          <>
-            <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Team</h2>
-                <p className="mt-2 text-sm text-slate-800">
-                  {builderContext?.teamName || "Team context not saved"}
-                </p>
-              </article>
-
-              <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Environment</h2>
-                <p className="mt-2 text-sm text-slate-800">
-                  {formatEnvironmentLabel(builderContext?.environment)}
-                </p>
-              </article>
-
-              <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Duration</h2>
-                <p className="mt-2 text-sm text-slate-800">{formatMinuteLabel(session.durationMin)}</p>
-              </article>
-
-              <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Equipment used</h2>
-                <p className="mt-2 text-sm text-slate-800">{equipmentUsedLabel}</p>
-              </article>
-            </div>
-
-            <div className="mt-8 grid gap-4 lg:grid-cols-2">
-              <article className="rounded-3xl border border-slate-200 bg-white/70 p-5">
-                <h2 className="text-lg font-semibold text-slate-900">Session details</h2>
-                <p className="mt-4 text-sm leading-6 text-slate-700">
-                  {builderContext?.objective || "No saved objective context for this session."}
-                </p>
-                <dl className="mt-4 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Created by</dt>
-                    <dd className="mt-1 break-all">{createdByLabel}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Created</dt>
-                    <dd className="mt-1">{formatCreatedAt(session.createdAt)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Source</dt>
-                    <dd className="mt-1">{sourceLabel}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">SIC engine</dt>
-                    <dd className="mt-1">v{session.schemaVersion}</dd>
-                  </div>
-                </dl>
-              </article>
-
-              <article className="rounded-3xl border border-slate-200 bg-white/70 p-5">
-                <h2 className="text-lg font-semibold text-slate-900">Session Shape</h2>
-                <p className="mt-4 text-sm leading-6 text-slate-700">
-                  {builderSessionShapeSummary || "No saved session shape available."}
-                </p>
-              </article>
-
-              <article className="rounded-3xl border border-slate-200 bg-white/70 p-5 lg:col-span-2">
-                <h2 className="text-lg font-semibold text-slate-900">Objective Tags</h2>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {session.objectiveTags.length > 0 ? (
-                    session.objectiveTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600"
-                      >
-                        {tag}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-slate-500">No objective tags</span>
-                  )}
-                </div>
-              </article>
-            </div>
-          </>
-        ) : (
+        {!isBuilderSession ? (
           <>
             <div className={`grid gap-4 ${isQuickSession ? "sm:grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
               <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Session details
+                  {isQuickSession ? "Quick activity title" : "Created by"}
                 </h2>
 
                 {isQuickSession ? (
@@ -807,7 +888,7 @@ export default async function SessionDetailPage({
               </div>
             )}
           </>
-        )}
+        ) : null}
 
         <SessionFeedbackPanel
           initialState={INITIAL_FEEDBACK_PANEL_STATE}

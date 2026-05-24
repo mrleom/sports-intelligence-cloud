@@ -32,6 +32,7 @@ const INITIAL_GENERATE_STATE: GenerateFormState = {
   values: {
     sport: "soccer",
     ageBand: "u14",
+    workGroupMode: "team",
     durationMin: "60",
     environment: "grass_field",
     theme: "",
@@ -123,6 +124,7 @@ export default async function NewSessionPage({
   const initialGenerateState: GenerateFormState = {
     values: {
       ...INITIAL_GENERATE_STATE.values,
+      workGroupMode: teamOptions.length > 0 ? "team" : "age_band",
       theme: requestedTheme || INITIAL_GENERATE_STATE.values.theme,
       durationMin:
         requestedDurationMin && Number.isInteger(Number.parseInt(requestedDurationMin, 10))
@@ -136,7 +138,7 @@ export default async function NewSessionPage({
       <CoachPageHeader
         badge="Session Builder"
         title="Build your session"
-        description="Specify the team and build mode you want to work with, then set up your session."
+        description="Choose a work group and build mode, then set up your session."
       />
 
       <NewSessionFlow

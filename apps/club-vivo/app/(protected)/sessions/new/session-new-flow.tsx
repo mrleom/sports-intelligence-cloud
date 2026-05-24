@@ -32,6 +32,7 @@ export type GenerateFormState = {
   values: {
     sport: string;
     ageBand: string;
+    workGroupMode: WorkGroupMode;
     durationMin: string;
     environment: string;
     theme: string;
@@ -54,6 +55,7 @@ type AnalyzeAction = (state: AnalyzeFormState, formData: FormData) => Promise<An
 type SaveAction = (state: SaveFormState, formData: FormData) => Promise<SaveFormState>;
 type SaveFormDispatch = (formData: FormData) => void;
 type PlanningPath = "custom" | "match_to_match";
+type WorkGroupMode = "team" | "age_band";
 
 const FULL_SESSION_DEFAULT_DURATION = "60";
 const FULL_SESSION_MIN_DURATION = 45;
@@ -133,7 +135,7 @@ function buildSessionContextTitle({
 
 function PlayerLegendSymbol({ fill }: { fill: string }) {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4 shrink-0">
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
       <circle cx="8" cy="8" r="5.4" fill={fill} stroke="white" strokeWidth="1.4" />
       <circle cx="8" cy="6.45" r="1.25" fill="white" opacity="0.9" />
       <path
@@ -377,6 +379,9 @@ export function NewSessionFlow({
   const [generateState, generateFormAction] = useActionState(generateAction, initialGenerateState);
   const [saveState, saveFormAction] = useActionState(saveAction, initialSaveState);
   const [selectedTeamId, setSelectedTeamId] = useState(teamOptions[0]?.id ?? "");
+  const [workGroupMode, setWorkGroupMode] = useState<WorkGroupMode>(
+    initialGenerateState.values.workGroupMode || (teamOptions.length > 0 ? "team" : "age_band")
+  );
   const [planningPath, setPlanningPath] = useState<PlanningPath>("custom");
   const [workspaceMode, setWorkspaceMode] = useState<SessionBuilderMode>("full_session");
   const [sport, setSport] = useState(initialGenerateState.values.sport);
@@ -407,6 +412,7 @@ export function NewSessionFlow({
   useEffect(() => {
     setSport(generateState.values.sport);
     setAgeBand(generateState.values.ageBand);
+    setWorkGroupMode(generateState.values.workGroupMode || (teamOptions.length > 0 ? "team" : "age_band"));
     setDurationMin(generateState.values.durationMin);
     setEnvironment(generateState.values.environment);
     setObjective(generateState.values.theme);
@@ -417,6 +423,7 @@ export function NewSessionFlow({
     generateState.values.equipment,
     generateState.values.environment,
     generateState.values.sport,
+    generateState.values.workGroupMode,
     generateState.values.theme
   ]);
 
@@ -440,6 +447,8 @@ export function NewSessionFlow({
   const maximumDuration = workspaceMode === "quick_drill" ? QUICK_DRILL_MAX_DURATION : FULL_SESSION_MAX_DURATION;
   const hasDraftProfile = Boolean(analyzeState.analysis?.profile);
   const selectedTeam = teamOptions.find((team) => team.id === selectedTeamId);
+  const activeTeam = workGroupMode === "team" ? selectedTeam : undefined;
+  const ageBandGroupName = `${ageBand.toUpperCase()} age-band group`;
 
   function handleProfileEditorChange(nextValue: string) {
     setProfileEditorValue(nextValue);
@@ -489,6 +498,31 @@ export function NewSessionFlow({
 
     if (selectedTeam.ageBand) {
       setAgeBand(selectedTeam.ageBand);
+    }
+  }
+
+  function handleWorkGroupModeChange(nextMode: WorkGroupMode) {
+    setWorkGroupMode(nextMode);
+
+    if (nextMode !== "team") {
+      return;
+    }
+
+    const nextTeam = teamOptions.find((team) => team.id === selectedTeamId) || teamOptions[0];
+
+    if (!nextTeam) {
+      setWorkGroupMode("age_band");
+      return;
+    }
+
+    if (nextTeam.id !== selectedTeamId) {
+      setSelectedTeamId(nextTeam.id);
+    }
+
+    setSport(nextTeam.sport);
+
+    if (nextTeam.ageBand) {
+      setAgeBand(nextTeam.ageBand);
     }
   }
 
@@ -573,10 +607,13 @@ export function NewSessionFlow({
             teams={teamOptions}
             selectedTeamId={selectedTeamId}
             onTeamChange={handleTeamChange}
+            workGroupMode={workGroupMode}
+            onWorkGroupModeChange={handleWorkGroupModeChange}
             mode={workspaceMode}
             onModeChange={handleModeChange}
             sport={sport}
             ageBand={ageBand}
+            onAgeBandChange={setAgeBand}
             durationMin={durationMin}
             onDurationMinChange={setDurationMin}
             minimumDuration={minimumDuration}
@@ -591,10 +628,10 @@ export function NewSessionFlow({
             equipment={equipment}
             onEquipmentChange={setEquipment}
             equipmentOptions={equipmentOptions}
-            selectedTeamName={selectedTeam?.label || ""}
-            selectedTeamAgeBand={selectedTeam?.ageBand}
-            selectedTeamProgramType={selectedTeam?.programType}
-            selectedTeamPlayerCount={selectedTeam?.playerCount}
+            selectedTeamName={activeTeam?.label || ""}
+            selectedTeamAgeBand={activeTeam?.ageBand}
+            selectedTeamProgramType={activeTeam?.programType}
+            selectedTeamPlayerCount={activeTeam?.playerCount}
             actions={<GenerateButton />}
           />
 
@@ -751,7 +788,7 @@ export function NewSessionFlow({
                 saveFormAction={saveFormAction}
                 sessionTitleContext={{
                   objective,
-                  teamName: selectedTeam?.label || "",
+                  teamName: activeTeam?.label || ageBandGroupName,
                   environment
                 }}
               />

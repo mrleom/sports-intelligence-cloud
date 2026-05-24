@@ -52,7 +52,7 @@ export function HomeSessionStartCard({
         </div>
 
         <label className="grid gap-2 text-sm text-slate-700">
-          <span className="font-medium">Coaching note / activity idea</span>
+          <span className="font-medium">Coaching note / activity idea (required)</span>
           <textarea
             name="prompt"
             value={notes}
