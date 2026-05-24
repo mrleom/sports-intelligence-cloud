@@ -13,11 +13,12 @@ type TeamSelectorProps = {
   teams: WorkspaceTeamOption[];
   value: string;
   onChange: (teamId: string) => void;
+  required?: boolean;
 };
 
 export type { WorkspaceTeamOption };
 
-export function TeamSelector({ teams, value, onChange }: TeamSelectorProps) {
+export function TeamSelector({ teams, value, onChange, required = false }: TeamSelectorProps) {
   return (
     <div className="grid gap-2 text-sm text-slate-700">
       <select
@@ -25,6 +26,7 @@ export function TeamSelector({ teams, value, onChange }: TeamSelectorProps) {
         onChange={(event) => onChange(event.target.value)}
         className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
         disabled={teams.length === 0}
+        required={required}
       >
         {teams.length > 0 ? (
           teams.map((team) => (

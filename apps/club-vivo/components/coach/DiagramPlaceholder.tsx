@@ -202,7 +202,8 @@ function localLegendKeys(keys: LegendKey[]) {
 }
 
 function inferredCaption(text: string) {
-  return `Inferred review diagram: ${text}`;
+  const trimmedText = text.trim();
+  return trimmedText ? trimmedText.charAt(0).toUpperCase() + trimmedText.slice(1) : "";
 }
 
 function buildAttackingOverloadPanels(activityIndex: number): DiagramPanel[] {
@@ -552,11 +553,11 @@ function buildActivationPanels(): DiagramPanel[] {
         { type: "gate", x: 129, y: 29 },
         { type: "gate", x: 31, y: 77 },
         { type: "gate", x: 129, y: 77 },
-        { type: "player", role: "coached", x: 72, y: 52 },
-        { type: "player", role: "opposition", x: 95, y: 62 },
-        { type: "ball", x: 81, y: 55 },
-        { type: "arrow", d: "M83 56 C96 62, 110 69, 126 76", action: "carry" },
-        { type: "arrow", d: "M95 62 C91 60, 87 58, 83 56", action: "pressure" }
+        { type: "player", role: "coached", x: 64, y: 50 },
+        { type: "player", role: "opposition", x: 103, y: 65 },
+        { type: "ball", x: 75, y: 55 },
+        { type: "arrow", d: "M79 57 C94 68, 110 75, 126 77", action: "carry" },
+        { type: "arrow", d: "M103 65 C98 66, 92 64, 85 59", action: "pressure" }
       ]
     }
   ];
@@ -1016,7 +1017,7 @@ function LegendSymbol({ item }: { item: LegendKey }) {
 
 function PlayerLegendSymbol({ fill }: { fill: string }) {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4 shrink-0">
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
       <circle cx="8" cy="8" r="5.4" fill={fill} stroke="white" strokeWidth="1.4" />
       <circle cx="8" cy="6.45" r="1.25" fill="white" opacity="0.9" />
       <path

@@ -299,7 +299,7 @@ export function ActivityOutput({
             </div>
           ) : (
             <p className="mt-4 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm leading-6 text-slate-500">
-              No description provided.
+              Use the activity title, timing, and diagram as the field cue for this block.
             </p>
           )}
         </div>

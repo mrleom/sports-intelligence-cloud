@@ -343,8 +343,13 @@ export async function generateSessionPackAction(
 
   const selectedSport = String(formData.get("sport") || "").trim();
   const ageBand = String(formData.get("ageBand") || "").trim();
+  const workGroupModeValue = String(formData.get("workGroupMode") || "").trim();
   const teamAgeBand = String(formData.get("teamAgeBand") || "").trim();
   const teamName = String(formData.get("teamName") || "").trim();
+  const workGroupMode: GenerateFormState["values"]["workGroupMode"] =
+    workGroupModeValue === "team" || (!workGroupModeValue && teamName)
+      ? "team"
+      : "age_band";
   const teamProgramType = normalizeProgramType(String(formData.get("teamProgramType") || ""));
   const teamPlayerCount = String(formData.get("teamPlayerCount") || "").trim();
   const durationMin = String(formData.get("durationMin") || "").trim();
@@ -384,11 +389,26 @@ export async function generateSessionPackAction(
   const values = {
     sport: selectedSport,
     ageBand: safeAgeBand,
+    workGroupMode,
     durationMin,
     environment,
     theme,
     equipment
   };
+
+  if (workGroupMode === "team" && (!teamName || !teamAgeBand)) {
+    return {
+      values,
+      error: "Choose a saved team or switch Work group to Age band before generating."
+    };
+  }
+
+  if (workGroupMode === "age_band" && !normalizeSupportedAgeBand(ageBand)) {
+    return {
+      values,
+      error: "Choose an age band before generating."
+    };
+  }
 
   if (!sport || !safeAgeBand || !durationMin || !theme) {
     return {
