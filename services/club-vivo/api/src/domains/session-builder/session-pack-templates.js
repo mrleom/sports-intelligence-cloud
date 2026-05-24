@@ -89,6 +89,7 @@ function isControlThemeSegment(segment) {
     normalizedSegment.startsWith("team context:") ||
     normalizedSegment.startsWith("coach brainstorming and extra details for today:") ||
     normalizedSegment.startsWith("primary session objective:") ||
+    normalizedSegment.startsWith("specific focus:") ||
     normalizedSegment.startsWith("format:") ||
     normalizedSegment.startsWith("mode:")
   );
@@ -103,6 +104,7 @@ function extractPromptSignals(theme, options = {}) {
     segments.find((segment) => !isControlThemeSegment(segment)) ||
     segments[0] ||
     rawTheme;
+  const specificFocus = extractDelimitedValue(rawTheme, "Specific focus");
   const teamContext = extractDelimitedValue(rawTheme, "Team context");
   const environment =
     extractDelimitedValue(rawTheme, "Environment context") ||
@@ -123,6 +125,7 @@ function extractPromptSignals(theme, options = {}) {
 
   return {
     primaryObjective: primaryObjective || rawTheme,
+    specificFocus: specificFocus || null,
     teamContext: teamContext || null,
     environment: environment || null,
     coachNotes: coachNotes || null,
@@ -274,7 +277,9 @@ function inferFocusTagsFromText(value) {
 }
 
 function applyPromptFocusTagsToSession(session, promptSignals) {
-  const sourceText = promptSignals?.primaryObjective || "";
+  const sourceText = [promptSignals?.primaryObjective, promptSignals?.specificFocus]
+    .filter(Boolean)
+    .join(" ");
   const promptTags = inferFocusTagsFromText(sourceText);
 
   if (promptTags.length < 1) {
@@ -431,6 +436,13 @@ function hasGoalEquipment(equipment) {
   });
 }
 
+function hasPuggGoalEquipment(equipment) {
+  return (Array.isArray(equipment) ? equipment : []).some((item) => {
+    const normalized = normalizeTheme(item);
+    return normalized.includes("pugg goal") || normalized.includes("pug goal");
+  });
+}
+
 function isGenericEquipmentOption(item) {
   const normalized = normalizeTheme(item);
 
@@ -558,9 +570,41 @@ function getPromptSignalText(promptSignals) {
   return normalizeTheme(
     [
       promptSignals?.primaryObjective,
+      promptSignals?.specificFocus,
       promptSignals?.coachNotes,
       promptSignals?.teamContext,
     ].filter(Boolean).join(" ")
+  );
+}
+
+function isDefending1v1Text(text) {
+  return (
+    text.includes("defending 1v1") ||
+    text.includes("defend 1v1") ||
+    (text.includes("defending") && text.includes("1v1"))
+  );
+}
+
+function isPossessionUnderPressureText(text) {
+  return (
+    text.includes("possession under pressure") ||
+    (text.includes("possession") && text.includes("play through pressure"))
+  );
+}
+
+function isFirstTouchReceivingText(text) {
+  return (
+    text.includes("first touch") ||
+    text.includes("scan before receiving") ||
+    text.includes("scanning before receiving")
+  );
+}
+
+function isRecoveryRunText(text) {
+  return (
+    text.includes("recover quickly") ||
+    text.includes("recovery run") ||
+    text.includes("recovery runs")
   );
 }
 
@@ -588,7 +632,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
     };
   }
 
-  if (text.includes("defending 1v1") || (text.includes("defending") && text.includes("1v1"))) {
+  if (isDefending1v1Text(text)) {
     return {
       setup:
         "use a narrow 1v1 channel with a start cone, defender recovery line, and two cone-gate targets instead of full goals",
@@ -606,7 +650,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
     };
   }
 
-  if (text.includes("first touch")) {
+  if (isFirstTouchReceivingText(text)) {
     return {
       setup:
         "use a receiving box with two pressure gates, a server line, defender line, and quick rotation spots",
@@ -615,7 +659,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
         : "serve into the receiver, release pressure on the pass, and reward the first touch that escapes into space",
       scoring:
         "receiver scores by scanning before the pass and taking the first touch through a gate; defender scores by forcing play out",
-      cues: "scan before the pass, receive side-on, push the first touch away from pressure, and play quickly",
+      cues: "scan before the ball arrives, receive side-on, push the first touch away from pressure, and play quickly",
       watch:
         "players watching only the ball, first touch stopping under feet, late pressure, or slow rotations",
       progress: "release the defender earlier, reduce touches, or add a target pass after the escape",
@@ -623,7 +667,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
     };
   }
 
-  if (text.includes("possession under pressure")) {
+  if (isPossessionUnderPressureText(text)) {
     return {
       setup:
         phase === "progression"
@@ -632,12 +676,12 @@ function getThemeSpecificLanguage(promptSignals, phase) {
       run:
         phase === "progression"
           ? "play directional possession toward target zones, then let defenders counter to mini goals immediately after a regain"
-          : "keep the ball under active pressure, score for split passes or escape passes, and rotate defenders quickly",
+          : "keep the ball under active pressure, receive with support angles, score for split passes or escape passes, and rotate defenders quickly",
       scoring:
         phase === "progression"
           ? "possession team scores by connecting to a target zone; defenders score by winning it and countering to mini goals"
           : "score for five passes, a split pass, or an escape pass out of pressure",
-      cues: "scan early, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
+      cues: "scan early, receive under pressure, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
       watch:
         "players hiding behind defenders, flat support, slow ball speed, or the first pass after pressure going into trouble",
       progress: "reduce touch count, add a pressing trigger, or require a forward target pass after the escape",
@@ -645,15 +689,33 @@ function getThemeSpecificLanguage(promptSignals, phase) {
     };
   }
 
+  if (isRecoveryRunText(text)) {
+    return {
+      setup:
+        "use a recovery lane with a clear recovery start line, one attacker breaking toward a counter gate, and one recovering defender chasing goal-side",
+      run:
+        phase === "progression"
+          ? "release the attacker first, then send a second ball or support runner so the defender must recover, delay, and protect the counter target"
+          : "start with an attacker breaking forward, release the defender from behind or beside the play, and coach the recovery run into a delay stance",
+      scoring:
+        "attacker scores by crossing the counter gate quickly; defender scores by recovering goal-side, delaying for five seconds, forcing wide, or winning the ball",
+      cues: "recover sprint first, curve the run, get goal-side, slow down under control, delay, and win it when support arrives",
+      watch:
+        "defenders chasing in a straight line, failing to get goal-side, diving in too early, or stopping once the attacker slows down",
+      progress: "move the recovery line farther back, add a support runner, or shorten the time defenders have to stop the counter",
+      regress: "start the defender closer, widen the lane, or let the defender shadow once before the live recovery run",
+    };
+  }
+
   if (text.includes("finishing") || text.includes("shoot") || text.includes("pugg")) {
     return {
       setup:
-        "set a short finishing lane with a server, shooter, recovering defender, rebound cone, and the selected goal target",
+        "set a short finishing lane with a server, shooter, recovering defender, rebound cone, and the selected scoring target",
       run: isSingleActivity
         ? "serve, shoot, follow the rebound, then rotate shooter-server-defender so players get repeated finishes under light pressure"
         : "play quick finishing waves with one pressure touch, one shot, a rebound chase, and a clear rotation after each attempt",
       scoring:
-        "score for clean shots on target, first-time finishes, rebounds followed in, or goals scored before the defender recovers",
+        "score for clean shots on target, first-time finishes, rebounds followed in, or finishes made before the defender recovers",
       cues: "set the ball out of feet, head steady, choose placement or power, follow rebounds, and shoot before pressure closes",
       watch:
         "players waiting in lines, shots from poor body shape, no rebound follow-up, or defenders arriving too late to matter",
@@ -863,22 +925,34 @@ function refineActivityName(name, promptSignals, phase) {
     if (phase === "progression") return "Overload Recovery Counter Game";
   }
 
-  if (text.includes("defending 1v1") || (text.includes("defending") && text.includes("1v1"))) {
+  if (isDefending1v1Text(text)) {
     if (phase === "main") return "1v1 Angle And Delay Gates";
     if (phase === "progression") return "Recover And Delay 1v1";
   }
 
-  if (text.includes("possession under pressure")) {
+  if (isPossessionUnderPressureText(text)) {
     if (phase === "main") return "Rondo Under Pressure";
     if (phase === "progression") return "Directional Possession To Targets";
   }
 
-  if (text.includes("first touch")) {
+  if (isFirstTouchReceivingText(text)) {
     return "First Touch Pressure Gates";
   }
 
+  if (isRecoveryRunText(text)) {
+    if (phase === "main") return "Recovery Run Delay Gates";
+    if (phase === "progression") return "Recover Goal-Side Counter Game";
+  }
+
   if (text.includes("finishing") || text.includes("shoot") || text.includes("pugg")) {
-    return "Pugg Goal Finishing Waves";
+    if (hasPuggGoalEquipment(promptSignals?.equipment)) {
+      return "Pugg Goal Finishing Waves";
+    }
+
+    if (text.includes("cutback")) return "Cutback Finishing Game";
+    if (text.includes("rebound")) return "Rebound Finishing Game";
+    if (text.includes("shoot early")) return "Early Shot Finishing Game";
+    return "Finishing Waves";
   }
 
   return name;
@@ -1382,7 +1456,11 @@ function generateSessionFromTheme({
     equipment,
     methodologyInfluence,
   });
-  const themeKey = normalizeTheme(promptSignals.primaryObjective || theme);
+  const themeKey = normalizeTheme(
+    [promptSignals.primaryObjective || theme, promptSignals.specificFocus]
+      .filter(Boolean)
+      .join(" ")
+  );
   const t = pickSportPackTemplate({
     sportPackId,
     themeKey: !hasGoalEquipment(equipment) && pickTemplate(themeKey) === "finishing"

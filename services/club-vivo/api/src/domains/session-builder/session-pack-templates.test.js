@@ -564,6 +564,128 @@ test("generatePack attacking overload fixture aligns activity story with diagram
   assert.equal(activity4.description.length < 600, true);
 });
 
+test("generatePack routes guided Defend 1v1 focus to defending 1v1 language", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: 1v1 / small-sided duels | Specific focus: Defend 1v1",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const [, activity2, activity3] = pack.sessions[0].activities;
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(activity2.name, "1v1 Angle And Delay Gates");
+  assert.equal(activity3.name, "Recover And Delay 1v1");
+  assert.match(text, /attacker|defender|angle|delay|show away|gate/i);
+  assert.match(text, /defenders score by delaying|winning and countering|wins it/i);
+  assert.doesNotMatch(text, /1v1 \/ Small-sided Duels channels game/i);
+});
+
+test("generatePack routes guided Play through pressure focus to possession under pressure language", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: Possession / build up | Specific focus: Play through pressure",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const [, activity2, activity3] = pack.sessions[0].activities;
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(activity2.name, "Rondo Under Pressure");
+  assert.equal(activity3.name, "Directional Possession To Targets");
+  assert.match(text, /receive under pressure|support angles|play away from the pressing defender/i);
+  assert.match(text, /escape target|target zones|escape pass|split pass/i);
+});
+
+test("generatePack routes guided Scan before receiving focus to first-touch receiving language", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "Primary session objective: Game understanding | Specific focus: Scan before receiving",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const [, activity2] = pack.sessions[0].activities;
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(activity2.name, "First Touch Pressure Gates");
+  assert.match(text, /receiving box|pressure gates|scan before the ball arrives/i);
+  assert.match(text, /receive side-on|first touch away from pressure|target pass|defender/i);
+});
+
+test("generatePack routes guided Recover quickly focus to recovery-run language", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: Physical / reaction / speed | Specific focus: Recover quickly",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const [, activity2, activity3] = pack.sessions[0].activities;
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(activity2.name, "Recovery Run Delay Gates");
+  assert.equal(activity3.name, "Recover Goal-Side Counter Game");
+  assert.match(text, /recovery start line|recovering defender|counter gate/i);
+  assert.match(text, /recovering goal-side|delay|forcing wide|winning the ball/i);
+});
+
+test("generatePack avoids Pugg naming for finishing with generic equipment", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: Finishing | Specific focus: Shoot early",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.match(pack.sessions[0].activities[1].name, /Early Shot Finishing Game/i);
+  assert.doesNotMatch(text, /pugg/i);
+  assert.match(text, /selected scoring target|finishing lane|first-time finishes/i);
+});
+
+test("generatePack allows Pugg naming for finishing when Pugg goals are selected", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: Finishing | Specific focus: Shoot early",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "Pugg goals"],
+  });
+
+  const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.match(pack.sessions[0].activities[1].name, /Pugg Goal Finishing Waves/i);
+  assert.match(text, /pugg goals/i);
+  assert.match(text, /finishing lane|shot|rebound|pressure/i);
+});
+
 test("generatePack defending 1v1 includes defender-specific cues", () => {
   const pack = generatePack({
     sport: "soccer",
