@@ -357,6 +357,16 @@ Current diagram implementation should pause before merge. The next work should c
 language and then continue with symbol system polish. No runtime behavior changed in this research
 branch.
 
+The Session Builder template quality matrix now lives at:
+
+- `docs/progress/new-sic/session-builder-core/template-quality-matrix.md`
+
+The matrix inventories every current primary objective and focus option in the guided Session
+Builder, reviews the current deterministic output quality for each pair, and recommends the next
+template implementation slices. No generation behavior, runtime code, frontend code, backend source,
+tests, package files, persistence, AI/RAG, Match-to-Match, infrastructure, auth, or tenancy behavior
+changed in this documentation branch.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
