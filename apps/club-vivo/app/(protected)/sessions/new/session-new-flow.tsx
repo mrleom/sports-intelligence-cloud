@@ -131,19 +131,67 @@ function buildSessionContextTitle({
   return parts.length > 0 ? parts.join(" / ") : "Generated session";
 }
 
-function LegendSymbol({
-  children,
-  className = ""
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+function PlayerLegendSymbol({ fill }: { fill: string }) {
   return (
-    <span
-      className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-800 ${className}`}
-    >
-      {children}
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-4 w-4 shrink-0">
+      <circle cx="8" cy="8" r="5.4" fill={fill} stroke="white" strokeWidth="1.4" />
+      <circle cx="8" cy="6.45" r="1.25" fill="white" opacity="0.9" />
+      <path
+        d="M5.25 9.75 C6.6 11, 9.4 11, 10.75 9.75"
+        fill="none"
+        stroke="white"
+        strokeLinecap="round"
+        strokeWidth="0.9"
+        opacity="0.9"
+      />
+    </svg>
+  );
+}
+
+function BallLegendSymbol() {
+  return (
+    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-900 bg-white">
+      <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
     </span>
+  );
+}
+
+function ConeLegendSymbol() {
+  return (
+    <span className="h-3.5 w-3.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
+  );
+}
+
+function LineLegendSymbol({
+  color = "#334155",
+  dash,
+  curved = false
+}: {
+  color?: string;
+  dash?: string;
+  curved?: boolean;
+}) {
+  const path = curved ? "M4 12 C11 3, 24 3, 32 10" : "M3 9 H33";
+
+  return (
+    <svg viewBox="0 0 36 18" aria-hidden="true" className="h-5 w-10 shrink-0">
+      <path
+        d={path}
+        fill="none"
+        stroke={color}
+        strokeDasharray={dash}
+        strokeLinecap="round"
+        strokeWidth="1.9"
+      />
+      <path
+        d="M29 6 L34 9 L29 12"
+        fill="none"
+        stroke={color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.9"
+      />
+    </svg>
   );
 }
 
@@ -232,45 +280,44 @@ function CandidateCard({
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
-        <div className="flex flex-col gap-1">
-          <h4 className="text-sm font-semibold text-slate-900">Diagram legend</h4>
-        </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-          <DiagramLegendItem symbol={<LegendSymbol>→</LegendSymbol>} label="Pass or shot" />
-          <DiagramLegendItem
-            symbol={<LegendSymbol>⋯→</LegendSymbol>}
-            label="Movement without the ball"
-          />
-          <DiagramLegendItem symbol={<LegendSymbol>~~~→</LegendSymbol>} label="Dribble or carry" />
-          <DiagramLegendItem
-            symbol={<LegendSymbol>⤴</LegendSymbol>}
-            label="Curved run or rotation"
-          />
-          <DiagramLegendItem
-            symbol={
-              <LegendSymbol className="border-blue-200 bg-blue-50">
-                <span className="h-3 w-3 rounded-full bg-blue-500" />
-              </LegendSymbol>
-            }
-            label="Team coached"
-          />
-          <DiagramLegendItem
-            symbol={
-              <LegendSymbol className="border-red-200 bg-red-50">
-                <span className="h-3 w-3 rounded-full bg-red-500" />
-              </LegendSymbol>
-            }
-            label="Opposition"
-          />
-          <DiagramLegendItem
-            symbol={
-              <LegendSymbol className="border-yellow-200 bg-yellow-50">
-                <span className="h-3 w-3 rounded-full bg-yellow-400" />
-              </LegendSymbol>
-            }
-            label="Cones or equipment"
-          />
-        </div>
+          <div className="flex flex-col gap-1">
+            <h4 className="text-sm font-semibold text-slate-900">Diagram legend</h4>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <DiagramLegendItem
+              symbol={<PlayerLegendSymbol fill="#2563eb" />}
+              label="Blue player = coached team"
+            />
+            <DiagramLegendItem
+              symbol={<PlayerLegendSymbol fill="#ef4444" />}
+              label="Red player = opponent / defender"
+            />
+            <DiagramLegendItem
+              symbol={<PlayerLegendSymbol fill="#94a3b8" />}
+              label="Gray player = neutral / free player"
+            />
+            <DiagramLegendItem symbol={<BallLegendSymbol />} label="Ball = ball" />
+            <DiagramLegendItem symbol={<ConeLegendSymbol />} label="Yellow circle = cone / equipment" />
+            <DiagramLegendItem
+              symbol={<LineLegendSymbol />}
+              label="Solid line = pass / shot / ball action"
+            />
+            <DiagramLegendItem
+              symbol={<LineLegendSymbol dash="1.2 3" />}
+              label="Dotted line = dribble / carry"
+            />
+            <DiagramLegendItem
+              symbol={<LineLegendSymbol dash="4 3" />}
+              label="Dashed line = movement / support / recovery / pressure"
+            />
+            <DiagramLegendItem
+              symbol={<LineLegendSymbol curved />}
+              label="Curved line = curved run / rotation / reset"
+            />
+          </div>
+          <p className="mt-3 text-xs leading-5 text-slate-500">
+            Line color follows the acting player.
+          </p>
         </section>
       </div>
 

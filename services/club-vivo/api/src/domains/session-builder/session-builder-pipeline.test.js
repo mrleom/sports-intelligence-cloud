@@ -2,6 +2,8 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const {
   processSessionPackRequest,
@@ -21,6 +23,10 @@ function stripPackIdentity(pack) {
     packId: undefined,
     createdAt: undefined,
   };
+}
+
+function readRepoFile(...parts) {
+  return fs.readFileSync(path.resolve(process.cwd(), "../../..", ...parts), "utf8");
 }
 
 test("normalizeSessionPackInput returns canonical request shape", () => {
@@ -242,8 +248,21 @@ test("programType team context can bias generated sessions while keeping request
   );
   assert.match(
     resolvedResult.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      resolvedResult.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(resolvedResult.validatedPack.durationMin, rawInput.durationMin);
   assert.equal(resolvedResult.validatedPack.theme, rawInput.theme);
   assert.deepEqual(resolvedResult.validatedPack.equipment, rawInput.equipment);
@@ -330,8 +349,21 @@ test("optional internal methodologyRecords influence only resolvedGenerationCont
   );
   assert.match(
     resolvedResult.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      resolvedResult.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(Object.hasOwn(resolvedResult.validatedPack, "resolvedMethodologyScope"), false);
   assert.equal(Object.hasOwn(resolvedResult.validatedPack, "methodologyInfluence"), false);
 });
@@ -348,7 +380,7 @@ test("processSessionPackRequest carries compact builder notes and environment in
   assert.match(result.validatedPack.sessions[0].activities[0].description, /Space note: use turf/i);
   assert.match(
     result.validatedPack.sessions[0].activities[1].description,
-    /Coach notes: first pass after regain\./i
+    /Note: first pass after regain\./i
   );
   assert.equal(result.validatedPack.theme, "pressing | notes:first pass after regain | env:turf");
   assert.equal(Object.hasOwn(result.validatedPack, "promptSignals"), false);
@@ -535,8 +567,21 @@ test("lookup path can resolve missing team programType and published travel meth
   assert.deepEqual(result.validatedPack.equipment, rawInput.equipment);
   assert.match(
     result.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      result.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(Object.hasOwn(result.validatedPack, "resolvedProgramType"), false);
   assert.equal(Object.hasOwn(result.validatedPack, "appliedMethodologyScopes"), false);
   assert.equal(Object.hasOwn(result.validatedPack, "methodologyInfluence"), false);
@@ -676,6 +721,61 @@ test("quick session-mode requests create a four-activity full session", async ()
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
   assert.match(session.activities.at(-1).name, /Final Game|Tournament|Competitive|Gate Battle/i);
   assert.equal(/Water break/i.test(session.activities.at(-1).name), false);
+});
+
+test("attacking-overload pipeline returns the polished four-activity story", async () => {
+  const result = await processSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    coachNotes: "attacking overloads",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const activities = result.validatedPack.sessions[0].activities;
+  const names = activities.map((activity) => activity.name);
+  const allText = activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.deepEqual(names, [
+    "Overload Gates Activation",
+    "Wide Overload Decision Game",
+    "Overload Recovery Counter Game",
+    "Overload Gate Battle Final Game",
+  ]);
+  assert.match(activities[2].description, /recovering defender|second decision|counter gate/i);
+  assert.match(activities[3].description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
+  assert.match(activities[3].description, /first team to three goals/i);
+  assert.doesNotMatch(allText, /No description provided|Ball mastery arrival game|Overload To Free Player Game|Small-Sided Competitive Final Game/i);
+});
+
+test("attacking-overload diagram legend code uses team-color line language", () => {
+  const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+  const activityOutput = readRepoFile("apps", "club-vivo", "components", "coach", "ActivityOutput.tsx");
+  const sessionNewFlow = readRepoFile("apps", "club-vivo", "app", "(protected)", "sessions", "new", "session-new-flow.tsx");
+  const sessionBuilderApi = readRepoFile("apps", "club-vivo", "lib", "session-builder-api.ts");
+  const staticText = `${diagramPlaceholder}\n${sessionNewFlow}\n${sessionBuilderApi}`;
+
+  assert.match(sessionNewFlow, /Blue player = coached team/);
+  assert.match(sessionNewFlow, /Red player = opponent \/ defender/);
+  assert.match(sessionNewFlow, /Line color follows the acting player/);
+  assert.match(sessionNewFlow, /Solid line = pass \/ shot \/ ball action/);
+  assert.match(sessionNewFlow, /Yellow circle = cone \/ equipment/);
+  assert.match(diagramPlaceholder, /Cone gate = scoring gate/);
+  assert.match(diagramPlaceholder, /Wide channel = free-player lane/);
+  assert.match(diagramPlaceholder, /Recovery line = defender release line/);
+  assert.match(diagramPlaceholder, /Blue dotted line = attacker dribbles to gate/);
+  assert.match(diagramPlaceholder, /Blue solid line = pass to free player/);
+  assert.match(diagramPlaceholder, /Red dashed line = recovery defender releases/);
+  assert.match(sessionBuilderApi, /Format: small-sided gate battle/);
+  assert.match(sessionBuilderApi, /Win condition: first team to three goals/);
+  assert.match(activityOutput, /buildFallbackSections/);
+  assert.match(activityOutput, /First team to three goals/);
+  assert.doesNotMatch(sessionNewFlow, /Cone gate|Target gate|Wide channel|Counter gate|Recovery line/);
+  assert.doesNotMatch(sessionNewFlow, /Blue line = coached team action|Red line = opponent \/ defender action|Gray line = neutral \/ free-player action/);
+  assert.doesNotMatch(staticText, /Solid green|Dotted green|#0f766e|markerBaseId}-green|Movement without the ball|Team coached|Cones or equipment/);
 });
 
 test("quick drill-mode requests create one main activity", async () => {
