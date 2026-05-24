@@ -242,8 +242,21 @@ test("programType team context can bias generated sessions while keeping request
   );
   assert.match(
     resolvedResult.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      resolvedResult.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(resolvedResult.validatedPack.durationMin, rawInput.durationMin);
   assert.equal(resolvedResult.validatedPack.theme, rawInput.theme);
   assert.deepEqual(resolvedResult.validatedPack.equipment, rawInput.equipment);
@@ -330,8 +343,21 @@ test("optional internal methodologyRecords influence only resolvedGenerationCont
   );
   assert.match(
     resolvedResult.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      resolvedResult.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(Object.hasOwn(resolvedResult.validatedPack, "resolvedMethodologyScope"), false);
   assert.equal(Object.hasOwn(resolvedResult.validatedPack, "methodologyInfluence"), false);
 });
@@ -348,7 +374,7 @@ test("processSessionPackRequest carries compact builder notes and environment in
   assert.match(result.validatedPack.sessions[0].activities[0].description, /Space note: use turf/i);
   assert.match(
     result.validatedPack.sessions[0].activities[1].description,
-    /Coach notes: first pass after regain\./i
+    /Note: first pass after regain\./i
   );
   assert.equal(result.validatedPack.theme, "pressing | notes:first pass after regain | env:turf");
   assert.equal(Object.hasOwn(result.validatedPack, "promptSignals"), false);
@@ -535,8 +561,21 @@ test("lookup path can resolve missing team programType and published travel meth
   assert.deepEqual(result.validatedPack.equipment, rawInput.equipment);
   assert.match(
     result.validatedPack.sessions[0].activities[0].description,
-    /Use clear spacing, scanning detail, and a progression the group can grow into\./
+    /Set a clear field with gates, target spaces, restart balls, and one visible first action\./
   );
+  for (const fragment of [
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ]) {
+    assert.equal(
+      result.validatedPack.sessions[0].activities.map((activity) => activity.description).join(" ").includes(fragment),
+      false
+    );
+  }
   assert.equal(Object.hasOwn(result.validatedPack, "resolvedProgramType"), false);
   assert.equal(Object.hasOwn(result.validatedPack, "appliedMethodologyScopes"), false);
   assert.equal(Object.hasOwn(result.validatedPack, "methodologyInfluence"), false);

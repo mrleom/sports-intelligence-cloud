@@ -254,6 +254,26 @@ test("generatePack uses selected Pugg goals directly without vague alternatives"
   assert.equal(/mini goals, target goals, or cone gates/i.test(text), false);
 });
 
+test("generatePack uses selected mini goals directly and clearly", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "possession under pressure",
+    sessionMode: "full_session",
+    coachNotes: "Use mini goals for the counter after a regain.",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies", "mini goals"],
+  });
+
+  const [session] = pack.sessions;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.deepEqual(session.equipment, ["balls", "cones", "pinnies", "mini goals"]);
+  assert.match(text, /mini goals/i);
+  assert.equal(/Pugg goals, small goals, target goals, or cone gates/i.test(text), false);
+});
+
 test("generatePack finishing with Pugg goals includes finishing-specific coaching detail", () => {
   const pack = generatePack({
     sport: "soccer",
@@ -312,6 +332,25 @@ test("generatePack chooses direct standard equipment when none is selected", () 
   assert.equal(/Pugg goals, small goals, target goals, or cone gates/i.test(setupText), false);
   assert.equal(/cone goals, cone gates, target lines, end zones, scoring zones, passing gates, or possession points/i.test(setupText), false);
   assert.equal(/available equipment/i.test(setupText), false);
+});
+
+test("generatePack setup text does not leak equipment placeholders", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["essentials / builder choice"],
+  });
+
+  const text = pack.sessions[0].activities.map((activity) => activity.description).join(" ");
+
+  assert.equal(text.toLowerCase().includes(["essentials /", "builder choice"].join(" ")), false);
+  assert.equal(text.toLowerCase().includes(["builder", "choice"].join(" ")), false);
+  assert.match(text, /Use cones to mark the grid and gates/i);
+  assert.match(text, /Keep spare balls beside the coach/i);
 });
 
 test("generatePack carries OST mixed-age playful context into activity text", () => {
@@ -409,16 +448,24 @@ test("generatePack gives every full-session activity coach-ready sections", () =
   assert.equal(session.activities.length, 3);
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [10, 20, 15]);
 
-  for (const activity of session.activities) {
+  for (const activity of session.activities.slice(0, -1)) {
     assert.match(activity.description, /Setup:/);
     assert.match(activity.description, /Run:/);
     assert.match(activity.description, /Scoring:/);
     assert.match(activity.description, /Cues:/);
     assert.match(activity.description, /Watch:/);
     assert.match(activity.description, /Progress:/);
-    assert.match(activity.description, /Regress:/);
     assert.equal(/full-size goals?/i.test(activity.description), false);
   }
+
+  const finalActivity = session.activities.at(-1);
+  assert.match(finalActivity.description, /Format:/);
+  assert.match(finalActivity.description, /Teams:/);
+  assert.match(finalActivity.description, /Scoring:/);
+  assert.match(finalActivity.description, /Constraint:/);
+  assert.match(finalActivity.description, /Win condition:/);
+  assert.match(finalActivity.description, /Focus:/);
+  assert.doesNotMatch(finalActivity.description, /Progress:|Regress:/);
 });
 
 test("generatePack attacking overloads includes overload-specific coaching detail", () => {
@@ -439,7 +486,69 @@ test("generatePack attacking overloads includes overload-specific coaching detai
   assert.equal(session.activities.length, 4);
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
   assert.equal(session.objectiveTags.includes("overloads"), true);
-  assert.match(text, /overload|wide support|wide channels|free player|pass or dribble/i);
+  assert.match(text, /overload|wide channel|wide player|free player|pass or dribble/i);
+});
+
+test("generatePack attacking overload fixture aligns activity story with diagrams", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "Primary session objective: Attacking | Specific focus: Create chances",
+    sessionMode: "full_session",
+    coachNotes: "attacking overloads",
+    sessionsCount: 1,
+    equipment: ["Essentials / Builder choice"],
+  });
+
+  const [activity1, activity2, activity3, activity4] = pack.sessions[0].activities;
+  const allDescriptions = pack.sessions[0].activities.map((activity) => activity.description).join(" ");
+  const forbiddenOutputFragments = [
+    ["essentials /", "builder choice"].join(" "),
+    ["builder", "choice"].join(" "),
+    ["select", "equipment"].join(" "),
+    ["introduce", "the theme"].join(" "),
+    ["movement", "direction"].join(" "),
+    ["scoring", "idea"].join(" "),
+    ["group can", "grow into"].join(" "),
+    [".", "Coach"].join(" "),
+    ["Attacking", ":"].join("")
+  ];
+
+  for (const fragment of forbiddenOutputFragments) {
+    assert.equal(allDescriptions.includes(fragment), false);
+  }
+  assert.doesNotMatch(allDescriptions, /(?:^|\s)Coach:(?:\s|$)/);
+
+  assert.match(activity1.description, /Grid: 18x16 yards/i);
+  assert.match(activity1.description, /four cone gates near the corners/i);
+  assert.match(activity1.description, /ball starting with a central attacker or server/i);
+  assert.match(activity1.description, /Use cones to mark the grid and gates\. Keep spare balls beside the coach/i);
+  assert.match(activity1.description, /attackers .*dribbling or passing through any cone gate/i);
+  assert.match(activity1.description, /defenders give light pressure/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
+  assert.match(activity1.description, /1v1.*2v1.*2v2.*3v2/i);
+
+  assert.match(activity2.name, /Wide Overload/i);
+  assert.match(activity2.description, /wide channel/i);
+  assert.match(activity2.description, /central ball start|central ball carrier/i);
+  assert.match(activity2.description, /support run/i);
+  assert.match(activity2.description, /shifting defender|defender shift/i);
+  assert.match(activity2.description, /target gate/i);
+  assert.match(activity2.description, /rotate the ball carrier, support runner, defender, and wide player/i);
+
+  assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
+  assert.match(activity3.description, /recovering defender|second decision|3v2|4v3|free player/i);
+
+  assert.match(activity4.name, /Final Game|Tournament|Competitive/i);
+  assert.match(activity4.description, /Format:/);
+  assert.match(activity4.description, /Teams:/);
+  assert.match(activity4.description, /Scoring:/);
+  assert.match(activity4.description, /Constraint:/);
+  assert.match(activity4.description, /Win condition:/);
+  assert.match(activity4.description, /Focus:/);
+  assert.doesNotMatch(activity4.description, /Progress:|Regress:|Cues:|Watch:|How to run|Rules/i);
+  assert.equal(activity4.description.length < 600, true);
 });
 
 test("generatePack defending 1v1 includes defender-specific cues", () => {
@@ -481,11 +590,55 @@ test("generatePack full-session setup starts with direct grid or field dimension
 
   assert.equal(setupLines.length, 4);
   assert.match(setupLines[0], /^Setup: Grid: 18x16 yards/i);
+  assert.match(setupLines[0], /four cone gates near the corners/i);
+  assert.match(setupLines[0], /ball starting with a central attacker or server/i);
   assert.match(setupLines[1], /^Setup: Grid: 20x18 yards/i);
   assert.match(setupLines[2], /^Setup: Field: 24x20 yards/i);
-  assert.match(setupLines[3], /^Setup: Field: 36x28 yards/i);
+  assert.equal(setupLines[3], "");
   assert.equal(/diameter/i.test(setupLines.join(" ")), false);
   assert.match(setupLines.join(" "), /balls, flat cones, pinnies/i);
+});
+
+test("generatePack Activity 1 activation includes setup, ball start, scoring, reset, and progression ladder", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    coachNotes: "create wide overloads and finish with a game",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [activity1] = pack.sessions[0].activities;
+
+  assert.match(activity1.description, /Grid: 18x16 yards/i);
+  assert.match(activity1.description, /four cone gates near the corners/i);
+  assert.match(activity1.description, /ball starting with a central attacker or server/i);
+  assert.match(activity1.description, /attackers .*dribbling or passing through any cone gate/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
+  assert.match(activity1.description, /1v1.*2v1.*2v2.*3v2/i);
+});
+
+test("generatePack Activity 3 in a four-activity full session remains a diagrammable progression", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u10",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    coachNotes: "create wide overloads, decision to pass or dribble, finish with a game",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [, , activity3, activity4] = pack.sessions[0].activities;
+
+  assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
+  assert.doesNotMatch(activity3.description, /real .*Final Game|real .*Tournament/i);
+  assert.match(activity3.description, /progress from Activity 2|recovering defender|second decision|free player/i);
+  assert.match(activity4.name, /Final Game|Tournament|Competitive/i);
 });
 
 test("generatePack possession under pressure has distinct Activity 2 and Activity 3 purposes", () => {
@@ -530,15 +683,39 @@ test("generatePack full-session story progresses from theme intro to final game"
   const run2 = activity2.description.match(/Run: [^.]+\./)?.[0] || "";
   const run3 = activity3.description.match(/Run: [^.]+\./)?.[0] || "";
 
-  assert.match(setup1, /introduce the theme, movement direction, and scoring idea/i);
-  assert.match(activity1.description, /introduce the session theme/i);
+  assert.match(setup1, /four cone gates near the corners/i);
+  assert.match(activity1.description, /welcome activation game/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
   assert.match(run2, /increase the pressure from Activity 1|first pass/i);
   assert.match(run3, /progress from Activity 2|transition|recovery|second decision/i);
   assert.notEqual(setup2, setup3);
   assert.notEqual(run2, run3);
   assert.equal(/Pugg goals, small goals, target goals, or cone gates/i.test(pack.sessions[0].activities.map((activity) => activity.description).join(" ")), false);
   assert.match(activity4.name, /Final Game|Tournament|Competitive/i);
-  assert.match(activity4.description, /apply .*defending pressure|first three activities|competitive|keep score/i);
+  assert.match(activity4.description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
+  assert.match(activity4.description, /competitive|visible score/i);
+});
+
+test("generatePack final Activity 4 stays compact and competitive", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "attacking overloads",
+    sessionMode: "full_session",
+    coachNotes: "Create chances with a wide free player before the final game.",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies", "mini goals"],
+  });
+
+  const activity4 = pack.sessions[0].activities.at(-1);
+
+  assert.match(activity4.name, /Final Game|Tournament|Competitive/i);
+  assert.match(activity4.description, /Format:/i);
+  assert.match(activity4.description, /Teams:/i);
+  assert.match(activity4.description, /visible score|bonus point|competitive|game flow/i);
+  assert.doesNotMatch(activity4.description, /Progress:|Regress:|Cues:|Watch:/i);
+  assert.equal(activity4.description.length < 600, true);
 });
 
 test("generatePack does not end full sessions with generic cooldown", () => {
@@ -665,7 +842,7 @@ test("generatePack applies compact builder prompt notes and environment to activ
   const [session] = pack.sessions;
 
   assert.match(session.activities[0].description, /Space note: use turf/i);
-  assert.match(session.activities[1].description, /Coach notes: first pass after regain\./i);
+  assert.match(session.activities[1].description, /Note: first pass after regain\./i);
 });
 
 test("generatePack preserves meaningful coach notes instead of tiny truncation", () => {
@@ -801,7 +978,7 @@ test("generatePack derives useful quick-session tags, equipment, and coaching de
   assert.match(session.activities[0].description, /Setup:/);
   assert.match(session.activities[1].description, /Cues:/);
   assert.match(session.activities.at(-1).name, /Final Game|Tournament|Competitive/i);
-  assert.match(session.activities.at(-1).description, /real .*final game|Run:/i);
+  assert.match(session.activities.at(-1).description, /Format:|Teams:|Win condition:/i);
 });
 
 test("generatePack combines quick 3v3 defending and duck-duck-goose into one strong activity", () => {
@@ -907,10 +1084,7 @@ test("generatePack avoids repeating one generic setup across all full-session ac
   );
 
   assert.equal(new Set(setupLines).size, setupLines.length);
-  assert.equal(
-    setupLines.every((setup) => /use the available space with balls, tall cones, flat cones/i.test(setup || "")),
-    false
-  );
+  assert.equal(setupLines.every((setup) => /balls, tall cones, flat cones/i.test(setup || "")), false);
 });
 
 test("generatePack uses pressure and possession prompt words instead of falling back to theme-only tags", () => {

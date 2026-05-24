@@ -10,19 +10,78 @@ type DiagramActivity = {
 
 type DiagramKind =
   | "activation_chase_or_reaction"
+  | "attacking_overload"
+  | "defending_1v1"
+  | "first_touch_pressure"
+  | "directional_possession"
+  | "mini_goal_possession"
+  | "pugg_goal_finishing"
   | "transition_to_attack"
-  | "chase_gates"
   | "pressure_cover_gates"
   | "recover_delay_win"
   | "generic_small_sided"
   | "final_game_format";
 
-type DiagramPhase = {
-  label: string;
-  note: string;
-  role: "activation" | "main" | "progression";
-  moment: "setup" | "play" | "score";
+type LegendGroup = "roles" | "movement" | "equipment" | "space";
+
+type LegendKey =
+  | "coachedPlayer"
+  | "oppositionPlayer"
+  | "neutralPlayer"
+  | "ball"
+  | "ballAction"
+  | "coachedRun"
+  | "defenderPressure"
+  | "dribbleCarry"
+  | "rotationReset"
+  | "cone"
+  | "coneGate"
+  | "miniGoal"
+  | "puggGoal"
+  | "wideChannel"
+  | "zone";
+
+type PlayerRole = "coached" | "opposition" | "neutral";
+type ArrowAction = "ball" | "run" | "pressure" | "carry" | "rotation";
+
+type DiagramToken =
+  | { type: "zone"; x: number; y: number; width: number; height: number; label?: string; tone?: "wide" | "target" | "pressure" | "finish" }
+  | { type: "player"; role: PlayerRole; x: number; y: number; label?: string }
+  | { type: "ball"; x: number; y: number }
+  | { type: "cone"; x: number; y: number; label?: string }
+  | { type: "gate"; x: number; y: number; rotate?: number; label?: string }
+  | { type: "miniGoal"; x: number; y: number; rotate?: number; pugg?: boolean; label?: string }
+  | { type: "label"; x: number; y: number; text: string; anchor?: "start" | "middle" | "end" }
+  | { type: "arrow"; d: string; action: ArrowAction; label?: string };
+
+type DiagramPanel = {
+  title: string;
+  caption: string;
+  tokens: DiagramToken[];
+  legend: LegendKey[];
 };
+
+const LEGEND_GROUP_ORDER: LegendGroup[] = ["roles", "movement", "equipment", "space"];
+
+const LEGEND_META: Record<LegendKey, { group: LegendGroup; label: string }> = {
+  coachedPlayer: { group: "roles", label: "Blue = coached team" },
+  oppositionPlayer: { group: "roles", label: "Red = opposition/defender" },
+  neutralPlayer: { group: "roles", label: "Gray = neutral/support" },
+  ball: { group: "equipment", label: "Ball" },
+  ballAction: { group: "movement", label: "Solid green = pass/shot" },
+  coachedRun: { group: "movement", label: "Blue dashed = support/recovery run" },
+  defenderPressure: { group: "movement", label: "Red dashed = pressure/recovery" },
+  dribbleCarry: { group: "movement", label: "Dotted green = dribble/carry" },
+  rotationReset: { group: "movement", label: "Curved arrow = reset/rotation" },
+  cone: { group: "equipment", label: "Yellow = cone/equipment" },
+  coneGate: { group: "equipment", label: "Cone gate" },
+  miniGoal: { group: "equipment", label: "Mini goal" },
+  puggGoal: { group: "equipment", label: "Pugg goal" },
+  wideChannel: { group: "space", label: "Dashed box = wide channel" },
+  zone: { group: "space", label: "Dashed box = target zone" }
+};
+const LEGEND_KEY_ORDER = Object.keys(LEGEND_META) as LegendKey[];
+const FOUNDATIONAL_LOCAL_LEGEND_KEYS: LegendKey[] = ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball"];
 
 function normalizeText(value: string | undefined) {
   return String(value || "").toLowerCase();
@@ -32,17 +91,41 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
   const text = normalizeText(`${activity?.name || ""} ${activity?.description || ""}`);
   const isFinalActivity =
     (totalActivities > 1 && activityIndex === totalActivities - 1) ||
-    /final game|tournament|competitive close|competitive final|gate battle/i.test(text);
+    /final game|tournament|competitive close|competitive final|small-sided competitive final|7v7 competitive final/i.test(text);
 
   if (isFinalActivity) {
     return "final_game_format";
   }
 
-  if (
-    /recover|regain|win it back|winning the ball|transition|counter|outlet|first pass|escape pressure after regain|own box/.test(
-      text
-    )
-  ) {
+  if (activityIndex === 0) {
+    return "activation_chase_or_reaction";
+  }
+
+  if (/pugg/.test(text)) {
+    return "pugg_goal_finishing";
+  }
+
+  if (/attacking overload|overload|free player|wide support|wide channel|wide play|pass or dribble|numbers up|extra player|create chances|combination play/.test(text)) {
+    return "attacking_overload";
+  }
+
+  if (/mini goal|mini goals/.test(text) && /possession|target|directional|pressure/.test(text)) {
+    return "mini_goal_possession";
+  }
+
+  if (/first touch|receiving box|scan before receiving|scan before the pass|pressure gate/.test(text)) {
+    return "first_touch_pressure";
+  }
+
+  if (/1v1|angle and delay|side-on|body shape|delay|force wide|recovery line/.test(text) && /defend|defender|delay|recover/.test(text)) {
+    return "defending_1v1";
+  }
+
+  if (/directional possession|target zone|target zones|rondo|possession under pressure|escape pass|split pass|support angle/.test(text)) {
+    return "directional_possession";
+  }
+
+  if (/recover|regain|win it back|winning the ball|transition|counter|outlet|first pass|escape pressure after regain|own box/.test(text)) {
     return /delay|recover|win it back/.test(text) ? "recover_delay_win" : "transition_to_attack";
   }
 
@@ -51,10 +134,6 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
   }
 
   if (/duck|goose|chase|escape|reaction/.test(text) && /gate/.test(text)) {
-    return activityIndex === 0 ? "activation_chase_or_reaction" : "chase_gates";
-  }
-
-  if (activityIndex === 0) {
     return "activation_chase_or_reaction";
   }
 
@@ -65,78 +144,522 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
   return "generic_small_sided";
 }
 
-function inferStoryRole(kind: DiagramKind, activityIndex: number): DiagramPhase["role"] {
-  if (activityIndex === 0) {
-    return "activation";
-  }
-
-  if (activityIndex >= 2 || kind === "recover_delay_win") {
-    return "progression";
-  }
-
-  return "main";
+function uniqueLegendKeys(keys: LegendKey[]) {
+  return keys.filter((key, index) => keys.indexOf(key) === index);
 }
 
-function buildStoryNotes(role: DiagramPhase["role"]): Record<DiagramPhase["moment"], string> {
-  if (role === "activation") {
-    return {
-      setup: "Players start loose inside a small grid with the ball central and gates visible.",
-      play: "Ball starts with the central blue player. Coach call triggers one run, one chase, and a carry through a gate.",
-      score: "Finish through the marked gate, collect the ball, and rotate back in."
-    };
-  }
+function orderedLegendKeys(keys: LegendKey[]) {
+  const uniqueKeys = uniqueLegendKeys(keys);
+  return uniqueKeys.sort((a, b) => {
+    const groupDelta = LEGEND_GROUP_ORDER.indexOf(LEGEND_META[a].group) - LEGEND_GROUP_ORDER.indexOf(LEGEND_META[b].group);
 
-  if (role === "progression") {
-    return {
-      setup: "Start from a related directional game shape with recovery space and a counter target.",
-      play: "A turnover or loose touch starts the harder decision: support run, pressure arrives, then counter.",
-      score: "Score on the counter target. Reset from the coach or next group after the finish."
-    };
-  }
+    if (groupDelta !== 0) {
+      return groupDelta;
+    }
 
-  return {
-    setup: "Two teams start in a compact game area with ball, gates, and support lanes visible.",
-    play: "First pass or bad touch starts the pressure and support movement toward the scoring target.",
-    score: "Score through the target. Blue players reset shape while the coach restarts the next round."
-  };
+    return LEGEND_KEY_ORDER.indexOf(a) - LEGEND_KEY_ORDER.indexOf(b);
+  });
 }
 
-function buildDiagramPhases(kind: DiagramKind, activityIndex: number): DiagramPhase[] {
-  const role = inferStoryRole(kind, activityIndex);
-  const notes = buildStoryNotes(role);
+function localLegendKeys(keys: LegendKey[]) {
+  return keys.filter((key) => !FOUNDATIONAL_LOCAL_LEGEND_KEYS.includes(key));
+}
 
-  if (role === "activation") {
+function inferredCaption(text: string) {
+  return `Inferred review diagram: ${text}`;
+}
+
+function buildAttackingOverloadPanels(activityIndex: number): DiagramPanel[] {
+  const isProgression = activityIndex >= 2;
+
+  if (isProgression) {
     return [
-      { label: "Setup", note: notes.setup, role, moment: "setup" },
-      { label: "Action", note: notes.play, role, moment: "play" },
+      {
+        title: "Setup",
+        caption: inferredCaption("start central, keep the wide player visible, and add a recovering defender to create the second decision."),
+        legend: ["neutralPlayer", "ball", "coneGate", "wideChannel"],
+        tokens: [
+          { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+          { type: "gate", x: 140, y: 52, rotate: 90 },
+          { type: "player", role: "coached", x: 65, y: 53 },
+          { type: "player", role: "coached", x: 80, y: 75 },
+          { type: "player", role: "neutral", x: 120, y: 40 },
+          { type: "player", role: "opposition", x: 88, y: 50 },
+          { type: "player", role: "opposition", x: 104, y: 70 },
+          { type: "ball", x: 65, y: 53 },
+          { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+        ]
+      },
+      {
+        title: "Action",
+        caption: inferredCaption("the first pass finds the wide free player while support arrives underneath and pressure shifts across."),
+        legend: ["neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "wideChannel"],
+        tokens: [
+          { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+          { type: "player", role: "coached", x: 67, y: 53 },
+          { type: "player", role: "coached", x: 82, y: 75 },
+          { type: "player", role: "neutral", x: 120, y: 40 },
+          { type: "player", role: "opposition", x: 88, y: 50 },
+          { type: "player", role: "opposition", x: 105, y: 68 },
+          { type: "ball", x: 67, y: 53 },
+          { type: "arrow", d: "M70 52 C86 47, 103 43, 118 40", action: "ball" },
+          { type: "arrow", d: "M82 75 C91 65, 100 57, 111 49", action: "run" },
+          { type: "arrow", d: "M88 50 C96 48, 105 44, 116 41", action: "pressure" },
+          { type: "arrow", d: "M105 68 C101 61, 96 56, 89 52", action: "pressure" }
+        ]
+      },
+      {
+        title: "Score / Reset",
+        caption: inferredCaption("the wide player chooses the finish lane or cutback, then the group rotates for the next overload."),
+        legend: ["neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "rotationReset", "coneGate", "zone"],
+        tokens: [
+          { type: "zone", x: 82, y: 30, width: 36, height: 43, label: "Lane", tone: "finish" },
+          { type: "gate", x: 140, y: 52, rotate: 90 },
+          { type: "player", role: "neutral", x: 120, y: 32, label: "F" },
+          { type: "player", role: "coached", x: 111, y: 52 },
+          { type: "player", role: "opposition", x: 98, y: 50 },
+          { type: "player", role: "opposition", x: 106, y: 67 },
+          { type: "ball", x: 120, y: 32 },
+          { type: "arrow", d: "M121 34 C126 41, 133 47, 140 52", action: "ball" },
+          { type: "arrow", d: "M111 52 C119 52, 128 52, 138 52", action: "run" },
+          { type: "arrow", d: "M98 50 C106 45, 114 39, 120 34", action: "pressure" },
+          { type: "arrow", d: "M111 62 C86 93, 52 79, 65 55", action: "rotation", label: "Rotate" }
+        ]
+      }
     ];
   }
 
   return [
-    { label: "Setup", note: notes.setup, role, moment: "setup" },
-    { label: "How to play", note: notes.play, role, moment: "play" },
-    { label: "How to score / reset", note: notes.score, role, moment: "score" },
+    {
+      title: "Setup",
+      caption: inferredCaption("set a wide channel, central ball start, central defender, and visible free player before the overload starts."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "wideChannel"],
+      tokens: [
+        { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+        { type: "gate", x: 140, y: 52, rotate: 90 },
+        { type: "player", role: "coached", x: 66, y: 53 },
+        { type: "player", role: "coached", x: 78, y: 74 },
+        { type: "player", role: "neutral", x: 119, y: 40 },
+        { type: "player", role: "opposition", x: 91, y: 52 },
+        { type: "ball", x: 66, y: 53 },
+        { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("the ball carrier reads pressure, then passes to the free player or dribbles into open space."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "ballAction", "coachedRun", "defenderPressure", "dribbleCarry", "wideChannel"],
+      tokens: [
+        { type: "zone", x: 112, y: 14, width: 30, height: 77, label: "Wide channel", tone: "wide" },
+        { type: "player", role: "coached", x: 67, y: 53 },
+        { type: "player", role: "coached", x: 79, y: 77 },
+        { type: "player", role: "neutral", x: 119, y: 40 },
+        { type: "player", role: "opposition", x: 90, y: 51 },
+        { type: "ball", x: 67, y: 53 },
+        { type: "arrow", d: "M70 52 C86 47, 101 43, 116 40", action: "ball" },
+        { type: "arrow", d: "M68 58 C82 67, 96 66, 110 57", action: "carry" },
+        { type: "arrow", d: "M79 77 C89 68, 100 59, 113 50", action: "run" },
+        { type: "arrow", d: "M90 51 C83 51, 76 52, 70 54", action: "pressure" },
+        { type: "label", x: 126, y: 31, text: "Free player", anchor: "middle" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("attack the free-player side, score through the gate, then rotate the passer into the wide support role."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "rotationReset", "coneGate"],
+      tokens: [
+        { type: "gate", x: 140, y: 52, rotate: 90 },
+        { type: "player", role: "neutral", x: 118, y: 36, label: "F" },
+        { type: "player", role: "coached", x: 105, y: 57 },
+        { type: "player", role: "coached", x: 78, y: 76 },
+        { type: "player", role: "opposition", x: 91, y: 49 },
+        { type: "ball", x: 118, y: 36 },
+        { type: "arrow", d: "M119 38 C125 43, 132 48, 139 52", action: "ball" },
+        { type: "arrow", d: "M78 76 C88 69, 99 63, 109 58", action: "run" },
+        { type: "arrow", d: "M91 49 C100 48, 108 44, 116 38", action: "pressure" },
+        { type: "arrow", d: "M105 61 C85 88, 51 81, 49 55", action: "rotation", label: "Rotate wide" },
+        { type: "label", x: 135, y: 42, text: "Score gate", anchor: "end" }
+      ]
+    }
   ];
 }
 
-function Player({
-  x,
-  y,
-  team,
-  label
-}: {
-  x: number;
-  y: number;
-  team: "blue" | "red";
-  label?: string;
-}) {
-  const fill = team === "blue" ? "#2563eb" : "#ef4444";
+function buildDefending1v1Panels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("build a narrow channel with a recovery line so the defender can show angle and delay."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ball", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 46, y: 16, width: 68, height: 73, label: "1v1 channel", tone: "pressure" },
+        { type: "gate", x: 124, y: 35, rotate: 90 },
+        { type: "gate", x: 124, y: 70, rotate: 90 },
+        { type: "player", role: "coached", x: 56, y: 52, label: "A" },
+        { type: "player", role: "opposition", x: 78, y: 49 },
+        { type: "ball", x: 56, y: 52 },
+        { type: "label", x: 81, y: 22, text: "Recovery line", anchor: "middle" },
+        { type: "zone", x: 78, y: 18, width: 2, height: 69, tone: "target" }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("the defender curves in side-on, delays the attacker, and forces play away from the middle."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ball", "dribbleCarry", "defenderPressure", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 46, y: 16, width: 68, height: 73, label: "Angle & delay", tone: "pressure" },
+        { type: "gate", x: 124, y: 35, rotate: 90 },
+        { type: "gate", x: 124, y: 70, rotate: 90 },
+        { type: "player", role: "coached", x: 69, y: 52, label: "A" },
+        { type: "player", role: "opposition", x: 88, y: 45 },
+        { type: "ball", x: 69, y: 52 },
+        { type: "arrow", d: "M71 53 C84 57, 96 62, 116 69", action: "carry" },
+        { type: "arrow", d: "M88 45 C81 48, 76 51, 71 55", action: "pressure" },
+        { type: "label", x: 94, y: 32, text: "Side-on", anchor: "middle" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("attackers score through a gate; defenders score by delaying, winning, or recovering across the line."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ballAction", "defenderPressure", "rotationReset", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 46, y: 16, width: 68, height: 73, tone: "pressure" },
+        { type: "gate", x: 124, y: 70, rotate: 90 },
+        { type: "player", role: "coached", x: 103, y: 65, label: "A" },
+        { type: "player", role: "opposition", x: 91, y: 52 },
+        { type: "ball", x: 103, y: 65 },
+        { type: "arrow", d: "M105 65 C112 66, 118 68, 124 70", action: "ball" },
+        { type: "arrow", d: "M91 52 C96 56, 100 60, 104 66", action: "pressure" },
+        { type: "arrow", d: "M116 78 C84 96, 47 79, 57 55", action: "rotation", label: "Reset pair" },
+        { type: "label", x: 80, y: 22, text: "Recovery line", anchor: "middle" }
+      ]
+    }
+  ];
+}
+
+function buildFirstTouchPanels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("show the receiver, server, pressure gate, and receiving box before the first touch happens."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 61, y: 31, width: 38, height: 34, label: "Box", tone: "target" },
+        { type: "gate", x: 103, y: 48, rotate: 90 },
+        { type: "gate", x: 134, y: 54, rotate: 90 },
+        { type: "player", role: "neutral", x: 30, y: 52, label: "S" },
+        { type: "player", role: "coached", x: 74, y: 50, label: "R" },
+        { type: "player", role: "opposition", x: 112, y: 48 },
+        { type: "ball", x: 30, y: 52 },
+        { type: "label", x: 108, y: 33, text: "Gate", anchor: "middle" }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("the receiver scans, takes the first touch away from pressure, and exits toward the scoring gate."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "dribbleCarry", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 61, y: 31, width: 38, height: 34, label: "Box", tone: "target" },
+        { type: "gate", x: 103, y: 48, rotate: 90 },
+        { type: "gate", x: 134, y: 54, rotate: 90 },
+        { type: "player", role: "neutral", x: 30, y: 52, label: "S" },
+        { type: "player", role: "coached", x: 74, y: 50, label: "R" },
+        { type: "player", role: "opposition", x: 112, y: 48 },
+        { type: "ball", x: 30, y: 52 },
+        { type: "arrow", d: "M34 52 C47 48, 60 47, 71 50", action: "ball" },
+        { type: "arrow", d: "M75 52 C91 63, 111 65, 132 55", action: "carry" },
+        { type: "arrow", d: "M112 48 C100 48, 87 49, 76 51", action: "pressure" },
+        { type: "arrow", d: "M58 76 C72 70, 87 66, 103 65", action: "run" },
+        { type: "label", x: 78, y: 26, text: "Scan first", anchor: "middle" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("score through the exit gate, then rotate server to receiver and receiver to pressure."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "rotationReset", "coneGate"],
+      tokens: [
+        { type: "gate", x: 134, y: 54, rotate: 90 },
+        { type: "player", role: "coached", x: 116, y: 57, label: "R" },
+        { type: "player", role: "opposition", x: 98, y: 51 },
+        { type: "player", role: "neutral", x: 51, y: 52, label: "S" },
+        { type: "ball", x: 116, y: 57 },
+        { type: "arrow", d: "M117 57 C123 56, 128 55, 134 54", action: "ball" },
+        { type: "arrow", d: "M116 64 C92 91, 49 84, 50 56", action: "rotation", label: "Rotate" }
+      ]
+    }
+  ];
+}
+
+function buildPossessionPanels(useMiniGoals: boolean): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("build a directional possession area with target zones so the next pass has a clear destination."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", useMiniGoals ? "miniGoal" : "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 13, y: 18, width: 28, height: 69, label: "Target zone", tone: "target" },
+        { type: "zone", x: 119, y: 18, width: 28, height: 69, label: "Target zone", tone: "target" },
+        useMiniGoals
+          ? { type: "miniGoal", x: 143, y: 52, rotate: 90 }
+          : { type: "gate", x: 142, y: 52, rotate: 90 },
+        { type: "player", role: "coached", x: 54, y: 35 },
+        { type: "player", role: "coached", x: 54, y: 70 },
+        { type: "player", role: "neutral", x: 128, y: 52, label: "T" },
+        { type: "player", role: "opposition", x: 82, y: 43 },
+        { type: "player", role: "opposition", x: 91, y: 67 },
+        { type: "ball", x: 54, y: 35 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("use support angles to play away from pressure and connect into the target zone."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "defenderPressure", useMiniGoals ? "miniGoal" : "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 119, y: 18, width: 28, height: 69, label: "Target zone", tone: "target" },
+        useMiniGoals
+          ? { type: "miniGoal", x: 143, y: 52, rotate: 90 }
+          : { type: "gate", x: 142, y: 52, rotate: 90 },
+        { type: "player", role: "coached", x: 59, y: 36 },
+        { type: "player", role: "coached", x: 76, y: 72 },
+        { type: "player", role: "coached", x: 101, y: 50 },
+        { type: "player", role: "neutral", x: 129, y: 52, label: "T" },
+        { type: "player", role: "opposition", x: 82, y: 43 },
+        { type: "player", role: "opposition", x: 93, y: 63 },
+        { type: "ball", x: 59, y: 36 },
+        { type: "arrow", d: "M62 37 C75 42, 89 46, 100 50", action: "ball" },
+        { type: "arrow", d: "M101 50 C111 51, 120 52, 128 52", action: "ball" },
+        { type: "arrow", d: "M76 72 C83 62, 91 55, 101 50", action: "run" },
+        { type: "arrow", d: "M82 43 C74 40, 67 38, 61 36", action: "pressure" },
+        { type: "arrow", d: "M93 63 C97 58, 100 54, 102 50", action: "pressure" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("score by finding the target player or mini goal, then reset with the counter-pressure visible."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "defenderPressure", "rotationReset", useMiniGoals ? "miniGoal" : "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 119, y: 18, width: 28, height: 69, label: "Target zone", tone: "target" },
+        useMiniGoals
+          ? { type: "miniGoal", x: 143, y: 52, rotate: 90 }
+          : { type: "gate", x: 142, y: 52, rotate: 90 },
+        { type: "player", role: "coached", x: 105, y: 51 },
+        { type: "player", role: "neutral", x: 129, y: 52, label: "T" },
+        { type: "player", role: "opposition", x: 93, y: 62 },
+        { type: "ball", x: 105, y: 51 },
+        { type: "arrow", d: useMiniGoals ? "M107 51 C119 51, 130 52, 143 52" : "M107 51 C116 51, 126 52, 142 52", action: "ball" },
+        { type: "arrow", d: "M93 62 C100 59, 107 55, 114 52", action: "pressure" },
+        { type: "arrow", d: "M130 68 C104 95, 65 88, 56 61", action: "rotation", label: "Reset direction" }
+      ]
+    }
+  ];
+}
+
+function buildPuggFinishingPanels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("mark a finish lane, a server, a shooter, a recovering defender, a rebound cone, and a Pugg goal."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "cone", "puggGoal", "zone"],
+      tokens: [
+        { type: "zone", x: 54, y: 30, width: 63, height: 43, label: "Finish lane", tone: "finish" },
+        { type: "miniGoal", x: 133, y: 52, rotate: 90, pugg: true },
+        { type: "cone", x: 104, y: 25, label: "Rebound cone" },
+        { type: "player", role: "neutral", x: 32, y: 52, label: "Srv" },
+        { type: "player", role: "coached", x: 58, y: 52, label: "Sh" },
+        { type: "player", role: "opposition", x: 72, y: 68 },
+        { type: "ball", x: 32, y: 52 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("serve into the finish lane, shoot quickly, and let the defender arrive under controlled pressure."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "defenderPressure", "puggGoal", "zone"],
+      tokens: [
+        { type: "zone", x: 54, y: 30, width: 63, height: 43, label: "Finish lane", tone: "finish" },
+        { type: "miniGoal", x: 133, y: 52, rotate: 90, pugg: true },
+        { type: "player", role: "neutral", x: 32, y: 52, label: "Srv" },
+        { type: "player", role: "coached", x: 69, y: 52, label: "Sh" },
+        { type: "player", role: "opposition", x: 82, y: 67 },
+        { type: "ball", x: 32, y: 52 },
+        { type: "arrow", d: "M35 52 C46 49, 57 49, 68 52", action: "ball" },
+        { type: "arrow", d: "M70 52 C89 49, 110 50, 133 52", action: "ball", label: "Shot" },
+        { type: "arrow", d: "M82 67 C78 62, 74 57, 70 53", action: "pressure" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("finish, chase the rebound, then rotate shooter to defender, defender to server, and server to shooter."),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "rotationReset", "cone", "puggGoal"],
+      tokens: [
+        { type: "miniGoal", x: 133, y: 52, rotate: 90, pugg: true },
+        { type: "cone", x: 104, y: 25 },
+        { type: "player", role: "coached", x: 103, y: 42, label: "Sh" },
+        { type: "player", role: "opposition", x: 76, y: 67 },
+        { type: "player", role: "neutral", x: 34, y: 52, label: "Srv" },
+        { type: "ball", x: 103, y: 42 },
+        { type: "arrow", d: "M104 42 C113 45, 123 49, 133 52", action: "ball" },
+        { type: "arrow", d: "M103 42 C102 36, 102 31, 104 25", action: "run" },
+        { type: "arrow", d: "M103 61 C82 92, 40 83, 35 56", action: "rotation", label: "Rotate" }
+      ]
+    }
+  ];
+}
+
+function buildActivationPanels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("start in a compact grid with cone gates visible and players ready to react."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ball", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 24, y: 18, width: 112, height: 69, label: "Grid", tone: "target" },
+        { type: "gate", x: 28, y: 28 },
+        { type: "gate", x: 132, y: 77 },
+        { type: "player", role: "coached", x: 50, y: 34 },
+        { type: "player", role: "coached", x: 55, y: 70 },
+        { type: "player", role: "opposition", x: 105, y: 44 },
+        { type: "player", role: "opposition", x: 109, y: 73 },
+        { type: "ball", x: 50, y: 34 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("coach call starts a reaction, a carry, and a chase toward the scoring gate."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ball", "defenderPressure", "dribbleCarry", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 24, y: 18, width: 112, height: 69, label: "Grid", tone: "target" },
+        { type: "gate", x: 132, y: 77 },
+        { type: "player", role: "coached", x: 72, y: 50 },
+        { type: "player", role: "opposition", x: 98, y: 61 },
+        { type: "ball", x: 72, y: 50 },
+        { type: "arrow", d: "M74 51 C88 56, 105 66, 132 77", action: "carry" },
+        { type: "arrow", d: "M98 61 C91 58, 82 54, 74 51", action: "pressure" }
+      ]
+    }
+  ];
+}
+
+function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
+  const isProgression = kind === "recover_delay_win" || kind === "transition_to_attack";
+  const title = isProgression ? "Counter / Recovery" : "Small-Sided Game";
+
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("use a compact game space with teams, gates, and the ball location clearly visible."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ball", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 24, y: 16, width: 112, height: 73, label: title, tone: isProgression ? "pressure" : "target" },
+        { type: "gate", x: 136, y: 34, rotate: 90 },
+        { type: "gate", x: 136, y: 72, rotate: 90 },
+        { type: "player", role: "coached", x: 50, y: 35 },
+        { type: "player", role: "coached", x: 55, y: 70 },
+        { type: "player", role: "opposition", x: 94, y: 39 },
+        { type: "player", role: "opposition", x: 101, y: 70 },
+        { type: "ball", x: 50, y: 35 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption(
+        isProgression
+          ? "after the regain, first pass and support run point the counter toward the scoring target."
+          : "pressure arrives, the support run opens, and the ball moves toward the scoring target."
+      ),
+      legend: ["coachedPlayer", "oppositionPlayer", "ballAction", "coachedRun", "defenderPressure", "coneGate", "zone"],
+      tokens: [
+        { type: "zone", x: 24, y: 16, width: 112, height: 73, label: title, tone: isProgression ? "pressure" : "target" },
+        { type: "gate", x: 136, y: 34, rotate: 90 },
+        { type: "player", role: "coached", x: 68, y: 47 },
+        { type: "player", role: "coached", x: 82, y: 75 },
+        { type: "player", role: "opposition", x: 91, y: 42 },
+        { type: "player", role: "opposition", x: 103, y: 65 },
+        { type: "ball", x: 68, y: 47 },
+        { type: "arrow", d: "M70 47 C88 41, 111 36, 136 34", action: "ball" },
+        { type: "arrow", d: "M82 75 C93 62, 108 48, 124 39", action: "run" },
+        { type: "arrow", d: "M91 42 C83 43, 76 45, 70 47", action: "pressure" }
+      ]
+    },
+    {
+      title: "Score / Reset",
+      caption: inferredCaption("score through the target, then reset the ball and team shape for the next repetition."),
+      legend: ["coachedPlayer", "oppositionPlayer", "ballAction", "rotationReset", "coneGate"],
+      tokens: [
+        { type: "gate", x: 136, y: 34, rotate: 90 },
+        { type: "player", role: "coached", x: 118, y: 37 },
+        { type: "player", role: "coached", x: 90, y: 72 },
+        { type: "player", role: "opposition", x: 103, y: 53 },
+        { type: "ball", x: 118, y: 37 },
+        { type: "arrow", d: "M119 37 C126 36, 131 35, 136 34", action: "ball" },
+        { type: "arrow", d: "M117 50 C90 89, 45 80, 50 39", action: "rotation", label: "Reset" }
+      ]
+    }
+  ];
+}
+
+function learningPanels(panels: DiagramPanel[]) {
+  return panels.slice(0, 2);
+}
+
+function buildDiagramPanels(kind: DiagramKind, activityIndex: number): DiagramPanel[] {
+  if (kind === "attacking_overload") {
+    return learningPanels(buildAttackingOverloadPanels(activityIndex));
+  }
+
+  if (kind === "defending_1v1") {
+    return learningPanels(buildDefending1v1Panels());
+  }
+
+  if (kind === "first_touch_pressure") {
+    return learningPanels(buildFirstTouchPanels());
+  }
+
+  if (kind === "directional_possession") {
+    return learningPanels(buildPossessionPanels(false));
+  }
+
+  if (kind === "mini_goal_possession") {
+    return learningPanels(buildPossessionPanels(true));
+  }
+
+  if (kind === "pugg_goal_finishing") {
+    return learningPanels(buildPuggFinishingPanels());
+  }
+
+  if (kind === "activation_chase_or_reaction") {
+    return learningPanels(buildActivationPanels());
+  }
+
+  return learningPanels(buildGenericPanels(kind));
+}
+
+function FieldArea({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <rect x="6" y="6" width="148" height="93" rx="7" fill="#f8fafc" stroke="#cbd5e1" />
+      <line x1="80" y1="6" x2="80" y2="99" stroke="#e2e8f0" strokeDasharray="3 3" />
+      <circle cx="80" cy="52.5" r="13" fill="none" stroke="#e2e8f0" />
+      {children}
+    </>
+  );
+}
+
+function PlayerToken({ x, y, role, label }: { x: number; y: number; role: PlayerRole; label?: string }) {
+  const fill = role === "coached" ? "#2563eb" : role === "opposition" ? "#ef4444" : "#94a3b8";
 
   return (
     <g>
-      <circle cx={x} cy={y} r="4.5" fill={fill} stroke="white" strokeWidth="1.5" />
+      <circle cx={x} cy={y} r="4.8" fill={fill} stroke="white" strokeWidth="1.5" />
+      <circle cx={x} cy={y - 1.35} r="1.15" fill="white" opacity="0.9" />
+      <path
+        d={`M${x - 2.45} ${y + 1.35} C${x - 1.2} ${y + 2.45}, ${x + 1.2} ${y + 2.45}, ${x + 2.45} ${y + 1.35}`}
+        fill="none"
+        stroke="white"
+        strokeLinecap="round"
+        strokeWidth="0.8"
+        opacity="0.9"
+      />
       {label ? (
-        <text x={x} y={y - 7} textAnchor="middle" className="fill-slate-600 text-[7px] font-semibold">
+        <text x={x} y={y - 7.2} textAnchor="middle" className="fill-slate-700 text-[6.5px] font-semibold">
           {label}
         </text>
       ) : null}
@@ -144,321 +667,336 @@ function Player({
   );
 }
 
-function Gate({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
-  return (
-    <g transform={`translate(${x} ${y}) rotate(${rotate})`}>
-      <circle cx="-6" cy="0" r="2.6" fill="#facc15" stroke="#ca8a04" strokeWidth="0.5" />
-      <circle cx="6" cy="0" r="2.6" fill="#facc15" stroke="#ca8a04" strokeWidth="0.5" />
-      <line x1="-4" y1="0" x2="4" y2="0" stroke="#ca8a04" strokeWidth="1.2" strokeDasharray="2 2" />
-    </g>
-  );
-}
-
-function Ball({ x, y }: { x: number; y: number }) {
+function BallToken({ x, y }: { x: number; y: number }) {
   return (
     <g>
-      <circle cx={x} cy={y} r="4" fill="white" stroke="#0f172a" strokeWidth="1" />
-      <circle cx={x} cy={y} r="1.1" fill="#0f172a" />
+      <circle cx={x} cy={y} r="3.7" fill="white" stroke="#0f172a" strokeWidth="1" />
+      <circle cx={x} cy={y} r="1" fill="#0f172a" />
       <path
-        d={`M${x - 2.4} ${y - 1.4} L${x - 3.4} ${y - 3} M${x + 2.4} ${y - 1.4} L${x + 3.4} ${y - 3} M${x - 2.4} ${y + 1.5} L${x - 3.5} ${y + 3} M${x + 2.4} ${y + 1.5} L${x + 3.5} ${y + 3}`}
+        d={`M${x - 2.2} ${y - 1.3} L${x - 3.1} ${y - 2.8} M${x + 2.2} ${y - 1.3} L${x + 3.1} ${y - 2.8} M${x - 2.2} ${y + 1.4} L${x - 3.1} ${y + 2.8} M${x + 2.2} ${y + 1.4} L${x + 3.1} ${y + 2.8}`}
         fill="none"
         stroke="#0f172a"
         strokeLinecap="round"
-        strokeWidth="0.6"
+        strokeWidth="0.55"
       />
     </g>
   );
 }
 
-function CueLabel({ x, y, children }: { x: number; y: number; children: string }) {
+function ConeToken({ x, y }: { x: number; y: number }) {
   return (
-    <text x={x} y={y} className="fill-slate-700 text-[8px] font-bold">
-      {children}
+    <path
+      d={`M${x} ${y - 4.2} L${x - 4.5} ${y + 4.2} H${x + 4.5} Z`}
+      fill="#facc15"
+      stroke="#ca8a04"
+      strokeLinejoin="round"
+      strokeWidth="0.7"
+    />
+  );
+}
+
+function ConeGate({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`}>
+      <circle cx="-6" cy="0" r="2.8" fill="#facc15" stroke="#ca8a04" strokeWidth="0.7" />
+      <circle cx="6" cy="0" r="2.8" fill="#facc15" stroke="#ca8a04" strokeWidth="0.7" />
+      <line x1="-3.2" y1="0" x2="3.2" y2="0" stroke="#ca8a04" strokeWidth="1.1" strokeDasharray="2 2" />
+    </g>
+  );
+}
+
+function MiniGoal({ x, y, rotate = 0, pugg = false }: { x: number; y: number; rotate?: number; pugg?: boolean }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`}>
+      <rect x="-9" y="-7" width="18" height="14" rx="1.5" fill="white" stroke="#334155" strokeWidth="1.2" />
+      <path d="M-6 -5 V5 M0 -5 V5 M6 -5 V5" stroke="#cbd5e1" strokeWidth="0.6" />
+      {pugg ? (
+        <g transform="translate(0 10)">
+          <rect x="-8" y="-4.2" width="16" height="8.4" rx="2" fill="#0f172a" />
+          <text x="0" y="2.4" textAnchor="middle" className="fill-white text-[5px] font-bold">
+            PUGG
+          </text>
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function ZoneBox({
+  x,
+  y,
+  width,
+  height,
+  label,
+  tone = "target"
+}: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label?: string;
+  tone?: "wide" | "target" | "pressure" | "finish";
+}) {
+  const fill = tone === "wide" ? "#dbeafe" : tone === "pressure" ? "#fee2e2" : tone === "finish" ? "#dcfce7" : "#f1f5f9";
+  const stroke = tone === "wide" ? "#60a5fa" : tone === "pressure" ? "#f87171" : tone === "finish" ? "#22c55e" : "#94a3b8";
+
+  return (
+    <g>
+      <rect x={x} y={y} width={width} height={height} rx="5" fill={fill} fillOpacity="0.56" stroke={stroke} strokeDasharray="4 3" />
+      {label ? <DirectLabel x={x + width / 2} y={y + 9} text={label} anchor="middle" /> : null}
+    </g>
+  );
+}
+
+function DirectLabel({
+  x,
+  y,
+  text,
+  anchor = "start"
+}: {
+  x: number;
+  y: number;
+  text: string;
+  anchor?: "start" | "middle" | "end";
+}) {
+  return (
+    <text x={x} y={y} textAnchor={anchor} className="fill-slate-700 text-[5.8px] font-bold">
+      {text}
     </text>
   );
 }
 
-function ActionArrow({
+function ArrowPath({
   d,
-  markerId,
-  color = "#0f766e",
-  dashed = false
+  action,
+  markerBaseId
 }: {
   d: string;
-  markerId: string;
-  color?: string;
-  dashed?: boolean;
+  action: ArrowAction;
+  markerBaseId: string;
 }) {
+  const color =
+    action === "pressure" ? "#ef4444" : action === "run" ? "#2563eb" : action === "rotation" ? "#64748b" : "#0f766e";
+  const dash = action === "pressure" || action === "run" ? "3 3" : action === "carry" ? "1.2 3" : undefined;
+  const markerSuffix = action === "pressure" ? "red" : action === "run" ? "blue" : action === "rotation" ? "slate" : "green";
+
   return (
     <path
       d={d}
       fill="none"
       stroke={color}
-      strokeWidth="1.25"
+      strokeWidth={action === "rotation" ? "1.1" : "1.3"}
+      strokeDasharray={dash}
       strokeLinecap="round"
-      strokeDasharray={dashed ? "3 3" : undefined}
-      markerEnd={`url(#${markerId})`}
+      markerEnd={`url(#${markerBaseId}-${markerSuffix})`}
     />
   );
 }
 
-function DiagramSvg({
-  phase,
-  markerId,
+function ArrowLabel({ d, label }: { d: string; label: string }) {
+  const match = /M\s*([\d.]+)\s+([\d.]+)/.exec(d);
+  const x = match ? Number(match[1]) : 80;
+  const y = match ? Number(match[2]) : 50;
+
+  return <DirectLabel x={x + 6} y={y - 5} text={label} />;
+}
+
+function renderToken(token: DiagramToken, markerBaseId: string) {
+  if (token.type === "zone") {
+    return <ZoneBox key={`zone-${token.x}-${token.y}-${token.label || ""}`} {...token} />;
+  }
+
+  if (token.type === "player") {
+    return <PlayerToken key={`player-${token.role}-${token.x}-${token.y}-${token.label || ""}`} {...token} />;
+  }
+
+  if (token.type === "ball") {
+    return <BallToken key={`ball-${token.x}-${token.y}`} x={token.x} y={token.y} />;
+  }
+
+  if (token.type === "cone") {
+    return (
+      <g key={`cone-${token.x}-${token.y}-${token.label || ""}`}>
+        <ConeToken x={token.x} y={token.y} />
+        {token.label ? <DirectLabel x={token.x + 8} y={token.y - 3} text={token.label} /> : null}
+      </g>
+    );
+  }
+
+  if (token.type === "gate") {
+    return (
+      <g key={`gate-${token.x}-${token.y}-${token.label || ""}`}>
+        <ConeGate x={token.x} y={token.y} rotate={token.rotate} />
+        {token.label ? <DirectLabel x={token.x + 9} y={token.y - 4} text={token.label} /> : null}
+      </g>
+    );
+  }
+
+  if (token.type === "miniGoal") {
+    return (
+      <g key={`goal-${token.x}-${token.y}-${token.pugg ? "pugg" : "mini"}`}>
+        <MiniGoal x={token.x} y={token.y} rotate={token.rotate} pugg={token.pugg} />
+        {token.label ? <DirectLabel x={token.x} y={token.y - 13} text={token.label} anchor="middle" /> : null}
+      </g>
+    );
+  }
+
+  if (token.type === "label") {
+    return <DirectLabel key={`label-${token.x}-${token.y}-${token.text}`} x={token.x} y={token.y} text={token.text} anchor={token.anchor} />;
+  }
+
+  return (
+    <g key={`arrow-${token.d}-${token.action}`}>
+      <ArrowPath d={token.d} action={token.action} markerBaseId={markerBaseId} />
+      {token.label ? <ArrowLabel d={token.d} label={token.label} /> : null}
+    </g>
+  );
+}
+
+function DiagramMarkers({ markerBaseId }: { markerBaseId: string }) {
+  return (
+    <defs>
+      <marker id={`${markerBaseId}-green`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
+        <path d="M0,1 L5.5,3 L0,5 Z" fill="#0f766e" />
+      </marker>
+      <marker id={`${markerBaseId}-blue`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
+        <path d="M0,1 L5.5,3 L0,5 Z" fill="#2563eb" />
+      </marker>
+      <marker id={`${markerBaseId}-red`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
+        <path d="M0,1 L5.5,3 L0,5 Z" fill="#ef4444" />
+      </marker>
+      <marker id={`${markerBaseId}-slate`} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
+        <path d="M0,1 L5.5,3 L0,5 Z" fill="#64748b" />
+      </marker>
+    </defs>
+  );
+}
+
+function DiagramBoard({
+  panel,
+  markerBaseId,
   size
 }: {
-  phase: DiagramPhase;
-  markerId: string;
+  panel: DiagramPanel;
+  markerBaseId: string;
   size: "compact" | "large";
 }) {
   const isLarge = size === "large";
-  const markerGreen = `${markerId}-green`;
-  const markerBlue = `${markerId}-blue`;
-  const markerRed = `${markerId}-red`;
-  const activationPlayers =
-    phase.moment === "setup"
-      ? {
-          blue: [
-            [38, 34],
-            [56, 52],
-            [38, 73],
-          ],
-          red: [
-            [94, 35],
-            [110, 58],
-            [94, 77],
-          ],
-          ball: [56, 52],
-        }
-      : {
-          blue: [
-            [50, 28],
-            [86, 40],
-            [62, 76],
-          ],
-          red: [
-            [91, 35],
-            [118, 45],
-            [98, 78],
-          ],
-          ball: [86, 40],
-        };
-  const mainPlayers =
-    phase.moment === "setup"
-      ? {
-          blue: [
-            [39, 31],
-            [50, 53],
-            [39, 76],
-          ],
-          red: [
-            [111, 31],
-            [121, 53],
-            [111, 76],
-          ],
-          ball: [50, 53],
-        }
-      : phase.moment === "play"
-        ? {
-            blue: [
-              [53, 31],
-              [78, 48],
-              [58, 78],
-            ],
-            red: [
-              [92, 35],
-              [106, 53],
-              [104, 76],
-            ],
-            ball: [78, 48],
-          }
-        : {
-            blue: [
-              [76, 29],
-              [112, 38],
-              [78, 73],
-            ],
-            red: [
-              [92, 45],
-              [108, 61],
-              [102, 82],
-            ],
-            ball: [112, 38],
-          };
-  const progressionPlayers =
-    phase.moment === "setup"
-      ? {
-          blue: [
-            [32, 30],
-            [53, 56],
-            [32, 80],
-          ],
-          red: [
-            [106, 29],
-            [123, 54],
-            [106, 80],
-          ],
-          ball: [53, 56],
-        }
-      : phase.moment === "play"
-        ? {
-            blue: [
-              [48, 34],
-              [78, 50],
-              [58, 82],
-            ],
-            red: [
-              [88, 30],
-              [108, 50],
-              [96, 77],
-            ],
-            ball: [78, 50],
-          }
-        : {
-            blue: [
-              [82, 30],
-              [118, 35],
-              [88, 70],
-            ],
-            red: [
-              [72, 48],
-              [98, 58],
-              [76, 84],
-            ],
-            ball: [118, 35],
-          };
 
   return (
     <svg
       viewBox="0 0 160 105"
       role="img"
-      aria-label={`${phase.label}: ${phase.note}`}
+      aria-label={`${panel.title}: ${panel.caption}`}
       className={["h-full w-full", isLarge ? "min-h-72" : "min-h-40"].join(" ")}
     >
-      <defs>
-        <marker id={markerGreen} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
-          <path d="M0,1 L5.5,3 L0,5 Z" fill="#0f766e" />
-        </marker>
-        <marker id={markerBlue} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
-          <path d="M0,1 L5.5,3 L0,5 Z" fill="#2563eb" />
-        </marker>
-        <marker id={markerRed} markerWidth="6" markerHeight="6" refX="5.4" refY="3" orient="auto">
-          <path d="M0,1 L5.5,3 L0,5 Z" fill="#ef4444" />
-        </marker>
-      </defs>
-
-      <rect x="6" y="6" width="148" height="93" rx="8" fill="#f8fafc" stroke="#cbd5e1" />
-      <line x1="80" y1="6" x2="80" y2="99" stroke="#e2e8f0" strokeDasharray="3 3" />
-      <circle cx="80" cy="52.5" r="13" fill="none" stroke="#e2e8f0" />
-
-      <Gate x={20} y={24} />
-      <Gate x={20} y={82} />
-      <Gate x={140} y={24} />
-      <Gate x={140} y={82} />
-
-      {phase.role === "activation" ? (
-        <>
-          <Ball x={activationPlayers.ball[0]} y={activationPlayers.ball[1]} />
-          {activationPlayers.blue.map(([x, y]) => (
-            <Player key={`activation-blue-${x}-${y}`} x={x} y={y} team="blue" />
-          ))}
-          {activationPlayers.red.map(([x, y]) => (
-            <Player key={`activation-red-${x}-${y}`} x={x} y={y} team="red" />
-          ))}
-          {phase.moment !== "setup" ? (
-            <ActionArrow d="M43 34 C56 24, 72 24, 88 37" markerId={markerBlue} color="#2563eb" dashed />
-          ) : null}
-          {phase.moment === "play" || phase.moment === "score" ? (
-            <>
-              <ActionArrow d="M86 40 C101 34, 118 28, 135 24" markerId={markerGreen} />
-              <ActionArrow d="M118 45 C124 40, 129 34, 133 29" markerId={markerRed} color="#ef4444" dashed />
-            </>
-          ) : null}
-          <CueLabel x={24} y={18}>{phase.moment === "setup" ? "Start" : "Play"}</CueLabel>
-          <CueLabel x={116} y={18}>Score</CueLabel>
-        </>
-      ) : null}
-
-      {phase.role === "main" ? (
-        <>
-          <Ball x={mainPlayers.ball[0]} y={mainPlayers.ball[1]} />
-          {mainPlayers.blue.map(([x, y]) => (
-            <Player key={`main-blue-${x}-${y}`} x={x} y={y} team="blue" />
-          ))}
-          {mainPlayers.red.map(([x, y]) => (
-            <Player key={`main-red-${x}-${y}`} x={x} y={y} team="red" />
-          ))}
-          {phase.moment !== "setup" ? (
-            <ActionArrow d="M78 48 C88 45, 99 47, 108 53" markerId={markerGreen} />
-          ) : null}
-          {phase.moment === "play" || phase.moment === "score" ? (
-            <>
-              <ActionArrow d="M92 35 C80 38, 66 43, 54 50" markerId={markerRed} color="#ef4444" dashed />
-              <ActionArrow d="M58 78 C75 84, 93 83, 108 76" markerId={markerBlue} color="#2563eb" dashed />
-              <ActionArrow d="M112 38 C121 33, 129 27, 136 24" markerId={markerGreen} />
-            </>
-          ) : null}
-          {phase.moment === "score" ? (
-            <ActionArrow d="M112 38 C92 30, 75 31, 58 42" markerId={markerBlue} color="#2563eb" dashed />
-          ) : null}
-          <CueLabel x={67} y={40}>Play</CueLabel>
-          {phase.moment === "play" ? <CueLabel x={72} y={90}>Press</CueLabel> : null}
-          <CueLabel x={117} y={18}>{phase.moment === "score" ? "Reset" : "Score"}</CueLabel>
-        </>
-      ) : null}
-
-      {phase.role === "progression" ? (
-        <>
-          <rect x="73" y="8" width="14" height="89" fill="#f1f5f9" stroke="#cbd5e1" strokeDasharray="3 3" />
-          <Ball x={progressionPlayers.ball[0]} y={progressionPlayers.ball[1]} />
-          {progressionPlayers.blue.map(([x, y]) => (
-            <Player key={`progression-blue-${x}-${y}`} x={x} y={y} team="blue" />
-          ))}
-          {progressionPlayers.red.map(([x, y]) => (
-            <Player key={`progression-red-${x}-${y}`} x={x} y={y} team="red" />
-          ))}
-          {phase.moment !== "setup" ? (
-            <ActionArrow d="M88 30 C76 38, 67 45, 58 55" markerId={markerRed} color="#ef4444" dashed />
-          ) : null}
-          {phase.moment === "play" || phase.moment === "score" ? (
-            <>
-              <ActionArrow d="M78 50 C90 43, 101 38, 114 35" markerId={markerGreen} />
-              <ActionArrow d="M114 35 C123 30, 131 26, 138 24" markerId={markerGreen} />
-              <ActionArrow d="M58 82 C70 72, 83 64, 96 58" markerId={markerBlue} color="#2563eb" dashed />
-            </>
-          ) : null}
-          {phase.moment === "score" ? (
-            <ActionArrow d="M82 30 C94 39, 106 50, 118 63" markerId={markerBlue} color="#2563eb" dashed />
-          ) : null}
-          {phase.moment === "setup" ? <CueLabel x={58} y={34}>Start</CueLabel> : null}
-          {phase.moment !== "setup" ? <CueLabel x={100} y={18}>Counter</CueLabel> : null}
-          <CueLabel x={118} y={75}>{phase.moment === "score" ? "Reset" : "Score"}</CueLabel>
-        </>
-      ) : null}
+      <DiagramMarkers markerBaseId={markerBaseId} />
+      <FieldArea>{panel.tokens.map((token) => renderToken(token, markerBaseId))}</FieldArea>
     </svg>
   );
 }
 
-function PhaseCard({
-  phase,
-  markerId,
+function LegendSymbol({ item }: { item: LegendKey }) {
+  if (item === "coachedPlayer") {
+    return <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />;
+  }
+
+  if (item === "oppositionPlayer") {
+    return <span className="h-2.5 w-2.5 rounded-full bg-red-500" />;
+  }
+
+  if (item === "neutralPlayer") {
+    return <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />;
+  }
+
+  if (item === "ball") {
+    return <span className="h-2.5 w-2.5 rounded-full border border-slate-900 bg-white" />;
+  }
+
+  if (item === "cone") {
+    return (
+      <svg viewBox="0 0 14 14" aria-hidden="true" className="h-3.5 w-3.5">
+        <path d="M7 2 L3 12 H11 Z" fill="#facc15" stroke="#ca8a04" strokeLinejoin="round" strokeWidth="1" />
+      </svg>
+    );
+  }
+
+  if (item === "coneGate") {
+    return (
+      <span className="inline-flex items-center gap-0.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
+        <span className="h-px w-3 bg-yellow-700" />
+        <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
+      </span>
+    );
+  }
+
+  if (item === "miniGoal" || item === "puggGoal") {
+    return (
+      <span className="inline-flex h-3.5 min-w-5 items-center justify-center rounded-sm border border-slate-600 bg-white px-0.5 text-[7px] font-bold leading-none text-slate-800">
+        {item === "puggGoal" ? "P" : ""}
+      </span>
+    );
+  }
+
+  if (item === "wideChannel" || item === "zone") {
+    return <span className="h-3 w-5 rounded-sm border border-dashed border-slate-400 bg-slate-100" />;
+  }
+
+  const color =
+    item === "defenderPressure" ? "#ef4444" : item === "coachedRun" ? "#2563eb" : item === "rotationReset" ? "#64748b" : "#0f766e";
+  const dash =
+    item === "defenderPressure" || item === "coachedRun" ? "3 3" : item === "dribbleCarry" ? "1.2 3" : undefined;
+  const path = item === "rotationReset" ? "M4 10 C11 2, 22 2, 29 8" : "M2 7 H28";
+
+  return (
+    <svg viewBox="0 0 34 14" aria-hidden="true" className="h-3.5 w-10">
+      <path d={path} fill="none" stroke={color} strokeDasharray={dash} strokeLinecap="round" strokeWidth="1.6" />
+      <path d="M27 4 L32 7 L27 10" fill="none" stroke={color} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function PanelLegend({ keys }: { keys: LegendKey[] }) {
+  const orderedKeys = orderedLegendKeys(localLegendKeys(keys));
+
+  if (orderedKeys.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="grid gap-1.5 border-t border-slate-100 px-3 py-2 text-[11px] leading-4 text-slate-500 sm:grid-cols-2">
+      {orderedKeys.map((item) => (
+        <p key={item} className="flex items-center gap-2">
+          <LegendSymbol item={item} />
+          {LEGEND_META[item].label}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function PanelCard({
+  panel,
+  markerBaseId,
   size
 }: {
-  phase: DiagramPhase;
-  markerId: string;
+  panel: DiagramPanel;
+  markerBaseId: string;
   size: "compact" | "large";
 }) {
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div className="border-b border-slate-100 px-3 py-2">
-        <h6 className="text-xs font-semibold uppercase tracking-wide text-teal-800">{phase.label}</h6>
+        <h6 className="text-xs font-semibold uppercase tracking-wide text-teal-800">{panel.title}</h6>
       </div>
       <div className={size === "large" ? "min-h-72" : "min-h-40"}>
-        <DiagramSvg phase={phase} markerId={markerId} size={size} />
+        <DiagramBoard panel={panel} markerBaseId={markerBaseId} size={size} />
       </div>
       <p className="border-t border-slate-100 px-3 py-2 text-xs leading-5 text-slate-600">
-        {phase.note}
+        {panel.caption}
       </p>
+      <PanelLegend keys={panel.legend} />
     </section>
   );
 }
@@ -475,54 +1013,6 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
       <p className="mt-2 text-xs leading-5 text-slate-600">
         Use the activity text to set teams, scoring, restarts, and the final constraint. Keep this
         block game-like and competitive.
-      </p>
-    </div>
-  );
-}
-
-function DiagramLegend() {
-  return (
-    <div className="mt-3 grid gap-2 text-xs leading-5 text-slate-500 sm:grid-cols-2">
-      <p className="flex items-center gap-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-blue-600" />
-        Blue = coached team
-      </p>
-      <p className="flex items-center gap-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
-        Red = opposition
-      </p>
-      <p className="flex items-center gap-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
-        Yellow = cones/goals/equipment
-      </p>
-      <p className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-0.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
-          <span className="h-px w-3 bg-yellow-700" />
-          <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 ring-1 ring-yellow-600" />
-        </span>
-        Yellow o--o = cone gate
-      </p>
-      <p className="flex items-center gap-2">
-        <svg viewBox="0 0 34 10" aria-hidden="true" className="h-3 w-10">
-          <path d="M2 5 H28" fill="none" stroke="#0f766e" strokeLinecap="round" strokeWidth="1.5" />
-          <path d="M27 2 L32 5 L27 8" fill="none" stroke="#0f766e" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-        </svg>
-        Solid arrow = player/ball action
-      </p>
-      <p className="flex items-center gap-2">
-        <svg viewBox="0 0 34 10" aria-hidden="true" className="h-3 w-10">
-          <path d="M2 5 H28" fill="none" stroke="#2563eb" strokeDasharray="3 3" strokeLinecap="round" strokeWidth="1.5" />
-          <path d="M27 2 L32 5 L27 8" fill="none" stroke="#2563eb" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-        </svg>
-        Blue dashed arrow = support/recovery run
-      </p>
-      <p className="flex items-center gap-2">
-        <svg viewBox="0 0 34 10" aria-hidden="true" className="h-3 w-10">
-          <path d="M2 5 H28" fill="none" stroke="#ef4444" strokeDasharray="3 3" strokeLinecap="round" strokeWidth="1.5" />
-          <path d="M27 2 L32 5 L27 8" fill="none" stroke="#ef4444" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-        </svg>
-        Red dashed arrow = pressure/chase
       </p>
     </div>
   );
@@ -546,15 +1036,15 @@ function ActivityDiagramCanvas({
     return <FinalGameFormatCard activity={activity} />;
   }
 
-  const phases = buildDiagramPhases(kind, activityIndex);
+  const panels = buildDiagramPanels(kind, activityIndex);
 
   return (
     <div className="grid gap-3">
-      {phases.map((phase, index) => (
-        <PhaseCard
-          key={`${phase.label}-${index}`}
-          phase={phase}
-          markerId={`club-vivo-diagram-arrow-${id}-${index}`}
+      {panels.map((panel, index) => (
+        <PanelCard
+          key={`${panel.title}-${index}`}
+          panel={panel}
+          markerBaseId={`club-vivo-diagram-arrow-${id}-${index}`}
           size={size}
         />
       ))}
@@ -574,7 +1064,7 @@ export function DiagramPlaceholder({
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const kind = inferDiagramKind(activity, activityIndex, totalActivities);
   const isFinalCard = kind === "final_game_format";
-  const title = isFinalCard ? "Competitive close" : "Activity diagram";
+  const title = isFinalCard ? "Competitive close" : "Inferred activity diagram";
 
   useEffect(() => {
     if (!isZoomOpen) {
@@ -612,7 +1102,7 @@ export function DiagramPlaceholder({
           }
         }}
         className="block w-full rounded-xl text-left outline-none transition hover:bg-teal-50/20 focus-visible:ring-2 focus-visible:ring-teal-600"
-        aria-label={`Open larger activity diagram for ${activity?.name || "this activity"}`}
+        aria-label={`Open larger inferred activity diagram for ${activity?.name || "this activity"}`}
       >
         <ActivityDiagramCanvas
           activity={activity}
@@ -620,7 +1110,6 @@ export function DiagramPlaceholder({
           totalActivities={totalActivities}
         />
       </div>
-      <DiagramLegend />
 
       {isZoomOpen ? (
         <div
@@ -632,7 +1121,7 @@ export function DiagramPlaceholder({
             className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl sm:p-6"
             role="dialog"
             aria-modal="true"
-            aria-label={`Larger activity diagram for ${activity?.name || "this activity"}`}
+            aria-label={`Larger inferred activity diagram for ${activity?.name || "this activity"}`}
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-4 flex items-start justify-between gap-4">
@@ -648,7 +1137,7 @@ export function DiagramPlaceholder({
                 type="button"
                 onClick={() => setIsZoomOpen(false)}
                 className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-lg leading-none text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600"
-                aria-label="Close larger activity diagram"
+                aria-label="Close larger inferred activity diagram"
               >
                 &times;
               </button>
@@ -660,7 +1149,6 @@ export function DiagramPlaceholder({
               totalActivities={totalActivities}
               size="large"
             />
-            <DiagramLegend />
           </div>
         </div>
       ) : null}

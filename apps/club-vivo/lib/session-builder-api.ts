@@ -702,6 +702,133 @@ function rewriteGoalCompatibleOutput(pack: SessionPack, originalEquipment: strin
   };
 }
 
+function isGenericEquipmentPlaceholder(value: string) {
+  const normalized = value.toLowerCase().replace(/\s+/g, " ").trim();
+
+  return (
+    normalized.includes("essentials") ||
+    normalized.includes(["builder", "choice"].join(" ")) ||
+    normalized.includes(["select", "equipment"].join(" ")) ||
+    normalized.includes(["choose", "equipment"].join(" "))
+  );
+}
+
+function practicalEquipment(items: string[] = []) {
+  const filtered = items
+    .map((item) => item.replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .filter((item) => !isGenericEquipmentPlaceholder(item));
+
+  return filtered.length > 0 ? [...new Set(filtered)] : ["cones", "balls", "pinnies"];
+}
+
+function sanitizeGeneratedCoachText(value: string) {
+  const oldActivationPattern = new RegExp(
+    ["introduce", "the theme,\\s*movement", "direction,\\s*and", "scoring", "idea"].join("\\s+"),
+    "gi"
+  );
+  const oldTravelPattern = new RegExp(
+    ["Use clear spacing,\\s*scanning detail,\\s*and a progression the", "group can", "grow into"].join("\\s+"),
+    "gi"
+  );
+  const oldGrowthPattern = new RegExp(["group can", "grow into"].join("\\s+"), "gi");
+  const danglingCoachPattern = new RegExp(["\\.", "Coach\\b"].join(" "), "g");
+  const danglingAttackingPattern = new RegExp(["Attacking", ":"].join(""), "g");
+
+  return value
+    .replace(new RegExp(["essentials\\s*\\/\\s*builder", "choice"].join("\\s+"), "gi"), "cones, balls, and pinnies")
+    .replace(new RegExp(["builder", "choice"].join("\\s+"), "gi"), "cones, balls, and pinnies")
+    .replace(new RegExp(["select", "equipment"].join("\\s+"), "gi"), "cones, balls, and pinnies")
+    .replace(new RegExp(["choose", "equipment"].join("\\s+"), "gi"), "cones, balls, and pinnies")
+    .replace(oldActivationPattern, "show the first action, scoring gates, and reset rotation")
+    .replace(
+      oldTravelPattern,
+      "Set a clear field with gates, target spaces, restart balls, and one visible first action"
+    )
+    .replace(oldGrowthPattern, "group can run clearly")
+    .replace(/\bplayers apply\s+([A-Za-z][A-Za-z ]*):/g, "players apply the $1 focus")
+    .replace(danglingCoachPattern, ". Guide")
+    .replace(/\bCoach\b\s*$/g, "")
+    .replace(danglingAttackingPattern, "Attacking focus")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isAttackingOverloadInput(input: GenerateSessionPackInput) {
+  const text = `${input.theme || ""} ${input.coachNotes || ""}`.toLowerCase();
+  return (
+    (text.includes("attacking") || text.includes("create chances")) &&
+    text.includes("overload")
+  );
+}
+
+function buildAttackingOverloadActivities(session: GeneratedSession, input: GenerateSessionPackInput) {
+  const minutes = splitDurationByWeights(input.durationMin, [0.2, 0.3, 0.3, 0.2]);
+
+  return [
+    {
+      ...(session.activities[0] || {}),
+      name: "Overload Gates Activation",
+      minutes: minutes[0],
+      description:
+        "Setup: Set an 18x16 yard grid. Place four cone gates near the corners or sides. Start the ball with a central attacker or server. Use cones to mark the grid and keep spare balls beside the coach. How to run it: Blue attackers try to create an overload and score through a gate. The red defender applies pressure and tries to win or force play away. Rotate roles after a score, turnover, or short round. Rules / scoring: attackers score by dribbling or passing through any gate; defender scores by winning the ball or forcing play out. Progression: progress from 1v1 to 2v1, 2v2, then 3v2, or change scoring from dribble-through gate to pass-through gate to combine-through gate."
+    },
+    {
+      ...(session.activities[1] || {}),
+      name: "Wide Overload Decision Game",
+      minutes: minutes[1],
+      description:
+        "Setup: Set a 24x20 yard field with a central start cone, one wide channel, a wide free player, two blue support runners, two red defenders, and a target gate. Start the ball with the central blue attacker. How to run it: The central attacker drives at the first defender, the support run arrives underneath, the wide free player stays in the wide channel, and defenders shift toward the ball before the pass or dribble. Rules / scoring: blue scores by finding the free player or support runner before attacking the target gate; red scores by winning and countering through the start gate. Reset: rotate the ball carrier, support runner, defender, and wide player after every score or turnover."
+    },
+    {
+      ...(session.activities[2] || {}),
+      name: "Overload Recovery Counter Game",
+      minutes: minutes[2],
+      description:
+        "Setup: Use the same direction as Activity 2 and add a recovery line plus a counter gate. Start 3v2 from a central ball and release a recovering red defender after the first touch. How to run it: Blue makes the first overload decision, then reacts to the second decision when the recovery defender arrives. Rules / scoring: score through the target gate within eight seconds; if red wins it, counter to the opposite gate. Rotation: rotate after each wave so every player attacks, defends, and recovers. Progression: require the free player to receive before scoring or shorten the time to finish."
+    },
+    {
+      ...(session.activities[3] || {}),
+      name: "Overload Gate Battle Final Game",
+      minutes: minutes[3],
+      description:
+        "Format: small-sided gate battle on a 36x28 yard field. Teams: balanced blue and red teams with quick restarts. Scoring: one point for a goal through a gate and one bonus point for finding a wide player or support run first. Constraint: the bonus only counts when the overload creates the chance. Win condition: first team to three goals, then reset for a rematch. Focus: keep it competitive, reward brave attacking decisions, and let the game flow."
+    }
+  ];
+}
+
+function normalizeGeneratedPackForDisplay(
+  pack: SessionPack,
+  input: GenerateSessionPackInput,
+  originalEquipment: string[] = []
+) {
+  const equipment = practicalEquipment(originalEquipment.length > 0 ? originalEquipment : pack.equipment);
+  const shouldShapeAttackingOverloads =
+    input.sessionMode === "full_session" && isAttackingOverloadInput(input);
+
+  return {
+    ...pack,
+    equipment,
+    sessions: pack.sessions.map((session) => {
+      const activities = shouldShapeAttackingOverloads
+        ? buildAttackingOverloadActivities(session, input)
+        : session.activities;
+
+      return {
+        ...session,
+        equipment,
+        activities: activities.map((activity) => ({
+          ...activity,
+          name: sanitizeGeneratedCoachText(activity.name),
+          ...(activity.description
+            ? { description: sanitizeGeneratedCoachText(activity.description) }
+            : {})
+        }))
+      };
+    })
+  };
+}
+
 async function getAccessToken() {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ACCESS_COOKIE)?.value;
@@ -826,7 +953,7 @@ export async function generateSessionPack(input: GenerateSessionPackInput) {
         pack = rewriteGoalCompatibleOutput(pack, originalEquipment);
       }
 
-      return pack;
+      return normalizeGeneratedPackForDisplay(pack, intendedInput, originalEquipment);
     } catch (error) {
       if (!(error instanceof SessionBuilderApiError) || error.status !== 400) {
         throw error;
