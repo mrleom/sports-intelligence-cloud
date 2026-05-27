@@ -9,7 +9,8 @@ import {
 } from "./session-new-flow";
 import {
   analyzeSessionImageAction,
-  generateSessionPackAction
+  generateSessionPackAction,
+  previewTrainingBriefDraftAction
 } from "./session-new-actions";
 import { COACH_TEAM_HINTS_COOKIE, getCoachTeams } from "../../../../lib/coach-team-hints";
 import {
@@ -149,6 +150,7 @@ export default async function NewSessionPage({
         initialEquipmentOptions={initialEquipmentOptions}
         initialConstraints={initialConstraints}
         analyzeAction={analyzeSessionImageAction}
+        previewTrainingBriefDraftAction={previewTrainingBriefDraftAction}
         generateAction={generateSessionPackAction}
         saveAction={saveGeneratedSessionAction}
       />
