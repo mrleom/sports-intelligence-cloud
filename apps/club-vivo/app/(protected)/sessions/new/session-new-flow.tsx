@@ -7,6 +7,10 @@ import {
   SessionBuilderTopBlock,
   type SessionEnvironmentOption
 } from "../../../../components/coach/SessionBuilderTopBlock";
+import {
+  TrainingBriefDraftReview,
+  type TrainingBriefDraftApplyInput
+} from "../../../../components/coach/TrainingBriefDraftReview";
 import { MatchToMatchPrescriptionDraft } from "./match-to-match-prescription-draft";
 import { ActivityOutput } from "../../../../components/coach/ActivityOutput";
 import { DiagramPlaceholder } from "../../../../components/coach/DiagramPlaceholder";
@@ -54,7 +58,7 @@ type GenerateAction = (
 type AnalyzeAction = (state: AnalyzeFormState, formData: FormData) => Promise<AnalyzeFormState>;
 type SaveAction = (state: SaveFormState, formData: FormData) => Promise<SaveFormState>;
 type SaveFormDispatch = (formData: FormData) => void;
-type PlanningPath = "custom" | "match_to_match";
+type PlanningPath = "custom" | "training_brief" | "match_to_match";
 type WorkGroupMode = "team" | "age_band";
 
 const FULL_SESSION_DEFAULT_DURATION = "60";
@@ -532,17 +536,22 @@ export function NewSessionFlow({
         <div>
           <h2 className="text-lg font-semibold text-slate-900">How do you want to start?</h2>
           <p className="mt-1 text-sm leading-6 text-slate-600">
-            Start with the everyday coach-led builder, or open the parked advanced draft preview
-            for match-to-match ideas.
+            Start with the everyday coach-led builder, draft from match notes, or open the parked
+            advanced preview for future match-to-match ideas.
           </p>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="mt-4 grid gap-3 lg:grid-cols-3">
           {[
             {
               value: "custom" as const,
               title: "Custom Build",
               description: "Everyday coach-led full session or drill/activity builder."
+            },
+            {
+              value: "training_brief" as const,
+              title: "Training Brief Draft",
+              description: "Review match notes, then apply the draft to the normal builder."
             },
             {
               value: "match_to_match" as const,
@@ -575,7 +584,25 @@ export function NewSessionFlow({
         </div>
       </section>
 
-      {planningPath === "match_to_match" ? (
+      {planningPath === "training_brief" ? (
+        <TrainingBriefDraftReview
+          ageBand={ageBand}
+          durationMin={durationMin}
+          equipment={equipment}
+          equipmentOptions={equipmentOptions}
+          selectedTeamName={activeTeam?.label}
+          selectedTeamAgeBand={activeTeam?.ageBand}
+          onApply={(draft: TrainingBriefDraftApplyInput) => {
+            setPlanningPath("custom");
+            setWorkspaceMode(draft.sessionMode);
+            setObjective(draft.objective);
+            setConstraints(draft.constraints);
+            setDurationMin(draft.durationMin);
+            setEquipment(draft.equipment);
+            setAgeBand(draft.ageBand);
+          }}
+        />
+      ) : planningPath === "match_to_match" ? (
         <MatchToMatchPrescriptionDraft
           teams={teamOptions}
           selectedTeamId={selectedTeamId}
