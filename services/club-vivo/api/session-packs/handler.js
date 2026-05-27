@@ -4,6 +4,7 @@
 const { withPlatform } = require("../src/platform/http/with-platform");
 const { parseJsonBody } = require("../src/platform/http/parse-body");
 const {
+  buildTrainingBriefDraftPreview,
   processSessionPackRequest,
   processSessionImageAnalysisRequest,
 } = require("../src/domains/session-builder/session-builder-pipeline");
@@ -54,6 +55,7 @@ function routeKey(event) {
 }
 
 function createSessionPacksInner({
+  buildTrainingBriefDraftPreviewFn = buildTrainingBriefDraftPreview,
   processSessionPackFn = processSessionPackRequest,
   processSessionImageAnalysisFn = processSessionImageAnalysisRequest,
 } = {}) {
@@ -127,6 +129,35 @@ function createSessionPacksInner({
           }
           throw e;
         }
+      }
+
+      if (body?.requestType === "training-brief-draft") {
+        let trainingBriefDraft;
+        try {
+          trainingBriefDraft = buildTrainingBriefDraftPreviewFn(body);
+        } catch (e) {
+          if (e?.statusCode === 400) {
+            throw new BadRequestError({
+              code: "platform.bad_request",
+              message: "Bad request",
+              details: e?.details || {},
+              cause: e,
+            });
+          }
+          throw e;
+        }
+
+        logger.info("training_brief_draft_preview_success", "training brief draft preview built", {
+          http: { statusCode: 200 },
+          tenant: { tenantId: tenantCtx?.tenantId, role: tenantCtx?.role, tier: tenantCtx?.tier },
+          trainingBriefDraft: {
+            candidateType: trainingBriefDraft.candidateType,
+            version: trainingBriefDraft.version,
+            requiresCoachReview: trainingBriefDraft.requiresCoachReview,
+          },
+        });
+
+        return json(200, { trainingBriefDraft });
       }
 
       let pipelineResult;

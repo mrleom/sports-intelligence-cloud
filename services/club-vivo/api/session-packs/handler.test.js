@@ -44,6 +44,19 @@ function makeEvent(body) {
   };
 }
 
+function hasKeyDeep(value, key) {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  if (Array.isArray(value)) {
+    return value.some((item) => hasKeyDeep(item, key));
+  }
+
+  return Object.prototype.hasOwnProperty.call(value, key) ||
+    Object.values(value).some((item) => hasKeyDeep(item, key));
+}
+
 test("POST /session-packs returns validatedPack from the internal pipeline and keeps public response shape", async () => {
   process.env.TENANT_ENTITLEMENTS_TABLE = "entitlements-table";
 
@@ -81,6 +94,136 @@ test("POST /session-packs returns validatedPack from the internal pipeline and k
   assert.equal(response.statusCode, 201);
   assert.deepEqual(JSON.parse(response.body), { pack: expectedPack });
   assert.equal(loggerEvents[0].eventType, "pack_generated_success");
+});
+
+test("POST /session-packs returns sanitized training brief draft preview", async () => {
+  process.env.TENANT_ENTITLEMENTS_TABLE = "entitlements-table";
+
+  const loggerEvents = [];
+  let sessionPackGenerationCalled = false;
+  const inner = createSessionPacksInner({
+    processSessionPackFn: () => {
+      sessionPackGenerationCalled = true;
+      throw new Error("session pack generation should not run");
+    },
+  });
+
+  const response = await inner({
+    event: makeEvent({
+      requestType: "training-brief-draft",
+      sport: "soccer",
+      ageBand: "u14",
+      durationMinutes: 60,
+      playerCount: 12,
+      evidenceSummary:
+        "We lost compactness after turnovers and allowed central counterattacks.",
+      coachNotes: "Half field, limited setup time, balls, cones, and bibs.",
+      nextGameObjective: "Recover compact shape after losing the ball",
+      availableEquipment: ["balls", "cones", "bibs"],
+    }),
+    tenantCtx: makeTenantCtx(),
+    logger: makeLogger(loggerEvents),
+  });
+
+  const body = JSON.parse(response.body);
+
+  assert.equal(response.statusCode, 200);
+  assert.equal(sessionPackGenerationCalled, false);
+  assert.deepEqual(Object.keys(body), ["trainingBriefDraft"]);
+  assert.deepEqual(body.trainingBriefDraft, {
+    candidateType: "training_brief_candidate",
+    version: "v1",
+    status: "draft",
+    requiresCoachReview: true,
+    recommendedFocus: "Recover compact shape after losing the ball",
+    rationale:
+      "Based on the match evidence, We lost compactness after turnovers and allowed central counterattacks. The next session should help the coach review and train: Recover compact shape after losing the ball.",
+    activityDirection: "Recover compact shape after losing the ball",
+    sessionBuilderHandoff: {
+      sport: "soccer",
+      ageBand: "u14",
+      durationMin: 60,
+      theme: "Recover compact shape after losing the ball",
+      sessionMode: "full_session",
+      coachNotes:
+        "Evidence: We lost compactness after turnovers and allowed central counterattacks.\nObjective: Recover compact shape after losing the ball\nCoach notes: Half field, limited setup time, balls, cones, and bibs.\nPlayers: 12",
+      equipment: ["balls", "cones", "bibs"],
+    },
+  });
+
+  for (const forbiddenKey of [
+    "handoffMeta",
+    "candidateMeta",
+    "validatedInput",
+    "activityRecommendations",
+    "generatedPack",
+    "validatedPack",
+    "persistedSession",
+    "route",
+    "tenantId",
+    "userId",
+    "role",
+    "tier",
+  ]) {
+    assert.equal(hasKeyDeep(body, forbiddenKey), false, `${forbiddenKey} should not be exposed`);
+  }
+  assert.equal(loggerEvents[0].eventType, "training_brief_draft_preview_success");
+});
+
+test("POST /session-packs maps invalid training brief draft input to platform bad request", async () => {
+  process.env.TENANT_ENTITLEMENTS_TABLE = "entitlements-table";
+
+  const inner = createSessionPacksInner();
+
+  await assert.rejects(
+    () =>
+      inner({
+        event: makeEvent({
+          requestType: "training-brief-draft",
+          sport: "soccer",
+          ageBand: "u14",
+        }),
+        tenantCtx: makeTenantCtx(),
+        logger: makeLogger([]),
+      }),
+    (err) => {
+      assert.equal(err.code, "platform.bad_request");
+      assert.equal(err.httpStatus, 400);
+      assert.deepEqual(err.details, {
+        missing: ["evidenceSummary"],
+      });
+      return true;
+    }
+  );
+});
+
+test("POST /session-packs rejects tenant-like fields in training brief draft input", async () => {
+  process.env.TENANT_ENTITLEMENTS_TABLE = "entitlements-table";
+
+  const inner = createSessionPacksInner();
+
+  await assert.rejects(
+    () =>
+      inner({
+        event: makeEvent({
+          requestType: "training-brief-draft",
+          sport: "soccer",
+          ageBand: "u14",
+          evidenceSummary: "We need to recover faster after losing the ball.",
+          tenantId: "client-supplied-tenant",
+        }),
+        tenantCtx: makeTenantCtx(),
+        logger: makeLogger([]),
+      }),
+    (err) => {
+      assert.equal(err.code, "platform.bad_request");
+      assert.equal(err.httpStatus, 400);
+      assert.deepEqual(err.details, {
+        unknown: ["tenantId"],
+      });
+      return true;
+    }
+  );
 });
 
 test("POST /session-packs accepts fut-soccer sportPackId while keeping the public response shape unchanged", async () => {
