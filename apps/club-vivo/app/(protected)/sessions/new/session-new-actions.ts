@@ -6,15 +6,23 @@ import { cookies } from "next/headers";
 import {
   analyzeSessionImage,
   generateSessionPack,
+  previewTrainingBriefDraft,
   type ConfirmedImageAnalysisProfile,
   type ImageAnalysisMode,
-  type SessionBuilderApiError
+  type SessionBuilderApiError,
+  type TrainingBriefDraftPreview,
+  type TrainingBriefDraftPreviewInput
 } from "../../../../lib/session-builder-api";
 import { EQUIPMENT_HINTS_COOKIE, getEquipmentItems } from "../../../../lib/equipment-hints";
 import { getCurrentUser } from "../../../../lib/get-current-user";
 import { formatEnvironmentLabel } from "../../../../lib/session-builder-context-hints";
 import { getWorkspaceCookieName } from "../../../../lib/workspace-local-cookies";
 import type { AnalyzeFormState, GenerateFormState } from "./session-new-flow";
+
+export type TrainingBriefDraftPreviewActionState = {
+  trainingBriefDraft?: TrainingBriefDraftPreview;
+  error?: string;
+};
 
 const SUPPORTED_IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_GENERATION_THEME_LENGTH = 60;
@@ -330,6 +338,40 @@ export async function analyzeSessionImageAction(
       error: getErrorMessage(
         error,
         "Image analysis failed. Try a different image or review the mode."
+      )
+    };
+  }
+}
+
+export async function previewTrainingBriefDraftAction(
+  input: TrainingBriefDraftPreviewInput
+): Promise<TrainingBriefDraftPreviewActionState> {
+  "use server";
+
+  try {
+    const sport = input.sport === "fut-soccer" ? "soccer" : input.sport;
+    const trainingBriefDraft = await previewTrainingBriefDraft({
+      ...input,
+      sport
+    });
+
+    return { trainingBriefDraft };
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "status" in error &&
+      (error as SessionBuilderApiError).status === 400
+    ) {
+      return {
+        error: "The Training Brief preview could not be built. Check the evidence, age band, duration, and equipment."
+      };
+    }
+
+    return {
+      error: getErrorMessage(
+        error,
+        "The Training Brief preview could not be built. Review the notes and try again."
       )
     };
   }

@@ -20,7 +20,9 @@ import type {
   GeneratedSession,
   ImageAnalysisMode,
   ImageAnalysisResult,
-  SessionPack
+  SessionPack,
+  TrainingBriefDraftPreview,
+  TrainingBriefDraftPreviewInput
 } from "../../../../lib/session-builder-api";
 import { buildBuilderSessionLabelFromSession } from "../../../../lib/builder-session-label";
 
@@ -56,6 +58,12 @@ type GenerateAction = (
 ) => Promise<GenerateFormState>;
 
 type AnalyzeAction = (state: AnalyzeFormState, formData: FormData) => Promise<AnalyzeFormState>;
+type TrainingBriefPreviewAction = (
+  input: TrainingBriefDraftPreviewInput
+) => Promise<{
+  trainingBriefDraft?: TrainingBriefDraftPreview;
+  error?: string;
+}>;
 type SaveAction = (state: SaveFormState, formData: FormData) => Promise<SaveFormState>;
 type SaveFormDispatch = (formData: FormData) => void;
 type PlanningPath = "custom" | "training_brief" | "match_to_match";
@@ -366,6 +374,7 @@ export function NewSessionFlow({
   initialEquipmentOptions,
   initialConstraints,
   analyzeAction,
+  previewTrainingBriefDraftAction,
   generateAction,
   saveAction
 }: {
@@ -376,6 +385,7 @@ export function NewSessionFlow({
   initialEquipmentOptions: string[];
   initialConstraints?: string;
   analyzeAction: AnalyzeAction;
+  previewTrainingBriefDraftAction: TrainingBriefPreviewAction;
   generateAction: GenerateAction;
   saveAction: SaveAction;
 }) {
@@ -586,12 +596,15 @@ export function NewSessionFlow({
 
       {planningPath === "training_brief" ? (
         <TrainingBriefDraftReview
+          sport={sport}
           ageBand={ageBand}
           durationMin={durationMin}
           equipment={equipment}
           equipmentOptions={equipmentOptions}
           selectedTeamName={activeTeam?.label}
           selectedTeamAgeBand={activeTeam?.ageBand}
+          selectedTeamPlayerCount={activeTeam?.playerCount}
+          previewAction={previewTrainingBriefDraftAction}
           onApply={(draft: TrainingBriefDraftApplyInput) => {
             setPlanningPath("custom");
             setWorkspaceMode(draft.sessionMode);

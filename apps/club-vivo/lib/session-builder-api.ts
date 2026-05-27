@@ -124,6 +124,38 @@ export type ImageAnalysisResult = {
   profile: ImageAnalysisProfile;
 };
 
+export type TrainingBriefDraftPreviewInput = {
+  sport: string;
+  ageBand: string;
+  durationMinutes: number;
+  playerCount?: number;
+  evidenceSummary: string;
+  coachNotes?: string;
+  nextGameObjective?: string;
+  availableEquipment?: string[];
+};
+
+export type TrainingBriefSessionBuilderHandoff = {
+  sport: string;
+  ageBand: string;
+  durationMin: number;
+  theme: string;
+  sessionMode: "full_session";
+  coachNotes: string;
+  equipment: string[];
+};
+
+export type TrainingBriefDraftPreview = {
+  candidateType: "training_brief_candidate";
+  version: "v1";
+  status: "draft";
+  requiresCoachReview: true;
+  recommendedFocus: string;
+  rationale: string;
+  activityDirection: string;
+  sessionBuilderHandoff: TrainingBriefSessionBuilderHandoff;
+};
+
 export type GeneratedSession = {
   sport: string;
   ageBand: string;
@@ -1026,6 +1058,20 @@ export async function analyzeSessionImage(input: AnalyzeSessionImageInput) {
   });
 
   return result.analysis;
+}
+
+export async function previewTrainingBriefDraft(input: TrainingBriefDraftPreviewInput) {
+  const result = await requestJson<{
+    trainingBriefDraft: TrainingBriefDraftPreview;
+  }>("/session-packs", {
+    method: "POST",
+    body: JSON.stringify({
+      requestType: "training-brief-draft",
+      ...input,
+    }),
+  });
+
+  return result.trainingBriefDraft;
 }
 
 export async function createSession(session: GeneratedSession) {
