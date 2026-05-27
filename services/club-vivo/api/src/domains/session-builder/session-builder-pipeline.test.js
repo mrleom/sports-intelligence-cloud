@@ -15,6 +15,8 @@ const {
   validateGeneratedPack,
   persistSession,
   exportPersistedSession,
+  processTrainingBriefSessionPackRequest,
+  buildCleanSessionPackInputFromTrainingBriefHandoff,
 } = require("./session-builder-pipeline");
 
 function stripPackIdentity(pack) {
@@ -408,6 +410,100 @@ test("processSessionPackRequest carries explicit coach notes without exposing re
   );
   assert.equal(Object.hasOwn(result.validatedPack, "sessionMode"), false);
   assert.equal(Object.hasOwn(result.validatedPack, "coachNotes"), false);
+});
+
+test("buildCleanSessionPackInputFromTrainingBriefHandoff strips internal metadata", () => {
+  const result = buildCleanSessionPackInputFromTrainingBriefHandoff({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMin: 60,
+    theme: "Protect central spaces",
+    sessionMode: "full_session",
+    coachNotes: "Evidence: exposed centrally",
+    equipment: ["balls", "cones"],
+    handoffMeta: { source: "training_brief" },
+    candidateMeta: { persistence: "not_persisted" },
+    validatedInput: { sport: "soccer" },
+    activityRecommendations: [],
+  });
+
+  assert.deepEqual(result, {
+    sport: "soccer",
+    ageBand: "u14",
+    durationMin: 60,
+    theme: "Protect central spaces",
+    sessionMode: "full_session",
+    coachNotes: "Evidence: exposed centrally",
+    sessionsCount: 1,
+    equipment: ["balls", "cones"],
+  });
+});
+
+test("processTrainingBriefSessionPackRequest builds candidate and deterministic session pack", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMinutes: 60,
+    playerCount: 12,
+    evidenceSummary: "The team loses central compactness after turnovers.",
+    nextGameObjective: "Improve defensive transition and protect central space.",
+    availableEquipment: ["balls", "cones", "bibs"],
+    context: {
+      teamLevel: "grassroots",
+      space: "half field",
+      methodologyTags: ["transition", "compactness"],
+    },
+  });
+
+  assert.equal(result.trainingBriefCandidate.candidateType, "training_brief_candidate");
+  assert.equal(result.trainingBriefCandidate.source, "training_brief_session_builder_intake");
+  assert.equal(result.trainingBriefCandidate.requiresCoachReview, true);
+  assert.equal(result.sessionBuilderHandoff.handoffMeta.requiresCoachReview, true);
+  assert.equal(result.sessionPackResult.validatedPack.sport, "soccer");
+  assert.equal(result.sessionPackResult.validatedPack.ageBand, "u14");
+  assert.equal(result.sessionPackResult.validatedPack.durationMin, 60);
+  assert.equal(result.sessionPackResult.validatedPack.sessions.length, 1);
+  assert.equal(result.sessionPackResult.validatedCoachLiteDraft.specVersion, "session-pack.v2");
+});
+
+test("processTrainingBriefSessionPackRequest passes only clean Session Builder fields into pack normalization", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u14",
+    evidenceSummary: "Wide overloads repeatedly pulled the team apart.",
+    nextGameObjective: "Defend wide areas with better cover.",
+    availableEquipment: ["balls", "cones"],
+  });
+
+  assert.deepEqual(Object.keys(result.sessionPackResult.normalizedInput).sort(), [
+    "ageBand",
+    "coachNotes",
+    "durationMin",
+    "equipment",
+    "sessionMode",
+    "sessionsCount",
+    "sport",
+    "theme",
+  ]);
+  assert.equal(Object.hasOwn(result.sessionPackResult.normalizedInput, "handoffMeta"), false);
+  assert.equal(Object.hasOwn(result.sessionPackResult.normalizedInput, "candidateMeta"), false);
+  assert.equal(Object.hasOwn(result.sessionPackResult.normalizedInput, "validatedInput"), false);
+  assert.equal(Object.hasOwn(result.sessionPackResult.normalizedInput, "activityRecommendations"), false);
+});
+
+test("processTrainingBriefSessionPackRequest does not persist or require public route state", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u14",
+    evidenceSummary: "The team was slow to press after losing possession.",
+    availableEquipment: ["balls", "cones"],
+  });
+
+  assert.equal(result.trainingBriefCandidate.candidateMeta.persistence, "not_persisted");
+  assert.equal(Object.hasOwn(result, "persistedSession"), false);
+  assert.equal(Object.hasOwn(result, "route"), false);
+  assert.equal(Object.hasOwn(result.sessionPackResult, "persistedSession"), false);
+  assert.equal(Object.hasOwn(result.sessionPackResult.validatedPack, "trainingBriefCandidate"), false);
 });
 
 test("lookup path loads teamContext and published methodology records when tenant inputs and repositories are supplied", async () => {

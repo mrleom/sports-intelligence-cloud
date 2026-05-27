@@ -59,7 +59,7 @@ function buildTrainingBriefCandidate(input) {
     candidateType: "training_brief_candidate",
     version: "v1",
     status: "draft",
-    source: "match_to_match_prescription",
+    source: "training_brief_session_builder_intake",
     requiresCoachReview: true,
     validatedInput,
     recommendedFocus,

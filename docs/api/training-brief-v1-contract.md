@@ -6,6 +6,8 @@ Proposed documentation contract.
 
 This is not shipped runtime behavior yet. It defines a proposed `TrainingBrief v1` shape and proposed endpoint semantics for a future bounded agentic coaching workflow around Session Builder.
 
+Internal implementation note: the backend now has an internal deterministic Training Brief -> Session Builder handoff helper that proves this bridge through the existing Session Builder pipeline. It is internal only; it does not expose a public endpoint, persist Training Briefs, or change auth, tenancy, data models, or public API behavior.
+
 ## 2. Purpose
 
 `TrainingBrief v1` is the structured bridge object between match or performance evidence and the Club Vivo Session Builder.

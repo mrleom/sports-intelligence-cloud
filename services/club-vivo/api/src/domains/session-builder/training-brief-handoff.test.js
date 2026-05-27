@@ -66,6 +66,19 @@ test("buildSessionBuilderHandoffFromTrainingBrief maps availableEquipment to equ
   assert.deepEqual(result.equipment, ["balls", "cones"]);
 });
 
+test("buildSessionBuilderHandoffFromTrainingBrief includes internal handoff metadata", () => {
+  const result = buildSessionBuilderHandoffFromTrainingBrief(makeValidBrief());
+
+  assert.deepEqual(result.handoffMeta, {
+    source: "training_brief",
+    trainingBriefVersion: "v1",
+    requiresCoachReview: true,
+    evidenceIncluded: true,
+    contextIncluded: false,
+    recommendedNextStep: "review_in_session_builder",
+  });
+});
+
 test("buildSessionBuilderHandoffFromTrainingBrief uses nextGameObjective as preferred theme", () => {
   const result = buildSessionBuilderHandoffFromTrainingBrief(
     makeValidBrief({ nextGameObjective: " Protect central spaces before playing forward. " })

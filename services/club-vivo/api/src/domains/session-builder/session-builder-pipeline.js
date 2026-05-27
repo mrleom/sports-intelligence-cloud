@@ -14,6 +14,7 @@ const { validateCreateSession } = require("./session-validate");
 const { validationError } = require("../../platform/validation/validate");
 const { validateImageAnalysisRequest } = require("./image-intake-validate");
 const { parseImageAnalysisText } = require("./image-intake-parser");
+const { buildTrainingBriefCandidate } = require("./training-brief-candidate");
 
 function normalizeSessionPackInput(rawInput) {
   return validateCreateSessionPack(rawInput);
@@ -144,6 +145,43 @@ async function processSessionPackRequest(rawInput, options = {}) {
   };
 }
 
+function buildCleanSessionPackInputFromTrainingBriefHandoff(sessionBuilderHandoff) {
+  const {
+    sport,
+    ageBand,
+    durationMin,
+    theme,
+    sessionMode,
+    coachNotes,
+    equipment,
+  } = sessionBuilderHandoff || {};
+
+  return {
+    sport,
+    ageBand,
+    durationMin,
+    theme,
+    ...(sessionMode !== undefined ? { sessionMode } : {}),
+    ...(coachNotes !== undefined ? { coachNotes } : {}),
+    sessionsCount: 1,
+    ...(equipment !== undefined ? { equipment } : {}),
+  };
+}
+
+async function processTrainingBriefSessionPackRequest(trainingBriefInput, options = {}) {
+  const trainingBriefCandidate = buildTrainingBriefCandidate(trainingBriefInput);
+  const sessionBuilderHandoff = trainingBriefCandidate.sessionBuilderHandoff;
+  const cleanSessionPackInput =
+    buildCleanSessionPackInputFromTrainingBriefHandoff(sessionBuilderHandoff);
+  const sessionPackResult = await processSessionPackRequest(cleanSessionPackInput, options);
+
+  return {
+    trainingBriefCandidate,
+    sessionBuilderHandoff,
+    sessionPackResult,
+  };
+}
+
 async function processSessionImageAnalysisRequest({
   rawInput,
   tenantCtx,
@@ -247,6 +285,8 @@ module.exports = {
   validateGeneratedPack,
   deriveMethodologyInfluence,
   processSessionPackRequest,
+  processTrainingBriefSessionPackRequest,
+  buildCleanSessionPackInputFromTrainingBriefHandoff,
   processSessionImageAnalysisRequest,
   persistSession,
   exportPersistedSession,
