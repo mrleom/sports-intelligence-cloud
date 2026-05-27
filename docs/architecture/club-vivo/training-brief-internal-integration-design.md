@@ -10,7 +10,7 @@ This document does not add a route, expose `/training-briefs`, expose `/prescrip
 
 Current frontend state:
 
-- Match-to-Match Prescription is still frontend-only deterministic draft preview behavior.
+- Match-to-Match Prescription is parked for later. Its existing deterministic draft preview behavior should be read as prior product-shape context, not the near-term source path.
 - `match-to-match-prescription-draft.tsx` collects team, days-until-next-match, environment, match observations, tactical notes, and coach notes.
 - The draft UI currently uses a route-local deterministic recommendation library.
 - When the coach selects an option, the UI hands objective, constraints, environment, duration, and mode back into Custom Build.
@@ -35,9 +35,11 @@ Current non-runtime claims:
 
 ## 3. Design Goal
 
-The design goal is an internal-first bridge from Match-to-Match evidence intake to a reviewable Training Brief candidate.
+The design goal is an internal-first bridge from Session Builder / Training Brief intake to a reviewable Training Brief candidate.
 
-The first integration should let the current Match-to-Match UI submit evidence to a server-side boundary that calls `buildTrainingBriefCandidate`, then returns a candidate preview for coach review.
+The first integration should let a bounded Training Brief intake inside the existing Session Builder path submit coach evidence or planning notes to a server-side boundary that calls `buildTrainingBriefCandidate`, then returns a candidate preview for coach review.
+
+The existing Match-to-Match UI can remain historical/prior context and may inform future intake ideas, but it should not be treated as the near-term first integration source.
 
 The candidate should remain a draft planning object. It should not become an automatically trusted prescription, persisted record, or generated SessionPack.
 
@@ -46,7 +48,7 @@ The candidate should remain a draft planning object. It should not become an aut
 Preferred flow:
 
 ```text
-Match-to-Match form
+Session Builder / Training Brief intake
 -> internal integration boundary
 -> buildTrainingBriefCandidate
 -> candidate review state
@@ -57,7 +59,7 @@ Match-to-Match form
 
 Important sequencing:
 
-- The Match-to-Match UI should eventually submit evidence to an internal backend boundary that calls `buildTrainingBriefCandidate`.
+- A bounded Training Brief intake should eventually submit coach evidence or planning notes to an internal backend boundary that calls `buildTrainingBriefCandidate`.
 - The returned candidate should be reviewable before handoff into Session Builder generation.
 - SessionPack generation should remain a separate explicit coach-reviewed step.
 - The coach should be able to accept, adapt, or abandon the candidate before generation.
@@ -80,7 +82,7 @@ The existing `docs/api/training-brief-v1-contract.md` remains proposed contract 
 
 ### A. Route-local server action inside existing Next app
 
-This option keeps the first integration closest to the current Match-to-Match UI.
+This option keeps the first integration close to the existing Session Builder UI without exposing a public API.
 
 Advantages:
 
@@ -105,7 +107,7 @@ Advantages:
 - closer to the future backend placement
 - can reuse API service validation and platform wrapper patterns
 - easier to add stable backend tests around the integration boundary
-- keeps Training Prescription inside the existing Club Vivo API service
+- keeps Training Brief candidate behavior inside the existing Club Vivo API service
 
 Risks:
 

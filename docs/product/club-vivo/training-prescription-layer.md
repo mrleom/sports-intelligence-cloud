@@ -2,11 +2,13 @@
 
 ## 1. Status
 
-This is a product source-of-truth document for the next intended evolution of Club Vivo/SIC.
+This is a product source-of-truth document preserving the Training Prescription direction as future/parked framing for Club Vivo/SIC.
 
-It is not shipped runtime behavior yet. It defines direction, scope, and MVP intent for a soccer-only Training Prescription Layer that extends the existing Club Vivo Session Builder direction.
+It is not shipped runtime behavior yet. The active near-term path is the bounded workflow:
 
-Current Match-to-Match Prescription behavior is a frontend-only deterministic draft preview path. It should be read as product-shape validation for this direction, not as shipped backend prescription automation.
+Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+
+Training Prescription and Match-to-Match Prescription are parked/future labels unless a later explicit product decision reactivates them. Existing Match-to-Match deterministic draft preview behavior should be read as prior product-shape context, not the near-term source path or shipped backend prescription automation.
 
 ## 2. Purpose
 
@@ -18,7 +20,7 @@ SIC remains the platform. Club Vivo remains the current coach-facing product.
 
 Coaches do not only need help generating sessions from constraints. They need help deciding what the next training session should work on.
 
-The Training Prescription Layer should bridge evidence from match play, team performance, player behavior, and coach observations into practical training decisions.
+The near-term Training Brief direction should bridge evidence from match play, team performance, player behavior, and coach observations into practical training decisions.
 
 ## 4. Target Users
 
@@ -49,9 +51,9 @@ The hard part is translation:
 
 SIC should help close that bridge between evidence and the next training action.
 
-## 6. What The Training Prescription Layer Does
+## 6. What The Future Training Prescription Layer Could Do
 
-The Training Prescription Layer helps produce:
+As future/parked direction, the Training Prescription Layer could help produce:
 
 - a prioritized training need
 - a recommended session objective
@@ -112,7 +114,7 @@ The brief should be short enough for grassroots coaches to use quickly and struc
 
 This direction extends the existing Club Vivo Session Builder. It does not replace it.
 
-The Session Builder remains the execution surface for creating, saving, reviewing, and exporting sessions. The Training Prescription Layer adds an upstream reasoning layer that helps decide what should be built next and why.
+The Session Builder remains the active execution surface for creating, saving, reviewing, and exporting sessions. The near-term bridge is Training Brief intake into Session Builder objectives, structured diagram intent / DiagramSequence, coach review, and feedback. Broader Training Prescription behavior remains parked/future.
 
 ## 11. Diagram-First Requirement
 
@@ -155,6 +157,7 @@ This document does not implement translation or require bilingual runtime behavi
 This direction does not yet include:
 
 - claiming shipped Training Prescription runtime behavior
+- claiming Training Prescription or Match-to-Match Prescription is the near-term path
 - claiming Match-to-Match Prescription is full backend prescription automation
 - claiming a public Training Brief API exists
 - claiming persisted prescription objects exist
@@ -171,14 +174,14 @@ This direction does not yet include:
 
 The first MVP slice should be small:
 
-- accept a coach-entered match or performance observation
+- accept coach-entered evidence or planning notes through bounded Training Brief intake
 - identify the likely training need
 - recommend one session objective
 - propose one to three activities or drills
 - produce structured diagram-ready sequence data for at least one activity
 - let the coach review, edit, save, and continue through the existing Session Builder flow
 
-The MVP should prove the evidence-to-training bridge before expanding data sources or automation depth.
+The MVP should prove the Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback loop before expanding data sources or automation depth.
 
 ## 17. Future Evolution
 
@@ -190,6 +193,7 @@ Future evolution may include:
 - player-group recommendations
 - methodology-aware prescription
 - video-assisted evidence capture
+- Match-to-Match Prescription reactivation after a later explicit decision
 - Spanish localization
 - academy and professional workflow support
 

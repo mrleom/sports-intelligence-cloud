@@ -25,6 +25,12 @@ Current workspace areas include:
 
 Quick Session is a fast shared-app lane into the same generation and save flow. It is not a separate backend product.
 
+Near-term Club Vivo direction is a bounded agentic coaching workflow around the existing Session Builder path:
+
+Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+
+Today, Session Builder is the active runtime wedge. Training Brief and DiagramSequence remain proposed contract/architecture surfaces unless runtime code proves otherwise.
+
 ## Architecture At A Glance
 
 - `apps/club-vivo`
@@ -104,7 +110,8 @@ For a detailed source map, see [Club Vivo Source Map](docs/architecture/club-viv
 - Club Vivo remains one shared coach-facing app.
 - Quick Session is not a separate backend product.
 - KSC is pilot context, not the product identity.
-- Methodology upload/source-mode, broad RAG/vector infrastructure, a separate admin app, a broader image-assisted intake restart, and deeper PDF document design are not claimed as active shipped runtime behavior here.
+- Match-to-Match Prescription is parked for later and outside the near-term agentic path.
+- Methodology upload/source-mode, broad RAG/vector infrastructure, autonomous agents, Bedrock production generation, a separate admin app, a broader image-assisted intake restart, and deeper PDF document design are not claimed as active shipped runtime behavior here.
 
 ## Public Repo Safety
 
