@@ -55,7 +55,14 @@ test("buildTrainingBriefCandidate builds a draft candidate from minimal valid ra
   assert.equal(candidate.candidateType, "training_brief_candidate");
   assert.equal(candidate.version, "v1");
   assert.equal(candidate.status, "draft");
-  assert.equal(candidate.source, "match_to_match_prescription");
+  assert.equal(candidate.source, "training_brief_session_builder_intake");
+  assert.equal(candidate.requiresCoachReview, true);
+});
+
+test("buildTrainingBriefCandidate keeps coach review required for Session Builder intake source", () => {
+  const candidate = buildTrainingBriefCandidate(makeValidBrief());
+
+  assert.equal(candidate.source, "training_brief_session_builder_intake");
   assert.equal(candidate.requiresCoachReview, true);
 });
 
