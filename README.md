@@ -110,7 +110,7 @@ For a detailed source map, see [Club Vivo Source Map](docs/architecture/club-viv
 - Club Vivo remains one shared coach-facing app.
 - Quick Session is not a separate backend product.
 - KSC is pilot context, not the product identity.
-- Match-to-Match Prescription is parked for later and is not the active near-term agentic path.
+- Match-to-Match Prescription is parked for later and outside the near-term agentic path.
 - Methodology upload/source-mode, broad RAG/vector infrastructure, autonomous agents, Bedrock production generation, a separate admin app, a broader image-assisted intake restart, and deeper PDF document design are not claimed as active shipped runtime behavior here.
 
 ## Public Repo Safety

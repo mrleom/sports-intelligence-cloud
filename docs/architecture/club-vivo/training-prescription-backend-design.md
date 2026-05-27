@@ -8,7 +8,7 @@
 
 ## 2. Purpose
 
-This note explains how future Training Prescription backend work should fit inside the existing Club Vivo/SIC architecture before implementation.
+This note preserves the future/parked Training Prescription backend framing and explains how bounded Training Brief work should fit inside the existing Club Vivo/SIC architecture before implementation.
 
 It is intended to align product, API, tenancy, validation, observability, and implementation boundaries before any runtime behavior is added.
 
@@ -16,7 +16,7 @@ It is intended to align product, API, tenancy, validation, observability, and im
 
 - Session Builder is the active runtime wedge.
 - Custom Build is the everyday coach-led builder.
-- Match-to-Match Prescription is currently frontend-only deterministic draft preview behavior.
+- Match-to-Match Prescription is parked for later. Existing deterministic draft preview behavior should be read as prior product-shape context, not the near-term source path.
 - Quick Activity remains the fast activity lane.
 - `/session-packs` is the current generation brain.
 - No public Training Brief API exists yet.
@@ -25,15 +25,16 @@ It is intended to align product, API, tenancy, validation, observability, and im
 
 ## 4. Design Direction
 
-The preferred future Training Prescription flow is:
+The active near-term future flow is:
 
-1. match evidence / coach observations
+1. Session Builder / Training Brief intake
 2. validated Training Brief candidate
 3. recommended objective and activity direction
-4. Session Builder handoff
-5. validated SessionPack
-6. coach review
+4. structured diagram intent / DiagramSequence requirements
+5. coach review and Session Builder handoff
+6. validated SessionPack
 7. save/export through existing session workflow
+8. coach feedback for future intelligence
 
 The first backend implementation should be internal-first unless an explicit API decision is made.
 
@@ -56,7 +57,7 @@ Public `/training-briefs` or `/prescriptions` endpoints should not be added unti
 
 ## 6. Backend Placement
 
-Training Prescription logic should stay inside the existing Club Vivo API service.
+Training Brief candidate logic should stay inside the existing Club Vivo API service. Broader Training Prescription and Match-to-Match behavior is parked/future unless a later explicit decision reactivates it.
 
 Preferred initial placement:
 
@@ -115,7 +116,7 @@ Output validation:
 
 ## 9. Handoff To Session Builder
 
-Training Prescription should map a validated Training Brief candidate into existing Session Builder inputs:
+Training Brief candidate logic should map a validated Training Brief candidate into existing Session Builder inputs:
 
 - objective
 - specific focus
@@ -144,11 +145,11 @@ Future persistence requires defining key shape, lifecycle, ownership, access rul
 
 Suggested event types:
 
-- `training_prescription_request_received`
-- `training_prescription_validation_failed`
-- `training_prescription_brief_created`
-- `training_prescription_handoff_created`
-- `training_prescription_failure`
+- `training_brief_request_received`
+- `training_brief_validation_failed`
+- `training_brief_candidate_created`
+- `training_brief_handoff_created`
+- `training_brief_failure`
 
 Safe log fields:
 
@@ -169,7 +170,7 @@ Do not introduce broad RAG, vector search, or Bedrock generation until a separat
 
 ## 13. Diagram Requirements
 
-Training Prescription should produce diagram requirements, not raw generated images.
+Training Brief candidate logic should produce diagram requirements, not raw generated images.
 
 Preferred flow:
 

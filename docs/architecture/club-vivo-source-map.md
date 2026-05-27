@@ -38,7 +38,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Template generation support lives in `services/club-vivo/api/src/domains/templates/`.
 - Current Session Builder runtime should be read as deterministic/template-based unless code proves a narrower generated behavior exists.
 - Training Brief is a proposed contract bridge into Session Builder, not proven shipped runtime behavior.
-- Match-to-Match Prescription is parked and should not be treated as the active near-term source path.
+- Match-to-Match Prescription is parked and should not be treated as the near-term source path.
 
 ## Diagram Rendering
 

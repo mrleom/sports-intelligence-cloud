@@ -36,7 +36,7 @@ The current foundation is:
 
 Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
 
-Match-to-Match Prescription is parked for later. Historical references may remain, but Match-to-Match is not the active near-term agentic path, is not full prescription automation, does not expose a public Training Brief or prescription API, and does not introduce a new persistence model.
+Match-to-Match Prescription is parked for later. Historical references may remain, but Match-to-Match is outside the near-term agentic path, is not full prescription automation, does not expose a public Training Brief or prescription API, and does not introduce a new persistence model.
 
 Future evolution should extend this foundation rather than create a separate app, backend service, or tenancy path without a clear ADR.
 
@@ -83,7 +83,7 @@ The following are parked outside active Club Vivo scope:
 - professional-only workflows
 - paid data-provider dependency
 - broad AI/ML infrastructure before product need is proven
-- Match-to-Match Prescription as the active near-term workflow
+- treating Match-to-Match Prescription as the near-term workflow
 - raw generated images as authoritative drill diagrams
 
 These ideas may return later, but they should not pull the current roadmap away from the soccer-first Session Builder and bounded Training Brief path.

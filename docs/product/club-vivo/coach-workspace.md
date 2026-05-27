@@ -32,7 +32,7 @@ That means this document must stay aligned to the current repo reality:
 - Full Session supports 45-120 minutes
 - Drill / Activity supports 15-25 minutes
 - Quick Activity remains the separate fast activity lane
-- Match-to-Match Prescription is an advanced evidence-led path with frontend-only deterministic draft preview behavior
+- Match-to-Match Prescription is parked for later; any existing deterministic draft preview behavior is prior product-shape context, not the near-term creation path
 - coach profile is not yet a durable product surface
 - equipment profile is not yet a durable product surface
 - coach-admin workspace is not yet a durable product surface
@@ -178,9 +178,9 @@ Current Week 21 grounding:
 
 ---
 
-## Custom Build and Match-to-Match direction
+## Custom Build and Training Brief direction
 
-Coach Workspace v1 should make the two current creation paths explicit.
+Coach Workspace v1 should make the current creation paths and parked future paths explicit.
 
 Frozen direction:
 
@@ -189,13 +189,14 @@ Frozen direction:
 - Full Session supports 45-120 minutes.
 - Drill / Activity supports 15-25 minutes.
 - **Quick Activity** remains the separate fast activity lane.
-- **Match-to-Match Prescription** is the advanced evidence-led draft path from last match to next match.
+- The active near-term future bridge is **Training Brief** intake into Session Builder objectives, structured diagram intent / DiagramSequence, coach review, and feedback.
 
 Week 21 boundary:
 
-- Match-to-Match Prescription is currently frontend-only deterministic draft preview behavior.
-- It should not be described as full backend prescription automation.
-- It does not imply a public Training Brief API, persisted prescription objects, or a new backend service.
+- Training Brief remains proposed/contract-level unless runtime code proves otherwise.
+- DiagramSequence remains proposed architecture unless runtime code proves otherwise.
+- Match-to-Match Prescription is parked for later and should not be described as the advanced path, first integration source, or Training Brief UI path.
+- Existing Match-to-Match preview behavior does not imply full backend prescription automation, a public Training Brief API, persisted prescription objects, or a new backend service.
 
 ---
 
@@ -254,6 +255,7 @@ Coach Workspace v1 is not trying to do all of the following in Week 21:
 - redesign IAM or CDK
 - claim a shipped teams UI that does not yet exist
 - claim full backend Match-to-Match prescription automation
+- claim Match-to-Match is the near-term creation path
 - claim a public Training Brief API or persisted prescription objects
 - claim a shipped coach-admin workspace that does not yet exist
 - turn Week 21 into a broad platform rewrite

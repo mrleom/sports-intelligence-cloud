@@ -91,7 +91,7 @@ These Club Vivo product docs define active product direction and should not chan
 
 Future-facing language inside product docs should stay clearly labeled as future direction when it does not represent shipped runtime behavior.
 
-The active near-term Club Vivo source-of-truth path is Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop. This is a bounded agentic coaching workflow direction, not a claim that autonomous agents, broad RAG/vector search, Bedrock production generation, or Match-to-Match Prescription are active shipped runtime behavior.
+The near-term Club Vivo source-of-truth path is Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop. This is a bounded agentic coaching workflow direction, not a claim that autonomous agents, broad RAG/vector search, Bedrock production generation, or Match-to-Match Prescription are shipped runtime behavior.
 
 ## 7. Historical Docs
 

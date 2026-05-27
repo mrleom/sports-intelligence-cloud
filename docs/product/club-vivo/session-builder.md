@@ -52,7 +52,7 @@ Current runtime shape:
 - Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
 - **Training Brief** is a proposed bridge object from evidence and coach observations into Session Builder objectives and activity direction.
 - **DiagramSequence** is proposed architecture for structured diagram intent and future animation data.
-- **Match-to-Match Prescription** is parked for later and is not the active near-term agentic path.
+- **Match-to-Match Prescription** is parked for later and outside the near-term agentic path.
 
 ---
 
