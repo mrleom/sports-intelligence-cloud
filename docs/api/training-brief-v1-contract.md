@@ -4,7 +4,7 @@
 
 Proposed documentation contract.
 
-This is not shipped runtime behavior yet. It defines a proposed `TrainingBrief v1` shape and proposed endpoint semantics for a future Club Vivo Training Prescription Layer.
+This is not shipped runtime behavior yet. It defines a proposed `TrainingBrief v1` shape and proposed endpoint semantics for a future bounded agentic coaching workflow around Session Builder.
 
 ## 2. Purpose
 
@@ -12,11 +12,15 @@ This is not shipped runtime behavior yet. It defines a proposed `TrainingBrief v
 
 It translates coach observations, match evidence, performance context, and next-game objectives into a concise brief that can later drive Session Builder output.
 
-## 3. Relationship To Training Prescription Layer
+## 3. Relationship To Bounded Agentic Coaching Workflow
 
 This contract supports `docs/product/club-vivo/training-prescription-layer.md`.
 
-The Training Prescription Layer remains soccer/football/fútbol only. It extends the existing Session Builder direction and does not create a separate app, backend service, or tenancy path.
+The active near-term workflow direction is:
+
+Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+
+Training Brief remains soccer/football/futbol only. It extends the existing Session Builder direction and does not create a separate app, backend service, or tenancy path.
 
 ## 4. Proposed Endpoint
 
@@ -255,6 +259,7 @@ The MVP should:
 - recommend one to three activities
 - include diagram sequence requirements for main activities
 - hand off to Session Builder for full session generation, duration validation, save, review, and export flows
+- keep coach review/edit in the loop before any future intelligence uses feedback
 
 ## 16. Future Extensions
 
@@ -268,6 +273,7 @@ Future extensions may include:
 - prior-session feedback loops
 - localization-ready labels
 - richer diagram sequence data compatible with diagram rendering contracts
+- Match-to-Match Prescription reactivation only after a later explicit product decision
 
 These are future directions, not current shipped behavior.
 

@@ -18,7 +18,7 @@ Week 21 keeps Session Builder as the active wedge, but hardens the product direc
 - team-level methodology defaults
 - Custom Build as the everyday coach-led path
 - Full Session and Drill / Activity modes inside Custom Build
-- Match-to-Match Prescription as an advanced evidence-led draft path
+- bounded Training Brief -> Diagrams -> Coach Feedback direction as proposed future workflow
 - coach-admin governance direction
 
 **Wedge message:**
@@ -49,8 +49,10 @@ Current runtime shape:
 - Full Session supports 45-120 minutes.
 - Drill / Activity supports 15-25 minutes.
 - **Quick Activity** remains the separate fast activity lane.
-- **Match-to-Match Prescription** is the advanced evidence-led draft path from last match to next match.
-- Match-to-Match Prescription is currently frontend-only deterministic draft preview behavior, not full backend prescription automation.
+- Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
+- **Training Brief** is a proposed bridge object from evidence and coach observations into Session Builder objectives and activity direction.
+- **DiagramSequence** is proposed architecture for structured diagram intent and future animation data.
+- **Match-to-Match Prescription** is parked for later and is not the active near-term agentic path.
 
 ---
 
@@ -59,7 +61,7 @@ Current runtime shape:
 The chatbot collects or infers (short form + chat refinement):
 
 ### Required (minimum viable)
-- **Sport** (soccer/basketball/futsal/etc.)
+- **Sport** (Club Vivo active scope is soccer; other sports are future scope)
 - **Age group / level** (U8/U12/HS/adult)
 - **Athletes count** (e.g., 20)
 - **Time available** (e.g., 75 minutes)
@@ -196,11 +198,12 @@ Current repo grounding:
 
 This should happen inside the existing shared app and shared tenant-safe product path.
 
-### Tenant Knowledge (RAG)
+### Future Tenant Knowledge (Parked RAG Direction)
 - club playbook, philosophy, drill library
 - field availability and facility constraints
 - equipment inventory defaults
-All stored/queryable **within tenant boundary**.
+
+This is future direction only. Broad RAG, FAISS/vector search, and tenant knowledge retrieval are not active shipped Session Builder runtime behavior unless implementation later proves otherwise. Any future retrieval must remain stored/queryable **within tenant boundary**.
 
 ---
 
@@ -239,10 +242,10 @@ All stored/queryable **within tenant boundary**.
 - Request enters SIC with verified identity context
 
 ### C) Core Services (domain-aligned)
-- **Chat Orchestrator Service**
+- **Session Builder Service**
   - Accepts coach message + structured intake
-  - Builds prompt from sport pack + tenant config + safety policy
-  - Calls generation engine
+  - Uses deterministic/template-based generation in the current runtime shape unless source code proves otherwise
+  - May later use bounded generation from sport pack + tenant config + safety policy
   - Stores conversation/session artifacts
 - **Session Pack Service**
   - Validates minutes, structure, equipment
@@ -251,7 +254,7 @@ All stored/queryable **within tenant boundary**.
 - **Clubs/Teams/Membership (RBAC)**
   - Determines permissions and personalization scope
   - “Who can save for a team?” etc.
-- **Knowledge Service (RAG)**
+- **Future Knowledge Service (RAG)**
   - Tenant-scoped retrieval of docs/snippets
   - Enforces per-tenant knowledge boundaries
 - **Entitlements / Tenant Context**
@@ -260,7 +263,7 @@ All stored/queryable **within tenant boundary**.
 ### D) Data Stores (tenant-scoped by construction)
 - DynamoDB (single-table or domain tables) with `PK=TENANT#<tenantId>`
 - S3 for exports (tenant prefix + short TTL presigned URLs)
-- Optional vector store (OpenSearch/pgvector/etc.) tenant-scoped
+- Optional future vector store (OpenSearch/pgvector/etc.) tenant-scoped only if product need and an explicit decision justify it
 
 ### E) Observability
 - CloudWatch logs with correlation IDs
@@ -280,9 +283,9 @@ All stored/queryable **within tenant boundary**.
 3) Handler calls `buildTenantContext(event)`:
    - verifies identity + loads entitlements
    - derives `tenantCtx.tenantId` and role
-4) Orchestrator loads `TenantBotConfig` (tenant-scoped query).
-5) Knowledge Service retrieves tenant-approved snippets (tenant-scoped retrieval).
-6) Generation Engine produces draft session pack.
+4) Session Builder loads tenant-safe context needed for the request.
+5) Current deterministic/template-based generation produces a draft session pack.
+6) Future bounded generation or retrieval may be introduced only when product need and tenant-safe contracts justify it.
 7) Session Pack Service validates:
    - minutes sum matches duration
    - equipment feasibility
@@ -372,7 +375,10 @@ Week 21 keeps that foundation intact while moving the product direction from nar
 - team-aware generation context
 - methodology-aware defaults
 - Custom Build with Full Session and Drill / Activity modes
-- Match-to-Match Prescription as a frontend-only deterministic draft preview path
+- Training Brief as a proposed bridge object into objectives and activities
+- structured diagram intent / DiagramSequence as the proposed diagram path
+- Coach Feedback as the future learning-loop signal
+- Match-to-Match Prescription parked for later
 - coach-admin governance direction
 
 ---

@@ -71,6 +71,7 @@ These API and internal contract docs define public or cross-layer expectations a
 - `docs/api/generation-context-v1-contract.md`
 - `docs/api/resolved-generation-context-v1-contract.md`
 - `docs/api/session-feedback-v1-contract.md`
+- `docs/api/training-brief-v1-contract.md`
 - `docs/api/platform-error-contract.md`
 
 Other files in `docs/api/` are also contract/reference docs and should be reviewed carefully when changed, especially when a change would affect clients, handlers, tests, saved data, or deployment behavior.
@@ -89,6 +90,8 @@ These Club Vivo product docs define active product direction and should not chan
   - Club methodology v1 product framing.
 
 Future-facing language inside product docs should stay clearly labeled as future direction when it does not represent shipped runtime behavior.
+
+The active near-term Club Vivo source-of-truth path is Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop. This is a bounded agentic coaching workflow direction, not a claim that autonomous agents, broad RAG/vector search, Bedrock production generation, or Match-to-Match Prescription are active shipped runtime behavior.
 
 ## 7. Historical Docs
 
@@ -115,6 +118,7 @@ Current examples include:
 
 - `docs/product/club-vivo/future/image-assisted-intake-parking-lot.md`
 - `docs/product/club-vivo/future/methodology-source-mode-planning.md`
+- Match-to-Match Prescription references outside historical closeouts, unless a later decision reactivates that path
 
 These docs should remain clearly separated from active source-of-truth docs unless a later architecture/product decision moves their scope into active work.
 

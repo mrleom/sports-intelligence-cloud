@@ -39,7 +39,11 @@ This first product helps coaches:
 
 This wedge is intentionally narrow so SIC can deliver real value early while building the structured foundation for broader platform growth.
 
-The next intended evolution is a proposed soccer-only Training Prescription Layer that helps translate match/performance evidence and coach observations into training objectives, sessions, activities, and diagram-ready outputs. This extends the Session Builder; it is not shipped runtime behavior yet and does not create a separate app, backend service, or tenancy path.
+The active near-term evolution is a bounded agentic coaching workflow around Session Builder:
+
+Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+
+Training Brief is the proposed bridge object for translating match/performance evidence and coach observations into training objectives, activities, and diagram-ready outputs. Diagram work should flow from structured diagram intent / DiagramSequence data, not raw generated images. This extends Session Builder directionally; it is not shipped runtime behavior yet and does not create a separate app, backend service, or tenancy path.
 
 ---
 
@@ -174,6 +178,7 @@ The goal is to stay realistic for an independent builder while keeping the platf
 The repo should currently reflect these active priorities:
 
 - Session Builder implementation
+- bounded Session Builder -> Training Brief -> Diagrams -> Coach Feedback direction
 - coach and team product workflows
 - multi-tenant platform safety
 - observability and reliability
@@ -197,7 +202,7 @@ When there is ambiguity, use this order:
 For repo navigation and current source orientation, see:
 - `docs/architecture/club-vivo-source-map.md`
 
-For the proposed Training Prescription direction, see:
+For the proposed bounded agentic coaching workflow direction, see:
 - `docs/product/club-vivo/training-prescription-layer.md`
 - `docs/api/training-brief-v1-contract.md`
 - `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`

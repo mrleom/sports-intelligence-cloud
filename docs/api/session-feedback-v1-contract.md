@@ -10,6 +10,8 @@ This is a narrow, product-first pilot feedback slice for the coach workflow.
 
 It documents the current implementation only. It does not introduce infra, IAM, auth-boundary, tenancy-boundary, entitlements-model, or event-timeline changes.
 
+In the current product direction, this backend feedback contract is the existing foundation for a future learning loop after Session Builder, Training Brief, and structured diagram outputs. It does not by itself claim autonomous agents, model training, dashboards, feedback reads, or production intelligence generation.
+
 ## Contract rules
 
 - Auth is required.

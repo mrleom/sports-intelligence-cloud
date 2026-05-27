@@ -4,7 +4,7 @@
 
 This is a long-lived product evolution guide for Club Vivo inside the Sports Intelligence Cloud platform.
 
-It is product direction, not shipped runtime behavior. It should guide future slices, closeouts, ADRs, and implementation planning without claiming that proposed Training Prescription capabilities already exist in production.
+It is product direction, not shipped runtime behavior. It should guide future slices, closeouts, ADRs, and implementation planning without claiming that proposed Training Brief, DiagramSequence, or bounded agentic workflow capabilities already exist in production.
 
 ## 2. North Star
 
@@ -29,14 +29,14 @@ The current foundation is:
 - Full Session support for 45-120 minutes
 - Drill / Activity support for 15-25 minutes
 - Quick Activity as the separate fast activity lane
-- Match-to-Match Prescription as an advanced evidence-led draft path
-- frontend-only deterministic Match-to-Match preview behavior
 - tenant-safe authenticated access
 - validated session outputs
 - save and export paths
 - diagram-oriented activity output
 
-Match-to-Match Prescription currently establishes product shape only. It is not full prescription automation, does not expose a public Training Brief or prescription API, and does not introduce a new persistence model.
+Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
+
+Match-to-Match Prescription is parked for later. Historical references may remain, but Match-to-Match is not the active near-term agentic path, is not full prescription automation, does not expose a public Training Brief or prescription API, and does not introduce a new persistence model.
 
 Future evolution should extend this foundation rather than create a separate app, backend service, or tenancy path without a clear ADR.
 
@@ -68,7 +68,11 @@ The starting market is:
 - small clubs and academies
 - nonprofit or community programs
 
-The proposed next evolution is a soccer-only Training Prescription Layer that helps convert match, team, performance, and coach evidence into a Training Brief and practical session direction.
+The active near-term evolution is a soccer-only bounded agentic coaching workflow:
+
+Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+
+Training Brief is the proposed bridge object that can convert match, team, performance, and coach evidence into practical session direction. It is contract-level direction unless runtime code proves implementation exists.
 
 ## 6. Parked Scope
 
@@ -79,9 +83,10 @@ The following are parked outside active Club Vivo scope:
 - professional-only workflows
 - paid data-provider dependency
 - broad AI/ML infrastructure before product need is proven
+- Match-to-Match Prescription as the active near-term workflow
 - raw generated images as authoritative drill diagrams
 
-These ideas may return later, but they should not pull the current roadmap away from the soccer-first Session Builder and Training Prescription path.
+These ideas may return later, but they should not pull the current roadmap away from the soccer-first Session Builder and bounded Training Brief path.
 
 ## 7. Product Pillars
 
@@ -95,7 +100,7 @@ Over time, Club Vivo should help clubs keep sessions consistent with their princ
 
 ### Evidence-to-training bridge
 
-The Training Prescription direction should help translate observations and performance evidence into a clear objective and training action.
+The Training Brief direction should help translate observations and performance evidence into a clear objective and training action.
 
 ### Five-star diagrams
 
@@ -132,7 +137,7 @@ This order can change when a smaller slice delivers clearer product value, but p
 
 - Prefer thin vertical product slices over broad platform construction.
 - Extend Session Builder unless there is a documented reason to create a new path.
-- Treat Training Prescription as upstream guidance for Session Builder, not a replacement.
+- Treat Training Brief as upstream guidance for Session Builder, not a replacement.
 - Use structured, validated data for diagrams and activity outputs.
 - Keep grassroots and low-budget usefulness ahead of elite-only sophistication.
 - Make future academy and professional scaling possible without requiring it now.
@@ -150,13 +155,13 @@ Future work must preserve:
 - cost-awareness
 - product value before platform expansion
 - soccer-only active scope until explicitly changed
-- no separate Training Prescription app, backend service, or tenancy path
+- no separate Training Brief, Training Prescription, or Match-to-Match app, backend service, or tenancy path
 
-Training Prescription must not weaken tenancy, bypass validation, or create unreviewable AI output paths.
+The bounded agentic coaching workflow must not weaken tenancy, bypass validation, or create unreviewable AI output paths.
 
 ## 11. Near-Term Build Runway
 
-Near-term work should stay focused on proving the evidence-to-training bridge:
+Near-term work should stay focused on proving the bounded evidence-to-training bridge:
 
 - Training Brief intake draft
 - Training Brief validation model
@@ -169,6 +174,7 @@ Near-term work should stay focused on proving the evidence-to-training bridge:
 - optional 7Q tagging for Training Briefs and activity recommendations
 - coach-facing learning prompts connected to football intelligence categories
 - future 7Q learning-surface exploration kept separate from current runtime claims
+- Match-to-Match Prescription kept parked unless a later decision explicitly reactivates it
 
 These are roadmap slices, not a claim of current shipped behavior.
 

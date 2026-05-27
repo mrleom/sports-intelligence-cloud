@@ -36,6 +36,9 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Backend session builder domain logic lives in `services/club-vivo/api/src/domains/session-builder/`.
 - Session persistence, feedback, and PDF export support live in `services/club-vivo/api/src/domains/sessions/`.
 - Template generation support lives in `services/club-vivo/api/src/domains/templates/`.
+- Current Session Builder runtime should be read as deterministic/template-based unless code proves a narrower generated behavior exists.
+- Training Brief is a proposed contract bridge into Session Builder, not proven shipped runtime behavior.
+- Match-to-Match Prescription is parked and should not be treated as the active near-term source path.
 
 ## Diagram Rendering
 
@@ -43,6 +46,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Shared frontend diagram typing lives in `apps/club-vivo/lib/types/drill-diagram-spec.ts`.
 - Backend diagram validation lives in `services/club-vivo/api/src/domains/session-builder/diagram-spec-validate.js`.
 - `docs/architecture/club-vivo/diagram-sequence-spec-v1.md` is the current proposed DiagramSequence v1 spec for structured diagram and future animation data.
+- Future workflow diagrams should come from structured diagram intent / DiagramSequence data rather than raw generated images.
 - Current diagram contracts and architecture notes live in `docs/api/diagram-rendering-contract-v1.md`, `docs/architecture/coach-lite/diagram-rendering-architecture.md`, and `docs/architecture/coach-lite/drill-diagram-spec-v1.md`.
 
 ## Methodology
