@@ -168,6 +168,50 @@ function buildCleanSessionPackInputFromTrainingBriefHandoff(sessionBuilderHandof
   };
 }
 
+function buildCleanTrainingBriefHandoffPreview(sessionBuilderHandoff) {
+  const {
+    sport,
+    ageBand,
+    durationMin,
+    theme,
+    sessionMode,
+    coachNotes,
+    equipment,
+  } = sessionBuilderHandoff || {};
+
+  return {
+    sport,
+    ageBand,
+    durationMin,
+    theme,
+    sessionMode,
+    coachNotes,
+    equipment,
+  };
+}
+
+function buildTrainingBriefDraftPreview(rawInput) {
+  const { requestType: _requestType, ...trainingBriefInput } = rawInput || {};
+  const trainingBriefCandidate = buildTrainingBriefCandidate(trainingBriefInput);
+  const firstActivityRecommendation = Array.isArray(trainingBriefCandidate.activityRecommendations)
+    ? trainingBriefCandidate.activityRecommendations[0]
+    : undefined;
+
+  return {
+    candidateType: trainingBriefCandidate.candidateType,
+    version: trainingBriefCandidate.version,
+    status: trainingBriefCandidate.status,
+    requiresCoachReview: trainingBriefCandidate.requiresCoachReview,
+    recommendedFocus: trainingBriefCandidate.recommendedFocus,
+    rationale: trainingBriefCandidate.rationale,
+    activityDirection:
+      firstActivityRecommendation?.objective || firstActivityRecommendation?.title || "",
+    sessionBuilderHandoff: buildCleanTrainingBriefHandoffPreview(
+      trainingBriefCandidate.sessionBuilderHandoff
+    ),
+  };
+}
+
 async function processTrainingBriefSessionPackRequest(trainingBriefInput, options = {}) {
   const trainingBriefCandidate = buildTrainingBriefCandidate(trainingBriefInput);
   const sessionBuilderHandoff = trainingBriefCandidate.sessionBuilderHandoff;
@@ -285,6 +329,7 @@ module.exports = {
   validateGeneratedPack,
   deriveMethodologyInfluence,
   processSessionPackRequest,
+  buildTrainingBriefDraftPreview,
   processTrainingBriefSessionPackRequest,
   buildCleanSessionPackInputFromTrainingBriefHandoff,
   processSessionImageAnalysisRequest,

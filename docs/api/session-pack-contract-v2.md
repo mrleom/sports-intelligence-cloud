@@ -446,6 +446,16 @@ SessionPack v2 is the intended in-place evolution of the existing `POST /session
 
 Coach Lite v1 should not introduce a separate long-lived backend pipeline or product-silo contract for session generation.
 
+### Training Brief Draft Preview Mode
+
+`POST /session-packs` also supports a narrow preview-only request mode:
+
+- `requestType: "training-brief-draft"`
+
+This mode validates Training Brief draft input and returns a sanitized coach-review draft with clean Session Builder handoff fields. It does not generate a session pack, does not persist Training Briefs, does not expose `/training-briefs`, and keeps coach review required before normal Session Builder generation.
+
+Normal session generation still uses accepted Session Builder fields such as `sport`, `ageBand`, `durationMin`, `theme`, `sessionsCount`, and `equipment`.
+
 ### Soccer Validation
 - output must be age-appropriate
 - output must fit the coach’s equipment and space constraints

@@ -17,6 +17,7 @@ const {
   exportPersistedSession,
   processTrainingBriefSessionPackRequest,
   buildCleanSessionPackInputFromTrainingBriefHandoff,
+  buildTrainingBriefDraftPreview,
 } = require("./session-builder-pipeline");
 
 function stripPackIdentity(pack) {
@@ -25,6 +26,19 @@ function stripPackIdentity(pack) {
     packId: undefined,
     createdAt: undefined,
   };
+}
+
+function hasKeyDeep(value, key) {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  if (Array.isArray(value)) {
+    return value.some((item) => hasKeyDeep(item, key));
+  }
+
+  return Object.prototype.hasOwnProperty.call(value, key) ||
+    Object.values(value).some((item) => hasKeyDeep(item, key));
 }
 
 function readRepoFile(...parts) {
@@ -437,6 +451,58 @@ test("buildCleanSessionPackInputFromTrainingBriefHandoff strips internal metadat
     sessionsCount: 1,
     equipment: ["balls", "cones"],
   });
+});
+
+test("buildTrainingBriefDraftPreview returns sanitized coach-review fields", () => {
+  const result = buildTrainingBriefDraftPreview({
+    requestType: "training-brief-draft",
+    sport: "soccer",
+    ageBand: "u14",
+    durationMinutes: 60,
+    playerCount: 12,
+    evidenceSummary: "The team loses central compactness after turnovers.",
+    nextGameObjective: "Improve defensive transition and protect central space.",
+    availableEquipment: ["balls", "cones", "bibs"],
+  });
+
+  assert.deepEqual(Object.keys(result), [
+    "candidateType",
+    "version",
+    "status",
+    "requiresCoachReview",
+    "recommendedFocus",
+    "rationale",
+    "activityDirection",
+    "sessionBuilderHandoff",
+  ]);
+  assert.equal(result.candidateType, "training_brief_candidate");
+  assert.equal(result.status, "draft");
+  assert.equal(result.requiresCoachReview, true);
+  assert.deepEqual(result.sessionBuilderHandoff, {
+    sport: "soccer",
+    ageBand: "u14",
+    durationMin: 60,
+    theme: "Improve defensive transition and protect central space.",
+    sessionMode: "full_session",
+    coachNotes:
+      "Evidence: The team loses central compactness after turnovers.\nObjective: Improve defensive transition and protect central space.\nPlayers: 12",
+    equipment: ["balls", "cones", "bibs"],
+  });
+
+  for (const forbiddenKey of [
+    "handoffMeta",
+    "candidateMeta",
+    "validatedInput",
+    "activityRecommendations",
+    "generatedPack",
+    "validatedPack",
+    "persistedSession",
+    "route",
+    "tenantId",
+    "userId",
+  ]) {
+    assert.equal(hasKeyDeep(result, forbiddenKey), false, `${forbiddenKey} should not be exposed`);
+  }
 });
 
 test("processTrainingBriefSessionPackRequest builds candidate and deterministic session pack", async () => {

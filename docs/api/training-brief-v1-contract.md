@@ -8,6 +8,8 @@ This is not shipped runtime behavior yet. It defines a proposed `TrainingBrief v
 
 Internal implementation note: the backend now has an internal deterministic Training Brief -> Session Builder handoff helper that proves this bridge through the existing Session Builder pipeline. It is internal only; it does not expose a public endpoint, persist Training Briefs, or change auth, tenancy, data models, or public API behavior.
 
+Current API boundary note: `POST /session-packs` supports a narrow `requestType: "training-brief-draft"` preview mode for coach review. This is not `/training-briefs`, does not persist Training Briefs, does not generate a session pack, and returns only sanitized draft and clean Session Builder handoff fields.
+
 ## 2. Purpose
 
 `TrainingBrief v1` is the structured bridge object between match or performance evidence and the Club Vivo Session Builder.
@@ -31,6 +33,8 @@ Proposed future endpoint:
 - `POST /training-briefs`
 
 This endpoint does not exist yet unless implemented later. The first MVP may also keep this behavior internal before exposing a public API route.
+
+The current preview boundary remains `POST /session-packs` with `requestType: "training-brief-draft"` and should not be treated as the proposed `/training-briefs` endpoint.
 
 ## 5. Request Shape
 
