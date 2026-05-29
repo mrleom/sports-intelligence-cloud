@@ -126,8 +126,9 @@ function normalizeText(value: string | undefined) {
 function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: number, totalActivities = 1): DiagramKind {
   const text = normalizeText(`${activity?.name || ""} ${activity?.description || ""}`);
   const isFinalActivity =
-    (totalActivities > 1 && activityIndex === totalActivities - 1) ||
-    /final game|tournament|competitive close|competitive final|small-sided competitive final|7v7 competitive final/i.test(text);
+    totalActivities > 1
+      ? activityIndex === totalActivities - 1
+      : /final game|tournament|competitive close|competitive final|small-sided competitive final|7v7 competitive final/i.test(text);
 
   if (isFinalActivity) {
     return "final_game_format";
@@ -365,14 +366,13 @@ function buildFirstTouchPanels(): DiagramPanel[] {
       caption: inferredCaption("show the receiver, server, pressure gate, and receiving box before the first touch happens."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "zone"],
       tokens: [
-        { type: "zone", x: 61, y: 31, width: 38, height: 34, label: "Box", tone: "target" },
+        { type: "zone", x: 61, y: 31, width: 38, height: 34, tone: "target" },
         { type: "gate", x: 103, y: 48, rotate: 90 },
         { type: "gate", x: 134, y: 54, rotate: 90 },
-        { type: "player", role: "neutral", x: 30, y: 52, label: "S" },
-        { type: "player", role: "coached", x: 74, y: 50, label: "R" },
+        { type: "player", role: "neutral", x: 30, y: 52 },
+        { type: "player", role: "coached", x: 74, y: 50 },
         { type: "player", role: "opposition", x: 112, y: 48 },
-        { type: "ball", x: 30, y: 52 },
-        { type: "label", x: 108, y: 33, text: "Gate", anchor: "middle" }
+        { type: "ball", x: 30, y: 52 }
       ]
     },
     {
@@ -380,18 +380,17 @@ function buildFirstTouchPanels(): DiagramPanel[] {
       caption: inferredCaption("the receiver scans, takes the first touch away from pressure, and exits toward the scoring gate."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "defenderPressure", "dribbleCarry", "coneGate", "zone"],
       tokens: [
-        { type: "zone", x: 61, y: 31, width: 38, height: 34, label: "Box", tone: "target" },
+        { type: "zone", x: 61, y: 31, width: 38, height: 34, tone: "target" },
         { type: "gate", x: 103, y: 48, rotate: 90 },
         { type: "gate", x: 134, y: 54, rotate: 90 },
-        { type: "player", role: "neutral", x: 30, y: 52, label: "S" },
-        { type: "player", role: "coached", x: 74, y: 50, label: "R" },
+        { type: "player", role: "neutral", x: 30, y: 52 },
+        { type: "player", role: "coached", x: 74, y: 50 },
         { type: "player", role: "opposition", x: 112, y: 48 },
         { type: "ball", x: 30, y: 52 },
         { type: "arrow", d: "M34 52 C47 48, 60 47, 71 50", action: "ball" },
         { type: "arrow", d: "M75 52 C91 63, 111 65, 132 55", action: "carry" },
         { type: "arrow", d: "M112 48 C100 48, 87 49, 76 51", action: "pressure" },
-        { type: "arrow", d: "M58 76 C72 70, 87 66, 103 65", action: "run" },
-        { type: "label", x: 78, y: 26, text: "Scan first", anchor: "middle" }
+        { type: "arrow", d: "M58 76 C72 70, 87 66, 103 65", action: "run" }
       ]
     },
     {
@@ -400,12 +399,12 @@ function buildFirstTouchPanels(): DiagramPanel[] {
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "rotationReset", "coneGate"],
       tokens: [
         { type: "gate", x: 134, y: 54, rotate: 90 },
-        { type: "player", role: "coached", x: 116, y: 57, label: "R" },
+        { type: "player", role: "coached", x: 116, y: 57 },
         { type: "player", role: "opposition", x: 98, y: 51 },
-        { type: "player", role: "neutral", x: 51, y: 52, label: "S" },
+        { type: "player", role: "neutral", x: 51, y: 52 },
         { type: "ball", x: 116, y: 57 },
         { type: "arrow", d: "M117 57 C123 56, 128 55, 134 54", action: "ball" },
-        { type: "arrow", d: "M116 64 C92 91, 49 84, 50 56", action: "rotation", label: "Rotate" }
+        { type: "arrow", d: "M116 64 C92 91, 49 84, 50 56", action: "rotation" }
       ]
     }
   ];
@@ -565,7 +564,6 @@ function buildActivationPanels(): DiagramPanel[] {
 
 function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
   const isProgression = kind === "recover_delay_win" || kind === "transition_to_attack";
-  const title = isProgression ? "Counter / Recovery" : "Small-Sided Game";
 
   return [
     {
@@ -573,7 +571,7 @@ function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
       caption: inferredCaption("use a compact game space with teams, gates, and the ball location clearly visible."),
       legend: ["coachedPlayer", "oppositionPlayer", "ball", "coneGate", "zone"],
       tokens: [
-        { type: "zone", x: 24, y: 16, width: 112, height: 73, label: title, tone: isProgression ? "pressure" : "target" },
+        { type: "zone", x: 24, y: 16, width: 112, height: 73, tone: isProgression ? "pressure" : "target" },
         { type: "gate", x: 136, y: 34, rotate: 90 },
         { type: "gate", x: 136, y: 72, rotate: 90 },
         { type: "player", role: "coached", x: 50, y: 35 },
@@ -592,7 +590,7 @@ function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
       ),
       legend: ["coachedPlayer", "oppositionPlayer", "ballAction", "coachedRun", "defenderPressure", "coneGate", "zone"],
       tokens: [
-        { type: "zone", x: 24, y: 16, width: 112, height: 73, label: title, tone: isProgression ? "pressure" : "target" },
+        { type: "zone", x: 24, y: 16, width: 112, height: 73, tone: isProgression ? "pressure" : "target" },
         { type: "gate", x: 136, y: 34, rotate: 90 },
         { type: "player", role: "coached", x: 68, y: 47 },
         { type: "player", role: "coached", x: 82, y: 75 },
