@@ -62,23 +62,15 @@ export default async function SessionsPage() {
         badge="Sessions"
         title="Saved sessions"
         description={
-          "Open saved sessions, review the key details, and start a new session through Session Builder or the faster Quick Activity path."
+          "Open saved sessions, review the key details, and start a new coach-ready plan through Session Builder."
         }
         actions={
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/sessions/new"
-              className="inline-flex rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-white"
-            >
-              New Session Builder
-            </Link>
-            <Link
-              href="/sessions/quick"
-              className="inline-flex rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-white"
-            >
-              Quick Activity
-            </Link>
-          </div>
+          <Link
+            href="/sessions/new"
+            className="inline-flex rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-white"
+          >
+            New Session Builder
+          </Link>
         }
       />
 

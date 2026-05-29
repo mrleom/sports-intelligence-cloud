@@ -1,7 +1,4 @@
-import { CoachPageHeader } from "../../../../components/coach/CoachPageHeader";
-import { HomeSessionStartCard } from "../../../../components/coach/HomeSessionStartCard";
-import { getCurrentUser } from "../../../../lib/get-current-user";
-import { createQuickSessionAction } from "../quick-session-actions";
+import { redirect } from "next/navigation";
 
 function parseSearchParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -12,22 +9,14 @@ export default async function QuickSessionPage({
 }: {
   searchParams?: Promise<{ prompt?: string | string[] }>;
 }) {
-  await getCurrentUser();
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const initialPrompt = parseSearchParam(resolvedSearchParams?.prompt)?.trim() || "";
+  const params = new URLSearchParams();
 
-  return (
-    <div className="grid gap-6">
-      <CoachPageHeader
-        badge="Quick activity"
-        title="Quick activity"
-        description="Use one prompt to generate a fast text-first activity. Ask for a session or full practice when you want a longer plan."
-      />
+  if (initialPrompt) {
+    params.set("notes", initialPrompt);
+    params.set("durationMin", "20");
+  }
 
-      <HomeSessionStartCard
-        createQuickSessionAction={createQuickSessionAction}
-        initialPrompt={initialPrompt}
-      />
-    </div>
-  );
+  redirect(`/sessions/new${params.size > 0 ? `?${params.toString()}` : ""}`);
 }

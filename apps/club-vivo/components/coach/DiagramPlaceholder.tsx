@@ -1069,16 +1069,40 @@ function PanelCard({
         <DiagramBoard panel={panel} markerBaseId={markerBaseId} size={size} />
       </div>
       <p className="border-t border-slate-100 px-3 py-2 text-xs leading-5 text-slate-600">
-        {panel.caption}
+        {shortenDiagramText(panel.caption, 120)}
       </p>
       <PanelLegend keys={panel.legend} />
     </section>
   );
 }
 
+function shortenDiagramText(value: string, maxLength = 96) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, maxLength).replace(/\s+\S*$/, "").trim()}...`;
+}
+
+function extractFinalGameLine(description: string, label: string) {
+  const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = description.match(
+    new RegExp(`${escapedLabel}:\\s*([\\s\\S]*?)(?=\\s(?:Format|Teams|Scoring|Constraint|Win condition|Focus|Run):|$)`, "i")
+  );
+
+  return match?.[1]?.trim() || "";
+}
+
 function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
   const description = activity?.description?.trim() ||
     "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
+  const summaryRows = [
+    ["Format", extractFinalGameLine(description, "Format") || "Small-sided game with fast restarts."],
+    ["Scoring", extractFinalGameLine(description, "Scoring") || extractFinalGameLine(description, "Win condition") || "Clear score target and quick rematch."],
+    ["Constraint", extractFinalGameLine(description, "Constraint") || extractFinalGameLine(description, "Focus") || "Keep the game tied to the session focus."]
+  ].filter(([, text]) => text);
 
   return (
     <div className="rounded-2xl border border-teal-100 bg-teal-50/50 p-4">
@@ -1088,9 +1112,16 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
       <h5 className="mt-2 text-sm font-semibold text-slate-900">
         {activity?.name || "Competitive close"}
       </h5>
-      <p className="mt-2 text-xs leading-5 text-slate-600">
-        {description}
-      </p>
+      <dl className="mt-3 grid gap-2">
+        {summaryRows.map(([label, text]) => (
+          <div key={label} className="rounded-xl border border-teal-100 bg-white/70 px-3 py-2">
+            <dt className="text-[11px] font-semibold uppercase tracking-wide text-teal-800">
+              {label}
+            </dt>
+            <dd className="mt-1 text-xs leading-5 text-slate-600">{shortenDiagramText(text)}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }

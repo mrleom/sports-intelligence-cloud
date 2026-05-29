@@ -3,15 +3,10 @@ import { cookies } from "next/headers";
 import { CoachPageHeader } from "../../../../components/coach/CoachPageHeader";
 import {
   NewSessionFlow,
-  type AnalyzeFormState,
   type GenerateFormState,
   type SaveFormState
 } from "./session-new-flow";
-import {
-  analyzeSessionImageAction,
-  generateSessionPackAction,
-  previewTrainingBriefDraftAction
-} from "./session-new-actions";
+import { generateSessionPackAction } from "./session-new-actions";
 import { COACH_TEAM_HINTS_COOKIE, getCoachTeams } from "../../../../lib/coach-team-hints";
 import {
   EQUIPMENT_HINTS_COOKIE,
@@ -22,12 +17,6 @@ import { listTeams, type TeamRecord } from "../../../../lib/team-api";
 import { saveGeneratedSessionAction } from "../session-actions";
 import { type WorkspaceTeamOption } from "../../../../components/coach/TeamSelector";
 import { getWorkspaceCookieName } from "../../../../lib/workspace-local-cookies";
-
-const INITIAL_ANALYZE_STATE: AnalyzeFormState = {
-  values: {
-    mode: "environment_profile"
-  }
-};
 
 const INITIAL_GENERATE_STATE: GenerateFormState = {
   values: {
@@ -143,14 +132,11 @@ export default async function NewSessionPage({
       />
 
       <NewSessionFlow
-        initialAnalyzeState={INITIAL_ANALYZE_STATE}
         initialGenerateState={initialGenerateState}
         initialSaveState={INITIAL_SAVE_STATE}
         teamOptions={teamOptions}
         initialEquipmentOptions={initialEquipmentOptions}
         initialConstraints={initialConstraints}
-        analyzeAction={analyzeSessionImageAction}
-        previewTrainingBriefDraftAction={previewTrainingBriefDraftAction}
         generateAction={generateSessionPackAction}
         saveAction={saveGeneratedSessionAction}
       />

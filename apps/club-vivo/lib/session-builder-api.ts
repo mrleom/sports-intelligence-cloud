@@ -772,6 +772,31 @@ function sanitizeGeneratedCoachText(value: string) {
     .replace(new RegExp(["builder", "choice"].join("\\s+"), "gi"), "cones, balls, and pinnies")
     .replace(new RegExp(["select", "equipment"].join("\\s+"), "gi"), "cones, balls, and pinnies")
     .replace(new RegExp(["choose", "equipment"].join("\\s+"), "gi"), "cones, balls, and pinnies")
+    .split("|")
+    .map((segment) => segment.trim())
+    .filter((segment) => {
+      const normalized = segment.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      return !(
+        normalized.startsWith("team ") ||
+        normalized.startsWith("team context ") ||
+        normalized.startsWith("env ") ||
+        normalized.startsWith("environment context ") ||
+        normalized.startsWith("primary session objective ") ||
+        normalized.startsWith("coach brainstorming and extra details for today ") ||
+        normalized.startsWith("notes ") ||
+        normalized.startsWith("originalteamageband ") ||
+        normalized.startsWith("apiageband ") ||
+        normalized.startsWith("programtype ") ||
+        normalized.startsWith("coachingstyle ") ||
+        normalized.startsWith("mixedage ") ||
+        normalized.startsWith("assumedagerange ")
+      );
+    })
+    .join(" ")
+    .replace(/\b(?:team|env|environment context|team context|notes)\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\bPrimary session objective\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\bCoach brainstorming and extra details for today\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\b(?:originalTeamAgeBand|apiAgeBand|programType|coachingStyle|mixedAge|assumedAgeRange)\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(oldActivationPattern, "show the first action, scoring gates, and reset rotation")
     .replace(
       oldTravelPattern,
