@@ -264,6 +264,29 @@ const INITIAL_FEEDBACK_PANEL_STATE: FeedbackPanelState = {
   }
 };
 
+function buildInitialFeedbackPanelState(
+  flowMode: SessionFeedbackFlowMode | ""
+): FeedbackPanelState {
+  return {
+    ...INITIAL_FEEDBACK_PANEL_STATE,
+    values: {
+      ...INITIAL_FEEDBACK_PANEL_STATE.values,
+      flowMode
+    }
+  };
+}
+
+function buildFeedbackActivityOptions(activities: SessionDetail["activities"]) {
+  return activities
+    .map((activity, index) => {
+      const name = activity.name.replace(/\s+/g, " ").trim();
+      const value = `Activity ${index + 1}: ${name}`;
+
+      return value.length > 280 ? value.slice(0, 280).trim() : value;
+    })
+    .filter(Boolean);
+}
+
 function getTrimmedValue(formData: FormData, field: string) {
   return String(formData.get(field) || "").trim();
 }
@@ -369,6 +392,10 @@ export default async function SessionDetailPage({
       ? `Session Builder - ${builderModeLabel}`
       : "Saved Session";
   const activityTimings = buildActivityTimings(session.activities);
+  const feedbackFlowMode: SessionFeedbackFlowMode | "" =
+    isQuickSession || isBuilderSession ? "session_builder" : "";
+  const initialFeedbackPanelState = buildInitialFeedbackPanelState(feedbackFlowMode);
+  const feedbackActivityOptions = buildFeedbackActivityOptions(session.activities);
   const activityCountLabel = formatActivityCount(session.activities.length);
   const headerDescription = isQuickSession
     ? `Coach-ready saved output from Quick Activity with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`
@@ -891,8 +918,9 @@ export default async function SessionDetailPage({
         ) : null}
 
         <SessionFeedbackPanel
-          initialState={INITIAL_FEEDBACK_PANEL_STATE}
+          initialState={initialFeedbackPanelState}
           submitAction={submitFeedbackAction}
+          activityOptions={feedbackActivityOptions}
         />
       </section>
     </div>
