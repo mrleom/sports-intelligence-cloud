@@ -126,7 +126,6 @@ export default async function NewSessionPage({
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge="Session Builder"
         title="Build your session"
         description="Choose a work group and build mode, then set up your session."
       />

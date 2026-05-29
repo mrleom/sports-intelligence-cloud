@@ -19,13 +19,9 @@ export function CoachAppShell({
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div>
-                <div className="club-vivo-badge inline-flex rounded-full px-3 py-1 text-sm font-medium tracking-wide uppercase">
-                  SIC Coach Workspace
+                <div className="club-vivo-badge inline-flex rounded-full px-3 py-1 text-sm font-semibold">
+                  Coach Workspace
                 </div>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-                  One shared coach-facing app for session creation, library reuse, and lightweight
-                  setup direction.
-                </p>
               </div>
 
               <div className="flex flex-col items-start gap-1 text-sm lg:items-end">

@@ -381,11 +381,6 @@ export default async function SessionDetailPage({
     : isBuilderSession
       ? builderModeLabel
       : `${session.sport} / ${session.ageBand}`;
-  const pageBadge = isQuickSession
-    ? "Quick Activity Output"
-    : isBuilderSession
-      ? "Session Builder Output"
-      : "Session Detail";
   const sourceLabel = isQuickSession
     ? "Quick Activity"
     : isBuilderSession
@@ -606,7 +601,6 @@ export default async function SessionDetailPage({
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge={pageBadge}
         title={pageTitle}
         description={headerDescription}
         actions={

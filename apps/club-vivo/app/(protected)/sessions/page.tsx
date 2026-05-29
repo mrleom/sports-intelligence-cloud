@@ -59,7 +59,6 @@ export default async function SessionsPage() {
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge="Sessions"
         title="Saved sessions"
         description={
           "Open saved sessions, review the key details, and start a new coach-ready plan through Session Builder."
