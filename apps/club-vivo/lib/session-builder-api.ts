@@ -828,14 +828,14 @@ function buildAttackingOverloadActivities(session: GeneratedSession, input: Gene
       name: "Overload Gates Activation",
       minutes: minutes[0],
       description:
-        "Setup: Set an 18x16 yard grid. Place four cone gates near the corners or sides. Start the ball with a central attacker or server. Use cones to mark the grid and keep spare balls beside the coach. How to run it: Blue attackers try to create an overload and score through a gate. The red defender applies pressure and tries to win or force play away. Rotate roles after a score, turnover, or short round. Rules / scoring: attackers score by dribbling or passing through any gate; defender scores by winning the ball or forcing play out. Progression: progress from 1v1 to 2v1, 2v2, then 3v2, or change scoring from dribble-through gate to pass-through gate to combine-through gate."
+        "Setup: Set a 16 x 15 meter grid (18 x 16 yards). Place four cone gates near the corners or sides. Start the ball with a central attacker or coach pass. Use cones to mark the grid and keep spare balls beside the coach. How to run it: Blue attackers try to create an overload and score through a gate. The red defender applies pressure and tries to win or force play away. Rotate roles after a score, turnover, or short round. Rules / scoring: attackers score by dribbling or passing through any gate; defender scores by winning the ball or forcing play out. Progression: progress from 1v1 to 2v1, 2v2, then 3v2, or change scoring from dribble-through gate to pass-through gate to combine-through gate."
     },
     {
       ...(session.activities[1] || {}),
       name: "Wide Overload Decision Game",
       minutes: minutes[1],
       description:
-        "Setup: Set a 24x20 yard field with a central start cone, one wide channel, a wide free player, two blue support runners, two red defenders, and a target gate. Start the ball with the central blue attacker. How to run it: The central attacker drives at the first defender, the support run arrives underneath, the wide free player stays in the wide channel, and defenders shift toward the ball before the pass or dribble. Rules / scoring: blue scores by finding the free player or support runner before attacking the target gate; red scores by winning and countering through the start gate. Reset: rotate the ball carrier, support runner, defender, and wide player after every score or turnover."
+        "Setup: Set a 24 x 20 meter field (26 x 22 yards) with a central start cone, one wide channel, a wide free player, two blue support runners, two red defenders, and a target gate. Start the ball with the central blue attacker. How to run it: The central attacker drives at the first defender, the support run arrives underneath, the wide free player stays in the wide channel, and defenders shift toward the ball before the pass or dribble. Rules / scoring: blue scores by finding the free player or support runner before attacking the target gate; red scores by winning and countering through the start gate. Reset: rotate the ball carrier, support runner, defender, and wide player after every score or turnover."
     },
     {
       ...(session.activities[2] || {}),
@@ -849,7 +849,7 @@ function buildAttackingOverloadActivities(session: GeneratedSession, input: Gene
       name: "Overload Gate Battle Final Game",
       minutes: minutes[3],
       description:
-        "Format: small-sided gate battle on a 36x28 yard field with fast restarts. Teams: balanced blue and red teams, with winner staying on or a quick rematch after each round. Scoring: one point through a gate and one bonus point for finding a wide player or support run first. Constraint: the bonus only counts when the overload creates the chance. Win condition: first team to three goals. Focus: keep it competitive, reward brave attacking decisions, and let the game flow."
+        "Format: small-sided gate battle on a 36 x 28 meter field (39 x 31 yards) with fast restarts. Teams: balanced blue and red teams, with winner staying on or a quick rematch after each round. Scoring: one point through a gate and one bonus point for finding a wide player or support run first. Constraint: the bonus only counts when the overload creates the chance. Win condition: first team to three goals. Focus: keep it competitive, reward brave attacking decisions, and let the game flow."
     }
   ];
 }

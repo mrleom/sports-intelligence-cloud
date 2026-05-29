@@ -435,6 +435,7 @@ export async function generateSessionPackAction(
     durationMin,
     environment,
     theme,
+    constraints,
     equipment
   };
 

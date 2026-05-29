@@ -35,6 +35,7 @@ export type GenerateFormState = {
     durationMin: string;
     environment: string;
     theme: string;
+    constraints: string;
     equipment: string;
   };
   pack?: SessionPack;
@@ -195,11 +196,41 @@ function DiagramLegendItem({
   );
 }
 
+function buildSessionStory(activities: GeneratedSession["activities"]) {
+  const activityText = activities
+    .map((activity) => `${activity.name} ${activity.description || ""}`)
+    .join(" ")
+    .toLowerCase();
+
+  if (
+    activities.length === 4 &&
+    activityText.includes("reaction chase") &&
+    activityText.includes("escape gates mini tournament")
+  ) {
+    return [
+      "Introduce gates and first-touch scoring.",
+      "Add chase pressure.",
+      "Add support and a second decision.",
+      "Finish with an escape-gates mini tournament."
+    ].join(" ");
+  }
+
+  const steps = activities
+    .map((activity, index) => {
+      const name = activity.name.replace(/\s+/g, " ").trim();
+      return name ? `${index + 1}. ${name}.` : "";
+    })
+    .filter(Boolean);
+
+  return steps.length > 0 ? steps.join(" ") : "";
+}
+
 function CandidateCard({
   candidate,
   origin,
   saveFormAction,
-  sessionTitleContext
+  sessionTitleContext,
+  coachNote
 }: {
   candidate: GeneratedSession;
   origin: "full_session" | "quick_drill";
@@ -209,6 +240,7 @@ function CandidateCard({
     teamName: string;
     environment: string;
   };
+  coachNote?: string;
 }) {
   const objectiveTags = Array.isArray(candidate.objectiveTags) ? candidate.objectiveTags : [];
   const sessionLabel = buildBuilderSessionLabelFromSession({
@@ -222,6 +254,7 @@ function CandidateCard({
   });
   const coachObjective = sessionTitleContext.objective.trim();
   const objectiveDisplay = coachObjective || objectiveTags.join(", ");
+  const sessionStory = buildSessionStory(candidate.activities);
 
   return (
     <article className="rounded-[2rem] border border-slate-200 bg-white/85 p-5 shadow-sm sm:p-6">
@@ -262,6 +295,24 @@ function CandidateCard({
               <p className="mt-2 text-sm leading-6 text-slate-800">{objectiveDisplay}</p>
             ) : null}
           </section>
+
+          {coachNote ? (
+            <section className="mt-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+              <h5 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Coach note / activity idea
+              </h5>
+              <p className="mt-2 text-sm leading-6 text-slate-800">{coachNote}</p>
+            </section>
+          ) : null}
+
+          {sessionStory ? (
+            <section className="mt-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+              <h5 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Session story
+              </h5>
+              <p className="mt-2 text-sm leading-6 text-slate-800">{sessionStory}</p>
+            </section>
+          ) : null}
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
@@ -288,11 +339,11 @@ function CandidateCard({
               label="Solid line = pass / shot / ball action"
             />
             <DiagramLegendItem
-              symbol={<LineLegendSymbol dash="1.2 3" />}
+              symbol={<LineLegendSymbol dash="1 4" />}
               label="Dotted line = dribble / carry"
             />
             <DiagramLegendItem
-              symbol={<LineLegendSymbol dash="4 3" />}
+              symbol={<LineLegendSymbol dash="6 4" />}
               label="Dashed line = movement / support / recovery / pressure"
             />
             <DiagramLegendItem
@@ -367,7 +418,7 @@ export function NewSessionFlow({
   const [environment, setEnvironment] = useState(initialGenerateState.values.environment);
   const [environmentOptions] = useState<SessionEnvironmentOption[]>(DEFAULT_ENVIRONMENT_OPTIONS);
   const [objective, setObjective] = useState(initialGenerateState.values.theme);
-  const [constraints, setConstraints] = useState(initialConstraints ?? "");
+  const [constraints, setConstraints] = useState(initialConstraints ?? initialGenerateState.values.constraints);
   const [equipment, setEquipment] = useState(initialGenerateState.values.equipment);
   const equipmentOptions = initialEquipmentOptions;
   const reviewSectionRef = useRef<HTMLElement | null>(null);
@@ -380,9 +431,11 @@ export function NewSessionFlow({
     setDurationMin(generateState.values.durationMin);
     setEnvironment(generateState.values.environment);
     setObjective(generateState.values.theme);
+    setConstraints(generateState.values.constraints);
     setEquipment(generateState.values.equipment);
   }, [
     generateState.values.ageBand,
+    generateState.values.constraints,
     generateState.values.durationMin,
     generateState.values.equipment,
     generateState.values.environment,
@@ -526,6 +579,7 @@ export function NewSessionFlow({
                   teamName: activeTeam?.label || ageBandGroupName,
                   environment
                 }}
+                coachNote={generateState.values.constraints}
               />
             ))}
           </div>

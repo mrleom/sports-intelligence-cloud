@@ -26,6 +26,7 @@ const INITIAL_GENERATE_STATE: GenerateFormState = {
     durationMin: "60",
     environment: "grass_field",
     theme: "",
+    constraints: "",
     equipment: ""
   }
 };
@@ -116,6 +117,7 @@ export default async function NewSessionPage({
       ...INITIAL_GENERATE_STATE.values,
       workGroupMode: teamOptions.length > 0 ? "team" : "age_band",
       theme: requestedTheme || INITIAL_GENERATE_STATE.values.theme,
+      constraints: initialConstraints || INITIAL_GENERATE_STATE.values.constraints,
       durationMin:
         requestedDurationMin && Number.isInteger(Number.parseInt(requestedDurationMin, 10))
           ? requestedDurationMin

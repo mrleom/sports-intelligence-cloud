@@ -191,20 +191,20 @@ copy of Activity 2. Activity 4 applies the same theme in a competitive final gam
 tournament.
 
 Coach-facing setup text should start with a direct space description: "Grid: 20x18 yards..." or
-"Field: 24x20 yards..." for rectangular spaces, and "Circle: 12-yard diameter..." only when the
+"Field: 24 x 20 meters (26 x 22 yards)..." for rectangular spaces, and "Circle: 11 meters (12 yards) diameter..." only when the
 activity is truly circular. Do not use diameter for rectangular grids.
 
 Story visuals should always be visible for Activities 1, 2, and 3. Coaches should be able to click
 the diagram area to enlarge it. Diagrams should avoid overlap between players, arrows, gates, ball,
-and labels. The legend should include visual examples for blue dot, red dot, yellow dot, cone gate,
-solid arrow, and dashed arrow.
+and labels. The global legend should include visual examples for blue dot, red dot, yellow dot,
+cone gate, solid arrow, dotted dribble/carry arrow, and dashed movement/pressure arrow.
 
 ## 6d. Diagram Movement Clarity v4
 
 Diagram symbols must stay consistent. Blue dots are the coached team, red dots are opposition, and
 yellow dots are cones, goals, or equipment. Two yellow cone dots connected by a short line means a
-cone gate. A solid green arrow means player-with-ball or ball action, such as carry, pass, shoot,
-or score. A blue dashed arrow means coached-team off-ball run, support movement, or recovery run. A
+cone gate. A solid arrow means pass, shot, or ball action. A dotted blue arrow means dribble or
+carry. A blue dashed arrow means coached-team off-ball run, support movement, or recovery run. A
 red dashed arrow means opposition pressure, chase, or defensive movement.
 
 The ball must be visible as a small ball symbol, not as the word "Ball." Player positions should
@@ -213,7 +213,9 @@ every caption. Activity 2 and Activity 3 must not reuse the same visual shape; A
 show a different pressure angle, recovery/counter shape, or second decision.
 
 Avoid unexplained grey curved reset arrows. Keep arrows and arrowheads thin, avoid overlap with
-players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. When AI
+players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. Mini
+legends should stay local to each diagram: only include visible symbols or actions, avoid duplicate
+activity-area entries, and do not repeat global player or ball symbols unless the local meaning changes. When AI
 diagram generation is added later, it should produce structured diagram instructions for this
 deterministic renderer rather than raw images.
 

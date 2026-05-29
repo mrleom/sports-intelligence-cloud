@@ -138,8 +138,8 @@ activity and increases decision-making or pressure. Activity 3 is the second mai
 add progression, transition, recovery, or faster decisions rather than repeat Activity 2. Activity 4
 applies the same theme in a competitive final game or mini tournament.
 
-Setup text should begin with a direct space description such as "Grid: 20x18 yards..." or "Field:
-24x20 yards..." for rectangular spaces. Use "Circle: 12-yard diameter..." only for circular
+Setup text should begin with a direct space description such as "Grid: 18 x 16 meters (20 x 18 yards)..."
+or "Field: 24 x 20 meters (26 x 22 yards)..." for rectangular spaces. Use "Circle: 11 meters (12 yards) diameter..." only for circular
 activities. Avoid broad equipment alternatives, and keep selected equipment direct.
 
 Story visuals for Activities 1, 2, and 3 should always be visible. The diagram area should be

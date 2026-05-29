@@ -84,6 +84,24 @@ function formatAgeBandDisplay(value: string) {
 }
 
 function buildSessionFlowSummary(activities: SessionDetail["activities"]) {
+  const activityText = activities
+    .map((activity) => `${activity.name} ${activity.description || ""}`)
+    .join(" ")
+    .toLowerCase();
+
+  if (
+    activities.length === 4 &&
+    activityText.includes("reaction chase") &&
+    activityText.includes("escape gates mini tournament")
+  ) {
+    return [
+      "Introduce gates and first-touch scoring.",
+      "Add chase pressure.",
+      "Add support and a second decision.",
+      "Finish with an escape-gates mini tournament."
+    ].join(" ");
+  }
+
   const steps = activities
     .map((activity) => activity.name.replace(/\s+/g, " ").trim())
     .filter(Boolean);
@@ -203,15 +221,15 @@ function DiagramLegendCard() {
         <DiagramLegendItem
           symbol={<LineLegendSymbol />}
           label="Solid line = pass / shot / ball action"
-        />
-        <DiagramLegendItem
-          symbol={<LineLegendSymbol dash="1.2 3" />}
-          label="Dotted line = dribble / carry"
-        />
-        <DiagramLegendItem
-          symbol={<LineLegendSymbol dash="4 3" />}
-          label="Dashed line = movement / support / recovery / pressure"
-        />
+          />
+          <DiagramLegendItem
+            symbol={<LineLegendSymbol dash="1 4" />}
+            label="Dotted line = dribble / carry"
+          />
+          <DiagramLegendItem
+            symbol={<LineLegendSymbol dash="6 4" />}
+            label="Dashed line = movement / support / recovery / pressure"
+          />
         <DiagramLegendItem
           symbol={<LineLegendSymbol curved />}
           label="Curved line = curved run / rotation / reset"
@@ -692,7 +710,7 @@ export default async function SessionDetailPage({
                   {isBuilderSession && builderSessionFlowSummary ? (
                     <div className="sm:col-span-2 xl:col-span-3">
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Session flow
+                        Session story
                       </p>
                       <p className="mt-1 text-sm font-medium leading-6 text-slate-900">
                         {builderSessionFlowSummary}

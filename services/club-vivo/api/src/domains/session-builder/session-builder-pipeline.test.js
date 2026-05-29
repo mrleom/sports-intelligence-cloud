@@ -65,6 +65,21 @@ function readRepoFile(...parts) {
   return fs.readFileSync(path.join(findRepoRoot(__dirname), ...parts), "utf8");
 }
 
+const blockedFrontendFixturePattern = new RegExp(
+  [
+    "18x16 yard",
+    "24x20 yard",
+    "36x28 yard",
+    ["central attacker or serv", "er"].join("")
+  ].join("|")
+);
+const blockedReactionCaptionPattern = new RegExp(
+  [
+    ["coach\\/serv", "er trigger"].join(""),
+    ["nearby serv", "er"].join("")
+  ].join("|")
+);
+
 test("normalizeSessionPackInput returns canonical request shape", () => {
   const normalizedInput = normalizeSessionPackInput({
     sport: "soccer",
@@ -636,7 +651,7 @@ test("processTrainingBriefSessionPackRequest routes build-out under pressure han
     durationMinutes: 60,
     evidenceSummary: "The back line struggled to build out when pressed.",
     nextGameObjective: "Build out under pressure with better support angles.",
-    coachNotes: "Use a goalkeeper/server and midfield target gates.",
+    coachNotes: "Use a goalkeeper or coach and midfield target gates.",
     availableEquipment: ["balls", "cones", "pinnies"],
   });
 
@@ -647,7 +662,7 @@ test("processTrainingBriefSessionPackRequest routes build-out under pressure han
   assert.equal(activity2.name, "Build-Out Support Angles");
   assert.equal(activity3.name, "Build-Out Under Pressure Game");
   assert.equal(activity4.name, "Build-Out Pressure Final Game");
-  assert.match(text, /goalkeeper or server|support angles|midfield target|first pressing line/i);
+  assert.match(text, /goalkeeper or coach|support angles|midfield target|first pressing line/i);
   assert.match(text, /playing away from pressure|calm first pass/i);
 });
 
@@ -1025,6 +1040,11 @@ test("attacking-overload diagram legend code uses team-color line language", () 
   assert.match(diagramPlaceholder, /Blue dotted line = attacker dribbles to gate/);
   assert.match(diagramPlaceholder, /Blue solid line = pass to free player/);
   assert.match(diagramPlaceholder, /Red dashed line = recovery defender releases/);
+  assert.match(sessionBuilderApi, /16 x 15 meter grid \(18 x 16 yards\)/);
+  assert.match(sessionBuilderApi, /24 x 20 meter field \(26 x 22 yards\)/);
+  assert.match(sessionBuilderApi, /36 x 28 meter field \(39 x 31 yards\)/);
+  assert.match(sessionBuilderApi, /Start the ball with a central attacker or coach pass/);
+  assert.doesNotMatch(sessionBuilderApi, blockedFrontendFixturePattern);
   assert.match(sessionBuilderApi, /Format: small-sided gate battle/);
   assert.match(sessionBuilderApi, /Win condition: first team to three goals/);
   assert.match(activityOutput, /buildFallbackSections/);
@@ -1043,6 +1063,58 @@ test("diagram placeholder field renderer does not render token text inside the S
   assert.match(diagramPlaceholder, /if \(token\.type === "label"\) {\s*return null;\s*}/);
   assert.match(diagramPlaceholder, /reaction_chase_progression/);
   assert.match(diagramPlaceholder, /activityIndex === totalActivities - 1/);
+});
+
+test("generated session At a Glance includes coach note and session story fallback", () => {
+  const sessionNewFlow = readRepoFile("apps", "club-vivo", "app", "(protected)", "sessions", "new", "session-new-flow.tsx");
+  const savedSessionPage = readRepoFile("apps", "club-vivo", "app", "(protected)", "sessions", "[sessionId]", "page.tsx");
+
+  assert.match(sessionNewFlow, /Coach note \/ activity idea/);
+  assert.match(sessionNewFlow, /Session story/);
+  assert.match(sessionNewFlow, /Introduce gates and first-touch scoring/);
+  assert.match(sessionNewFlow, /Add chase pressure/);
+  assert.match(sessionNewFlow, /Add support and a second decision/);
+  assert.match(sessionNewFlow, /Finish with an escape-gates mini tournament/);
+  assert.match(sessionNewFlow, /coachNote=\{generateState\.values\.constraints\}/);
+  assert.match(savedSessionPage, /Session story/);
+  assert.match(savedSessionPage, /Introduce gates and first-touch scoring/);
+});
+
+test("diagram mini legends stay local and line styles are distinct", () => {
+  const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+  const sessionNewFlow = readRepoFile("apps", "club-vivo", "app", "(protected)", "sessions", "new", "session-new-flow.tsx");
+  const savedSessionPage = readRepoFile("apps", "club-vivo", "app", "(protected)", "sessions", "[sessionId]", "page.tsx");
+
+  assert.match(diagramPlaceholder, /function panelUsesLegendKey/);
+  assert.match(diagramPlaceholder, /key === "neutralPlayer" \|\| key === "freePlayer"/);
+  assert.match(diagramPlaceholder, /token\.type === "player" && token\.role === "neutral"/);
+  assert.match(diagramPlaceholder, /!\(key === "zone" && visibleKeys\.includes\("activityArea"\)\)/);
+  assert.match(diagramPlaceholder, /legend: \["coneGate", "activityArea"\]/);
+  assert.match(diagramPlaceholder, /strokeDasharray=\{dash\}/);
+  assert.match(diagramPlaceholder, /action === "carry" \? "1 4"/);
+  assert.match(diagramPlaceholder, /action === "pressure" \|\| action === "run" \? "6 4"/);
+  assert.match(sessionNewFlow, /LineLegendSymbol dash="1 4"/);
+  assert.match(sessionNewFlow, /LineLegendSymbol dash="6 4"/);
+  assert.match(savedSessionPage, /LineLegendSymbol dash="1 4"/);
+  assert.match(savedSessionPage, /LineLegendSymbol dash="6 4"/);
+});
+
+test("reaction chase progression and final card stay coach-readable", () => {
+  const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+
+  assert.match(diagramPlaceholder, /nearby coach/);
+  assert.match(diagramPlaceholder, /support and a second defender/);
+  assert.match(diagramPlaceholder, /attacks any open scoring gate/);
+  assert.doesNotMatch(diagramPlaceholder, blockedReactionCaptionPattern);
+  assert.match(diagramPlaceholder, /FinalGameGridVisual/);
+  assert.match(diagramPlaceholder, /Format/);
+  assert.match(diagramPlaceholder, /Goals/);
+  assert.match(diagramPlaceholder, /Game length/);
+  assert.match(diagramPlaceholder, /Bonus/);
+  assert.match(diagramPlaceholder, /Winner rule/);
+  assert.match(diagramPlaceholder, /4v4 or 5v5/);
+  assert.match(diagramPlaceholder, /5-minute games or first team to two goals/);
+  assert.match(diagramPlaceholder, /goal counts double/i);
 });
 
 test("quick drill-mode requests create one main activity", async () => {
