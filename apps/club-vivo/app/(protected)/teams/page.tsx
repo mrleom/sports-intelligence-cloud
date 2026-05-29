@@ -383,7 +383,6 @@ export default async function TeamsPage({
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge="Teams"
         title="Teams"
         description={
           isAdmin

@@ -39,7 +39,6 @@ export default async function HomePage() {
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge="Home"
         title="Coach Workspace"
         description="A practical planning space for coaches who need sessions, team context, equipment context, and a clear record of what worked."
       />
@@ -63,19 +62,17 @@ export default async function HomePage() {
 
       <section className="grid gap-4 lg:grid-cols-2">
         {WORKSPACE_AREAS.map((area) => (
-          <article
+          <Link
             key={area.title}
-            className="rounded-3xl border border-slate-200 bg-white/75 p-5 shadow-sm"
+            href={area.href}
+            className="group rounded-3xl border border-slate-200 bg-white/75 p-5 shadow-sm transition hover:border-teal-300 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
           >
             <h3 className="text-base font-semibold text-slate-900">{area.title}</h3>
             <p className="mt-2 text-sm leading-6 text-slate-600">{area.description}</p>
-            <Link
-              href={area.href}
-              className="mt-4 inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-800"
-            >
-              Open {area.title}
-            </Link>
-          </article>
+            <p className="mt-4 text-sm font-semibold text-teal-800 transition group-hover:text-teal-900">
+              Go to {area.title}
+            </p>
+          </Link>
         ))}
       </section>
     </div>

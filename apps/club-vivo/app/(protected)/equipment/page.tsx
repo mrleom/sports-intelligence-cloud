@@ -41,8 +41,7 @@ export default async function EquipmentPage() {
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        badge="Equipment"
-        title="Essentials"
+        title="Equipment Essentials"
         description="Start with the standard equipment most coaches need, then add any extra items you want available in your planning context."
       />
 
