@@ -530,7 +530,7 @@ test("generatePack attacking overload fixture aligns activity story with diagram
     "Overload Gate Battle Final Game",
   ]);
 
-  assert.match(activity1.description, /Grid: 18x16 yards/i);
+  assert.match(activity1.description, /Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(activity1.description, /four cone gates near the corners/i);
   assert.match(activity1.description, /ball starting with a central attacker or server/i);
   assert.match(activity1.description, /Use cones to mark the grid and gates\. Keep spare balls beside the coach/i);
@@ -724,11 +724,11 @@ test("generatePack full-session setup starts with direct grid or field dimension
   );
 
   assert.equal(setupLines.length, 4);
-  assert.match(setupLines[0], /^Setup: Grid: 18x16 yards/i);
+  assert.match(setupLines[0], /^Setup: Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(setupLines[0], /four cone gates near the corners/i);
   assert.match(setupLines[0], /ball starting with a central attacker or server/i);
-  assert.match(setupLines[1], /^Setup: Grid: 20x18 yards/i);
-  assert.match(setupLines[2], /^Setup: Field: 24x20 yards/i);
+  assert.match(setupLines[1], /^Setup: Grid: 18 x 16 meters \(20 x 18 yards\)/i);
+  assert.match(setupLines[2], /^Setup: Field: 24 x 20 meters \(26 x 22 yards\)/i);
   assert.equal(setupLines[3], "");
   assert.equal(/diameter/i.test(setupLines.join(" ")), false);
   assert.match(setupLines.join(" "), /balls, flat cones, pinnies/i);
@@ -748,7 +748,7 @@ test("generatePack Activity 1 activation includes setup, ball start, scoring, re
 
   const [activity1] = pack.sessions[0].activities;
 
-  assert.match(activity1.description, /Grid: 18x16 yards/i);
+  assert.match(activity1.description, /Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(activity1.description, /four cone gates near the corners/i);
   assert.match(activity1.description, /ball starting with a central attacker or server/i);
   assert.match(activity1.description, /attackers .*dribbling or passing through any cone gate/i);
@@ -1021,9 +1021,10 @@ function assertDuckDuckGooseSoccerActivity(activity) {
   assert.doesNotMatch(activity.description, /duck, duck, goose|duck duck goose/i);
   assert.match(activity.description, /trigger|reaction/i);
   assert.match(activity.description, /first touch/i);
-  assert.match(activity.description, /chases? as a defender|defender chases/i);
+  assert.match(activity.description, /defender\/chaser|chaser|defender/i);
   assert.match(activity.description, /cone gates?|gate/i);
   assert.match(activity.description, /quick|rotate/i);
+  assert.doesNotMatch(activity.description, /\bcaller\b/i);
 }
 
 test("generatePack turns a quick duck-duck-goose prompt into one soccer chase escape activity", () => {
@@ -1067,10 +1068,12 @@ test("generatePack gives full-session duck-duck-goose brainstorm a soccer progre
   assert.equal(session.activities.length, 4);
   assertDuckDuckGooseSoccerActivity(activity2);
   assert.match(activity3.name, /escape, support, score progression/i);
-  assert.match(activity3.description, /support player|second defender|counter gate|quick pass|carry/i);
+  assert.match(activity3.description, /support player|second defender|open gate|quick gate score/i);
+  assert.doesNotMatch(activity3.description, /counter gate/i);
   assert.match(activity4.name, /mini tournament|final game|competitive/i);
   assert.match(activity4.description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
   assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
+  assert.doesNotMatch(allText, /\bcaller\b/i);
 });
 
 test("generatePack turns attacking create-chances duck-duck-goose note into coach-ready full-session quality", () => {
@@ -1091,15 +1094,33 @@ test("generatePack turns attacking create-chances duck-duck-goose note into coac
 
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
   assert.match(activity1.name, /trigger touch activation/i);
+  assert.match(activity1.description, /15 x 15 meter grid \(16 x 16 yards\)/i);
+  assert.match(activity1.description, /start with pairs/i);
+  assert.match(activity1.description, /one blue attacker and one red defender share one ball/i);
+  assert.match(activity1.description, /red gives light pressure/i);
+  assert.match(activity1.description, /switch roles/i);
   assertDuckDuckGooseSoccerActivity(activity2);
-  assert.match(activity2.description, /receiver scans|trigger call|safe tagging|forcing the ball out|rotate the caller/i);
+  assert.match(activity2.description, /same 15 x 15 meter grid \(16 x 16 yards\)/i);
+  assert.match(activity2.description, /coach or server gives the trigger/i);
+  assert.match(activity2.description, /first touch away from pressure/i);
+  assert.match(activity2.description, /defender\/chaser pressures immediately/i);
+  assert.match(activity2.description, /counter through any open gate/i);
   assert.match(activity3.name, /escape, support, score progression/i);
-  assert.match(activity3.description, /support player|second defender|counter gate|quick chance/i);
+  assert.match(activity3.description, /24 x 20 meter field \(26 x 22 yards\)/i);
+  assert.match(activity3.description, /same four cone gates|same cone gate is the scoring gate/i);
+  assert.match(activity3.description, /ball starts with the attacker|visible server beside the attacker/i);
+  assert.match(activity3.description, /support player|second defender|open gate|quick gate score/i);
   assert.match(activity3.description, /scan before receiving|first touch away|support/i);
+  assert.doesNotMatch(activity3.description, /counter gate/i);
   assert.match(activity4.name, /escape gates mini tournament/i);
-  assert.match(activity4.description, /visible score|bonus point|first touch away from pressure|first team to three goals|winner stays on|quick rematch/i);
+  assert.match(activity4.description, /4v4 or 5v5/i);
+  assert.match(activity4.description, /5-minute games|first team to two goals/i);
+  assert.match(activity4.description, /winner stays on|quick rematch/i);
+  assert.match(activity4.description, /bonus point|five seconds|support player/i);
+  assert.match(activity4.description, /most goals after 10 minutes wins|first team to three goals/i);
   assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
   assert.doesNotMatch(allText, /team:|originalTeamAgeBand|apiAgeBand|programType|coachingStyle|raw pipe/i);
+  assert.doesNotMatch(allText, /\bcaller\b|counter gate/i);
   assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
 });
 

@@ -143,6 +143,9 @@ choose simple standard equipment, but should still write one clear setup choice.
 be better with missing equipment, suggest it as an optional coaching note rather than as a vague
 setup list.
 
+Coach-facing setup dimensions should use meters first with yards in parentheses, for example
+"15 x 15 meters (16 x 16 yards)." Keep the unit wording easy to read on the field.
+
 Diagrams should include a clear start cue, ball cue when relevant, movement cue, and a short "how
 to read/play this" caption. Coaches should be able to see where players start, where the ball
 starts, what action begins the activity, where the main movement goes, and how the action scores or
@@ -162,6 +165,10 @@ Activity 1 diagrams should stay simple and activation/warm-up oriented. Activity
 show the first main learning activity. Activity 3 diagrams should show a progression, transition,
 recovery, or harder decision, and should not visually repeat Activity 2. Activity 4 should stay as
 a competitive final-game card only, not a full tactical diagram.
+
+For playground-game adaptations, keep one clear cone-gate symbol unless a second symbol is essential.
+If a gate changes meaning by possession, explain that in the caption or legend rather than adding a
+new field label or confusing second gate type.
 
 Diagram Storytelling Polish v2 keeps the SVG itself minimal. Diagrams should not put words inside
 the field view. Do not render player labels, zone labels, arrow labels, or field text such as

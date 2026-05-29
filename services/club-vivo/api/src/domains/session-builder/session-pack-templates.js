@@ -711,7 +711,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
       setup:
         phase === "progression"
           ? "create a directional pressing field with a build-out team, a pressing team, target gates, and a counter gate after the regain"
-          : "use a 20x18 yard field with a build-out line, two wide escape gates, one central target, and restart balls beside the coach",
+          : "use an 18 x 16 meter field (20 x 18 yards) with a build-out line, two wide escape gates, one central target, and restart balls beside the coach",
       run:
         phase === "progression"
           ? "let the build-out team try to play through pressure, then reward the pressing team for regaining and countering within six seconds"
@@ -926,11 +926,44 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   const playerCount = Number.isInteger(promptSignals?.playerCount)
     ? ` for about ${promptSignals.playerCount} players`
     : "";
+
+  if (!isDefendingActivity && phase === "arrival") {
+    return capDescription(
+      [
+        `Setup: Set up a 15 x 15 meter grid (16 x 16 yards) with four cone gates or Pugg goals, one near each corner, and ${equipmentText}; place balls in the middle and use pinnies to split players into blue and red teams${playerCount}.`,
+        "How to start: start with pairs; one blue attacker and one red defender share one ball.",
+        "How to run it: blue attacks and tries to dribble through any gate while red gives light pressure; after a score, switch roles, and the new attacker must choose a different gate.",
+        "Rules / scoring: one point for dribbling through a gate under control; the defender gets a point by winning the ball and scoring quickly through any open gate.",
+        "Coaching cues: soft first touch, eyes up, change direction early, keep the ball close, and attack open space.",
+        "What to watch for: players sprinting before they control the ball, one gate getting crowded, or defenders tackling too hard for a warm-up.",
+        "Safety / space adjustment: keep it light, use safe spacing between pairs, and widen the grid if paths cross.",
+        "Progression: ask the attacker to scan before choosing the gate or switch roles after every 30-second round.",
+        "Regression: start without pressure, widen the gates, or let the defender shadow for one round.",
+      ].join(" ")
+    );
+  }
+
+  if (!isDefendingActivity && (phase === "main" || phase === "single")) {
+    return capDescription(
+      [
+        `Setup: Use the same 15 x 15 meter grid (16 x 16 yards), four cone gates or Pugg goals, and ${equipmentText}; keep balls with the server or coach${playerCount}.`,
+        "How to start: the coach or server gives the trigger and rolls the ball to the attacker.",
+        "How to run it: the attacker scans, takes the first touch away from pressure, and escapes through any gate while the defender/chaser pressures immediately; if the defender wins it, they counter through any open gate.",
+        "Rules / scoring: attacker scores through a gate; defender scores by winning it, safe tagging, forcing out, or countering.",
+        "Coaching cues: scan before receiving, first touch away, accelerate, keep safe spacing, and choose the open gate.",
+        "What to watch for: flat-footed attackers, early chasers, unsafe tags, or touches too far ahead.",
+        "Safety / space adjustment: run 20-30 second rounds, rotate attacker, defender/chaser, and server, and enlarge the grid if paths cross.",
+        "Progression: release the defender closer, require a turn, or reward the far gate.",
+        "Regression: start the attacker ahead, delay the chaser, or rehearse without pressure.",
+      ].join(" ")
+    );
+  }
+
   const phaseDetail =
     phase === "arrival"
       ? "start unopposed for one round, then add the chase once players understand the route"
       : phase === "progression"
-        ? "make the chase live from the first touch, add a support player, release a second defender, and require a quick pass or carry into the counter gate"
+        ? "make the chase live from the first touch, add a support player, release a second defender, and require a quick pass or carry toward an open gate"
         : isDefendingActivity
           ? "play 3v3 waves when numbers allow, with one defender released by the trigger call to pressure, delay, and recover"
           : "keep every round short, loud, and competitive so players react instead of waiting";
@@ -938,15 +971,15 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   if (!isDefendingActivity && phase === "progression") {
     return capDescription(
       [
-        `Setup: Field: 24x20 yards with four escape gates, one counter gate, one support player, two defenders, and ${equipmentText}${playerCount}.`,
-        "How to start: the caller plays into the receiver and gives the trigger call; the receiver scans before the ball arrives.",
-        "How to run it: the receiver takes the first touch away from pressure, escapes the first chase, then carries or combines with support before the second defender recovers.",
-        "Rules / scoring: attackers score two for a quick chance through the counter gate and one for using support before scoring; defenders score by safe tagging, forcing out, or winning and countering.",
-        "Coaching cues: scan before receiving, first touch away from the chaser, protect the ball, find support early, accelerate after escape, and decide quickly.",
-        "What to watch for: flat-footed receivers, late support, second defenders diving in, or the counter gate getting crowded.",
-        "Progression: release the second defender earlier or add a bonus for a one-touch support pass.",
-        "Regression: delay the second defender, widen the counter gate, or keep the support player neutral.",
-        "Safety / space adjustment: separate chase lanes, keep tags below shoulder height, and rotate caller, chaser, receiver, and support.",
+        `Setup: Use a 24 x 20 meter field (26 x 22 yards) with the same four cone gates, one support player, two defenders, and ${equipmentText}${playerCount}; the ball starts with the attacker or from a clearly visible server beside the attacker.`,
+        "How to start: the server plays to the attacker, who scans before receiving and prepares to escape first pressure.",
+        "How to run it: the attacker receives, escapes the first defender/chaser, finds the support player if needed, then attacks an open gate; if defenders win the ball, they counter through any open gate.",
+        "Rules / scoring: attackers score two points for escaping pressure and creating a quick gate score, or one point for using support before scoring; defenders score by safe tagging, forcing out, winning it, or countering through an open gate.",
+        "Coaching cues: scan before receiving, first touch away from pressure, protect the ball, use support when the gate is blocked, and attack quickly once space opens.",
+        "What to watch for: attackers forcing the first gate, support standing behind pressure, second defenders diving in, or players forgetting the same cone gate is the scoring gate for whoever has the ball.",
+        "Progression: release the second defender earlier or add a bonus for a one-touch support pass before the gate score.",
+        "Regression: delay the second defender, make the support player neutral for both teams, or widen the gates.",
+        "Safety / space adjustment: separate chase lanes, keep tags below shoulder height, and rotate attacker, defender/chaser, server, and support.",
       ].join(" ")
     );
   }
@@ -954,12 +987,12 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   return capDescription(
     [
       isDefendingActivity
-        ? `Setup: Field: 20x18 yards with two end gates, two side gates, and ${equipmentText}; use 3v3 groups when possible and keep spare balls ready${playerCount}.`
-        : `Setup: Grid: 16x16 yards with four outside cone gates and ${equipmentText}; give players balls when possible${playerCount}.`,
-      "How to start: players dribble or toe-tap while one caller names a receiver or gives the trigger call; the receiver scans and takes a first touch into space.",
+        ? `Setup: Field: 18 x 16 meters (20 x 18 yards) with two end gates, two side gates, and ${equipmentText}; use 3v3 groups when possible and keep spare balls ready${playerCount}.`
+        : `Setup: Grid: 15 x 15 meters (16 x 16 yards) with four outside cone gates and ${equipmentText}; give players balls when possible${playerCount}.`,
+      "How to start: players dribble or toe-tap while the coach or server names a receiver or gives the trigger; the receiver scans and takes a first touch into space.",
       isDefendingActivity
         ? `How to run it: the attacker escapes through a gate while the first defender chases and teammates recover to cover angles; ${phaseDetail}.`
-        : `How to run it: the attacker escapes through any cone gate while the caller chases as a defender; ${phaseDetail}.`,
+        : `How to run it: the attacker escapes through any cone gate while the defender/chaser pressures; ${phaseDetail}.`,
       isDefendingActivity
         ? "Rules / scoring: attackers score by escaping through a gate or connecting two passes; defenders score by delaying, winning it, safe tagging, or forcing play out."
         : "Rules / scoring: attacker scores by dribbling through a gate under control; defender scores by safe tagging or forcing the ball out.",
@@ -967,7 +1000,7 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
         ? "Coaching cues: close fast, slow under control, angle the run, recover goal-side, scan before receiving, and win it when the touch gets loose."
         : "Coaching cues: first touch away from pressure, explode on the trigger, keep it close, scan before receiving, and choose a gate.",
       "What to watch for: long lines, unsafe spacing, one gate getting crowded, or attackers kicking too far ahead.",
-      "Safety / space adjustment: keep chase lanes clear, rotate the caller every rep, and enlarge the grid if paths cross.",
+      "Safety / space adjustment: keep chase lanes clear, rotate roles every rep, and enlarge the grid if paths cross.",
       isDefendingActivity
         ? "Progression: make it live 3v3 after the chase, add a counter gate, or give bonus points for forcing play into help."
         : "Progression: add a second defender, require a change of direction, or reward the far gate.",
@@ -1019,12 +1052,12 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
 
   const setupByPhase =
     phase === "final"
-      ? `Setup: Field: 36x28 yards with clear touchlines, ${scoringTargets}, and quick restart balls; keep teams balanced and ready to compete`
+      ? `Setup: Field: 36 x 28 meters (39 x 31 yards) with clear touchlines, ${scoringTargets}, and quick restart balls; keep teams balanced and ready to compete`
       : phase === "arrival"
-        ? `Setup: Grid: 18x16 yards with four cone gates near the corners and the ball starting with a central attacker or server; ${equipmentSetupSentence}`
+        ? `Setup: Grid: 16 x 15 meters (18 x 16 yards) with four cone gates near the corners and the ball starting with a central attacker or server; ${equipmentSetupSentence}`
         : phase === "progression"
-          ? `Setup: Field: 24x20 yards with two end gates, one recovery line, and ${equipmentText}; use the same direction as Activity 2 with a counter target added`
-          : `Setup: Grid: 20x18 yards with two end gates, two side gates, and ${equipmentText}; place spare balls beside the coach`;
+          ? `Setup: Field: 24 x 20 meters (26 x 22 yards) with two end gates, one recovery line, and ${equipmentText}; use the same direction as Activity 2 with a counter target added`
+          : `Setup: Grid: 18 x 16 meters (20 x 18 yards) with two end gates, two side gates, and ${equipmentText}; place spare balls beside the coach`;
   const setupText = themeLanguage?.setup
     ? `${setupByPhase}; ${themeLanguage.setup}`
     : setupByPhase;
@@ -1189,11 +1222,19 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
 
   return capDescription(
     [
-      `Format: ${gameName} on a 36x28 yard field with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
-      "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
-      `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
+      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+        ? `Format: ${gameName}: play 4v4 or 5v5 in the same 36 x 28 meter area (39 x 31 yards) with the four cone gates or Pugg goals as goals.`
+        : `Format: ${gameName} on a 36 x 28 meter field (39 x 31 yards) with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
+      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+        ? "Teams: play 5-minute games or first team to two goals; winner stays on or teams reset for a quick rematch."
+        : "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
+      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+        ? "Scoring: score by dribbling or passing through any gate; add a bonus point if a team scores within five seconds of escaping pressure or after using a support player."
+        : `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
       `Constraint: ${finalGameConstraint}.`,
-      "Win condition: first team to three goals.",
+      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+        ? "Win condition: most goals after 10 minutes wins, or first team to three goals."
+        : "Win condition: first team to three goals.",
       `Focus: ${focusText}.`,
     ].join(" ")
   );
@@ -1207,7 +1248,7 @@ function buildDefendingGatesMainDescription({ promptSignals, phase }) {
 
   return capDescription(
     [
-      "Setup: Field: 24x20 yards with two end gates, two side gates, spare balls beside the coach, and waiting teams ready on the outside.",
+      "Setup: Field: 24 x 20 meters (26 x 22 yards) with two end gates, two side gates, spare balls beside the coach, and waiting teams ready on the outside.",
       "How to start: coach serves to the attacking team and calls a gate color or side to create the first defending decision.",
       "How to run it: defenders press the ball, one covers the closest gate, and the third protects the far-side escape while attackers try to split or dribble through a gate.",
       "Rules / scoring: attackers score by crossing a gate under control; defenders score by winning the ball and countering through any gate within six seconds.",
