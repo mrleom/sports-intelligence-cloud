@@ -28,7 +28,7 @@ const WORKSPACE_AREAS = [
       "Define the equipment profile the builder can use when it shapes activities, constraints, and scoring options."
   },
   {
-    title: "Saved Sessions",
+    title: "Sessions",
     href: "/sessions",
     description:
       "Review saved sessions, reuse ideas, and leave feedback that can support future learning-loop interpretation."
@@ -65,13 +65,11 @@ export default async function HomePage() {
           <Link
             key={area.title}
             href={area.href}
+            aria-label={`Open ${area.title}`}
             className="group rounded-3xl border border-slate-200 bg-white/75 p-5 shadow-sm transition hover:border-teal-300 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2"
           >
             <h3 className="text-base font-semibold text-slate-900">{area.title}</h3>
             <p className="mt-2 text-sm leading-6 text-slate-600">{area.description}</p>
-            <p className="mt-4 text-sm font-semibold text-teal-800 transition group-hover:text-teal-900">
-              Go to {area.title}
-            </p>
           </Link>
         ))}
       </section>
