@@ -11,6 +11,11 @@ const {
   normalizeTheme,
 } = require("./session-pack-templates");
 
+const confusingRolePattern = new RegExp(
+  `\\b(${["call", "er"].join("")}|${["serv", "er"].join("")})\\b`,
+  "i"
+);
+
 function stripPackMeta(pack) {
   return {
     sport: pack.sport,
@@ -532,11 +537,11 @@ test("generatePack attacking overload fixture aligns activity story with diagram
 
   assert.match(activity1.description, /Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(activity1.description, /four cone gates near the corners/i);
-  assert.match(activity1.description, /ball starting with a central attacker or server/i);
+  assert.match(activity1.description, /ball starting with a central attacker or coach pass/i);
   assert.match(activity1.description, /Use cones to mark the grid and gates\. Keep spare balls beside the coach/i);
   assert.match(activity1.description, /attackers .*dribbling or passing through any cone gate/i);
   assert.match(activity1.description, /defenders give light pressure/i);
-  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or coach and rotate the defender/i);
   assert.match(activity1.description, /1v1.*2v1.*2v2.*3v2/i);
 
   assert.match(activity2.name, /Wide Overload/i);
@@ -726,7 +731,7 @@ test("generatePack full-session setup starts with direct grid or field dimension
   assert.equal(setupLines.length, 4);
   assert.match(setupLines[0], /^Setup: Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(setupLines[0], /four cone gates near the corners/i);
-  assert.match(setupLines[0], /ball starting with a central attacker or server/i);
+  assert.match(setupLines[0], /ball starting with a central attacker or coach pass/i);
   assert.match(setupLines[1], /^Setup: Grid: 18 x 16 meters \(20 x 18 yards\)/i);
   assert.match(setupLines[2], /^Setup: Field: 24 x 20 meters \(26 x 22 yards\)/i);
   assert.equal(setupLines[3], "");
@@ -750,9 +755,9 @@ test("generatePack Activity 1 activation includes setup, ball start, scoring, re
 
   assert.match(activity1.description, /Grid: 16 x 15 meters \(18 x 16 yards\)/i);
   assert.match(activity1.description, /four cone gates near the corners/i);
-  assert.match(activity1.description, /ball starting with a central attacker or server/i);
+  assert.match(activity1.description, /ball starting with a central attacker or coach pass/i);
   assert.match(activity1.description, /attackers .*dribbling or passing through any cone gate/i);
-  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or coach and rotate the defender/i);
   assert.match(activity1.description, /1v1.*2v1.*2v2.*3v2/i);
 });
 
@@ -822,7 +827,7 @@ test("generatePack full-session story progresses from theme intro to final game"
 
   assert.match(setup1, /four cone gates near the corners/i);
   assert.match(activity1.description, /welcome activation game/i);
-  assert.match(activity1.description, /reset with the ball at the central attacker or server and rotate the defender/i);
+  assert.match(activity1.description, /reset with the ball at the central attacker or coach and rotate the defender/i);
   assert.match(run2, /increase the pressure from Activity 1|first pass/i);
   assert.match(run3, /progress from Activity 2|transition|recovery|second decision/i);
   assert.notEqual(setup2, setup3);
@@ -1024,7 +1029,7 @@ function assertDuckDuckGooseSoccerActivity(activity) {
   assert.match(activity.description, /defender\/chaser|chaser|defender/i);
   assert.match(activity.description, /cone gates?|gate/i);
   assert.match(activity.description, /quick|rotate/i);
-  assert.doesNotMatch(activity.description, /\bcaller\b/i);
+  assert.doesNotMatch(activity.description, confusingRolePattern);
 }
 
 test("generatePack turns a quick duck-duck-goose prompt into one soccer chase escape activity", () => {
@@ -1073,7 +1078,7 @@ test("generatePack gives full-session duck-duck-goose brainstorm a soccer progre
   assert.match(activity4.name, /mini tournament|final game|competitive/i);
   assert.match(activity4.description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
   assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
-  assert.doesNotMatch(allText, /\bcaller\b/i);
+  assert.doesNotMatch(allText, confusingRolePattern);
 });
 
 test("generatePack turns attacking create-chances duck-duck-goose note into coach-ready full-session quality", () => {
@@ -1101,14 +1106,14 @@ test("generatePack turns attacking create-chances duck-duck-goose note into coac
   assert.match(activity1.description, /switch roles/i);
   assertDuckDuckGooseSoccerActivity(activity2);
   assert.match(activity2.description, /same 15 x 15 meter grid \(16 x 16 yards\)/i);
-  assert.match(activity2.description, /coach or server gives the trigger/i);
+  assert.match(activity2.description, /coach starts the reaction rep by rolling or passing the ball to the attacker/i);
   assert.match(activity2.description, /first touch away from pressure/i);
   assert.match(activity2.description, /defender\/chaser pressures immediately/i);
   assert.match(activity2.description, /counter through any open gate/i);
   assert.match(activity3.name, /escape, support, score progression/i);
   assert.match(activity3.description, /24 x 20 meter field \(26 x 22 yards\)/i);
   assert.match(activity3.description, /same four cone gates|same cone gate is the scoring gate/i);
-  assert.match(activity3.description, /ball starts with the attacker|visible server beside the attacker/i);
+  assert.match(activity3.description, /ball starts with the attacker|coach clearly beside the attacker/i);
   assert.match(activity3.description, /support player|second defender|open gate|quick gate score/i);
   assert.match(activity3.description, /scan before receiving|first touch away|support/i);
   assert.doesNotMatch(activity3.description, /counter gate/i);
@@ -1116,11 +1121,11 @@ test("generatePack turns attacking create-chances duck-duck-goose note into coac
   assert.match(activity4.description, /4v4 or 5v5/i);
   assert.match(activity4.description, /5-minute games|first team to two goals/i);
   assert.match(activity4.description, /winner stays on|quick rematch/i);
-  assert.match(activity4.description, /bonus point|five seconds|support player/i);
+  assert.match(activity4.description, /goal counts double|five seconds|support player/i);
   assert.match(activity4.description, /most goals after 10 minutes wins|first team to three goals/i);
   assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
   assert.doesNotMatch(allText, /team:|originalTeamAgeBand|apiAgeBand|programType|coachingStyle|raw pipe/i);
-  assert.doesNotMatch(allText, /\bcaller\b|counter gate/i);
+  assert.doesNotMatch(allText, new RegExp(`${confusingRolePattern.source}|counter gate`, "i"));
   assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
 });
 

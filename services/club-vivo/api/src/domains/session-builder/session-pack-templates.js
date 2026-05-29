@@ -691,7 +691,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
       setup:
         phase === "progression"
           ? "build a directional transition field with a possession zone, a counter gate, a recovery line, and two compact central gates to protect"
-          : "use a compact central grid with two counter gates, a coach server, and recovery lines so players can react immediately after losing the ball",
+          : "use a compact central grid with two counter gates, coach-start balls, and recovery lines so players can react immediately after losing the ball",
       run:
         phase === "progression"
           ? "start with a possession action, call turnover, then demand the nearest player presses while teammates recover inside to protect the central lane"
@@ -767,10 +767,10 @@ function getThemeSpecificLanguage(promptSignals, phase) {
   if (isFirstTouchReceivingText(text)) {
     return {
       setup:
-        "use a receiving box with two pressure gates, a server line, defender line, and quick rotation spots",
+        "use a receiving box with two pressure gates, a coach-start line, defender line, and quick rotation spots",
       run: isSingleActivity
-        ? "serve into the receiver, release pressure on the pass, and rotate server-receiver-defender after every rep"
-        : "serve into the receiver, release pressure on the pass, and reward the first touch that escapes into space",
+        ? "pass into the receiver, release pressure on the pass, and rotate coach-start player, receiver, and defender after every rep"
+        : "pass into the receiver, release pressure on the pass, and reward the first touch that escapes into space",
       scoring:
         "receiver scores by scanning before the pass and taking the first touch through a gate; defender scores by forcing play out",
       cues: "scan before the ball arrives, receive side-on, push the first touch away from pressure, and play quickly",
@@ -788,10 +788,10 @@ function getThemeSpecificLanguage(promptSignals, phase) {
       setup:
         phase === "progression"
           ? buildOut
-            ? "build a half-field build-out channel with a goalkeeper or server, two defenders, midfield targets, pressing forwards, and counter gates"
+            ? "build a half-field build-out channel with a goalkeeper or coach, two defenders, midfield targets, pressing forwards, and counter gates"
             : "build a directional possession field with two target zones, touchline outlets, and mini goals for the counter"
           : buildOut
-            ? "start with a build-out grid from a goalkeeper or server, two support angles, pressing defenders, and a midfield target gate"
+            ? "start with a build-out grid from a goalkeeper or coach, two support angles, pressing defenders, and a midfield target gate"
             : "start with a rondo grid that has clear support angles, pressing defenders, and an escape target",
       run:
         phase === "progression"
@@ -814,7 +814,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
         : "scan early, receive under pressure, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
       watch:
         buildOut
-          ? "defenders hiding on the same line, slow goalkeeper/server decisions, square support, or the first pass inviting pressure"
+          ? "defenders hiding on the same line, slow goalkeeper/coach decisions, square support, or the first pass inviting pressure"
           : "players hiding behind defenders, flat support, slow ball speed, or the first pass after pressure going into trouble",
       progress: "reduce touch count, add a pressing trigger, or require a forward target pass after the escape",
       regress: "add a neutral player, increase the grid, or let the possession team restart after three passes",
@@ -842,9 +842,9 @@ function getThemeSpecificLanguage(promptSignals, phase) {
   if (text.includes("finishing") || text.includes("shoot") || text.includes("pugg")) {
     return {
       setup:
-        "set a short finishing lane with a server, shooter, recovering defender, rebound cone, and the selected scoring target",
+        "set a short finishing lane with a coach feeder, shooter, recovering defender, rebound cone, and the selected scoring target",
       run: isSingleActivity
-        ? "serve, shoot, follow the rebound, then rotate shooter-server-defender so players get repeated finishes under light pressure"
+        ? "feed, shoot, follow the rebound, then rotate shooter, feeder, and defender so players get repeated finishes under light pressure"
         : "play quick finishing waves with one pressure touch, one shot, a rebound chase, and a clear rotation after each attempt",
       scoring:
         "score for clean shots on target, first-time finishes, rebounds followed in, or finishes made before the defender recovers",
@@ -852,7 +852,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
       watch:
         "players waiting in lines, shots from poor body shape, no rebound follow-up, or defenders arriving too late to matter",
       progress: "release the defender sooner, require a first-time shot, or add a second ball for a rebound finish",
-      regress: "start unopposed, move the server closer, or give the shooter one setup touch before pressure starts",
+      regress: "start unopposed, move the starting ball closer, or give the shooter one setup touch before pressure starts",
     };
   }
 
@@ -946,13 +946,13 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   if (!isDefendingActivity && (phase === "main" || phase === "single")) {
     return capDescription(
       [
-        `Setup: Use the same 15 x 15 meter grid (16 x 16 yards), four cone gates or Pugg goals, and ${equipmentText}; keep balls with the server or coach${playerCount}.`,
-        "How to start: the coach or server gives the trigger and rolls the ball to the attacker.",
+        `Setup: Use the same 15 x 15 meter grid (16 x 16 yards), four cone gates or Pugg goals, and ${equipmentText}; keep extra balls beside the coach${playerCount}.`,
+        "How to start: the coach starts the reaction rep by rolling or passing the ball to the attacker.",
         "How to run it: the attacker scans, takes the first touch away from pressure, and escapes through any gate while the defender/chaser pressures immediately; if the defender wins it, they counter through any open gate.",
         "Rules / scoring: attacker scores through a gate; defender scores by winning it, safe tagging, forcing out, or countering.",
         "Coaching cues: scan before receiving, first touch away, accelerate, keep safe spacing, and choose the open gate.",
         "What to watch for: flat-footed attackers, early chasers, unsafe tags, or touches too far ahead.",
-        "Safety / space adjustment: run 20-30 second rounds, rotate attacker, defender/chaser, and server, and enlarge the grid if paths cross.",
+        "Safety / space adjustment: run 20-30 second rounds, rotate attackers and defender/chasers often, and enlarge the grid if paths cross.",
         "Progression: release the defender closer, require a turn, or reward the far gate.",
         "Regression: start the attacker ahead, delay the chaser, or rehearse without pressure.",
       ].join(" ")
@@ -971,15 +971,15 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   if (!isDefendingActivity && phase === "progression") {
     return capDescription(
       [
-        `Setup: Use a 24 x 20 meter field (26 x 22 yards) with the same four cone gates, one support player, two defenders, and ${equipmentText}${playerCount}; the ball starts with the attacker or from a clearly visible server beside the attacker.`,
-        "How to start: the server plays to the attacker, who scans before receiving and prepares to escape first pressure.",
+        `Setup: Use a 24 x 20 meter field (26 x 22 yards) with the same four cone gates, one support player, two defenders, and ${equipmentText}${playerCount}; the ball starts with the attacker or with the coach clearly beside the attacker.`,
+        "How to start: the coach passes to the attacker, who scans before receiving and prepares to escape first pressure.",
         "How to run it: the attacker receives, escapes the first defender/chaser, finds the support player if needed, then attacks an open gate; if defenders win the ball, they counter through any open gate.",
         "Rules / scoring: attackers score two points for escaping pressure and creating a quick gate score, or one point for using support before scoring; defenders score by safe tagging, forcing out, winning it, or countering through an open gate.",
         "Coaching cues: scan before receiving, first touch away from pressure, protect the ball, use support when the gate is blocked, and attack quickly once space opens.",
         "What to watch for: attackers forcing the first gate, support standing behind pressure, second defenders diving in, or players forgetting the same cone gate is the scoring gate for whoever has the ball.",
         "Progression: release the second defender earlier or add a bonus for a one-touch support pass before the gate score.",
         "Regression: delay the second defender, make the support player neutral for both teams, or widen the gates.",
-        "Safety / space adjustment: separate chase lanes, keep tags below shoulder height, and rotate attacker, defender/chaser, server, and support.",
+        "Safety / space adjustment: separate chase lanes, keep tags below shoulder height, and rotate attacker, defender/chaser, and support player.",
       ].join(" ")
     );
   }
@@ -989,7 +989,7 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
       isDefendingActivity
         ? `Setup: Field: 18 x 16 meters (20 x 18 yards) with two end gates, two side gates, and ${equipmentText}; use 3v3 groups when possible and keep spare balls ready${playerCount}.`
         : `Setup: Grid: 15 x 15 meters (16 x 16 yards) with four outside cone gates and ${equipmentText}; give players balls when possible${playerCount}.`,
-      "How to start: players dribble or toe-tap while the coach or server names a receiver or gives the trigger; the receiver scans and takes a first touch into space.",
+      "How to start: players dribble or toe-tap while the coach names a receiver or gives the trigger; the receiver scans and takes a first touch into space.",
       isDefendingActivity
         ? `How to run it: the attacker escapes through a gate while the first defender chases and teammates recover to cover angles; ${phaseDetail}.`
         : `How to run it: the attacker escapes through any cone gate while the defender/chaser pressures; ${phaseDetail}.`,
@@ -1005,7 +1005,7 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
         ? "Progression: make it live 3v3 after the chase, add a counter gate, or give bonus points for forcing play into help."
         : "Progression: add a second defender, require a change of direction, or reward the far gate.",
       isDefendingActivity
-        ? "Regression: widen gates, start 2v2 plus a server, let defenders shadow, or give one step of separation."
+        ? "Regression: widen gates, start 2v2 plus a neutral support player, let defenders shadow, or give one step of separation."
         : "Regression: widen gates, start the attacker one step ahead, rehearse without a ball, or make the defender shadow.",
     ].join(" ")
   );
@@ -1054,7 +1054,7 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
     phase === "final"
       ? `Setup: Field: 36 x 28 meters (39 x 31 yards) with clear touchlines, ${scoringTargets}, and quick restart balls; keep teams balanced and ready to compete`
       : phase === "arrival"
-        ? `Setup: Grid: 16 x 15 meters (18 x 16 yards) with four cone gates near the corners and the ball starting with a central attacker or server; ${equipmentSetupSentence}`
+        ? `Setup: Grid: 16 x 15 meters (18 x 16 yards) with four cone gates near the corners and the ball starting with a central attacker or coach pass; ${equipmentSetupSentence}`
         : phase === "progression"
           ? `Setup: Field: 24 x 20 meters (26 x 22 yards) with two end gates, one recovery line, and ${equipmentText}; use the same direction as Activity 2 with a counter target added`
           : `Setup: Grid: 18 x 16 meters (20 x 18 yards) with two end gates, two side gates, and ${equipmentText}; place spare balls beside the coach`;
@@ -1071,7 +1071,7 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   const regressText = themeLanguage?.regress || style.regress;
   const arrivalScoringText =
     phase === "arrival"
-      ? `Scoring: attackers score by dribbling or passing through any cone gate; after a score, turnover, or 45-second round, reset with the ball at the central attacker or server and rotate the defender.`
+      ? `Scoring: attackers score by dribbling or passing through any cone gate; after a score, turnover, or 45-second round, reset with the ball at the central attacker or coach and rotate the defender.`
       : null;
   const arrivalProgressText =
     phase === "arrival"
@@ -1229,7 +1229,7 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
         ? "Teams: play 5-minute games or first team to two goals; winner stays on or teams reset for a quick rematch."
         : "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Scoring: score by dribbling or passing through any gate; add a bonus point if a team scores within five seconds of escaping pressure or after using a support player."
+        ? "Scoring: score by dribbling or passing through any gate; the goal counts double if a team scores within five seconds of escaping pressure or after using a support player."
         : `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
       `Constraint: ${finalGameConstraint}.`,
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"

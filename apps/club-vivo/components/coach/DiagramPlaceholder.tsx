@@ -123,7 +123,7 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
   }
 
   const isReactionChase =
-    /reaction|trigger|chase|escape|safe tag|tagging|caller|receiver/.test(text) &&
+    /reaction|trigger|chase|escape|safe tag|tagging|receiver/.test(text) &&
     /gate|first touch|scan|pressure|support|counter/.test(text);
 
   if (isReactionChase && activityIndex >= 2) {
@@ -194,8 +194,58 @@ function orderedLegendKeys(keys: LegendKey[]) {
   });
 }
 
-function localLegendKeys(keys: LegendKey[]) {
-  return keys;
+function panelHasToken(tokens: DiagramToken[], predicate: (token: DiagramToken) => boolean) {
+  return tokens.some(predicate);
+}
+
+function panelUsesLegendKey(key: LegendKey, tokens: DiagramToken[]) {
+  if (key === "coachedPlayer") return false;
+  if (key === "oppositionPlayer") return false;
+  if (key === "neutralPlayer" || key === "freePlayer") {
+    return panelHasToken(tokens, (token) => token.type === "player" && token.role === "neutral");
+  }
+  if (key === "ball") return false;
+  if (key === "cone") return false;
+  if (key === "coneGate" || key === "targetGate" || key === "counterGate") {
+    return panelHasToken(tokens, (token) => token.type === "gate");
+  }
+  if (key === "miniGoal") {
+    return panelHasToken(tokens, (token) => token.type === "miniGoal" && !token.pugg);
+  }
+  if (key === "puggGoal") {
+    return panelHasToken(tokens, (token) => token.type === "miniGoal" && Boolean(token.pugg));
+  }
+  if (key === "activityArea" || key === "zone") {
+    return panelHasToken(tokens, (token) => token.type === "zone");
+  }
+  if (key === "wideChannel") {
+    return panelHasToken(tokens, (token) => token.type === "zone" && token.tone === "wide");
+  }
+  if (key === "recoveryLine") {
+    return panelHasToken(tokens, (token) => token.type === "zone" && token.tone === "recovery");
+  }
+  if (key === "ballAction" || key === "passFreePlayerLine") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "ball");
+  }
+  if (key === "coachedRun" || key === "supportRunLine") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "run");
+  }
+  if (key === "defenderPressure" || key === "defenderPressureLine" || key === "recoveryDefenderLine") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "pressure");
+  }
+  if (key === "dribbleCarry" || key === "attackerDribbleLine") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "carry");
+  }
+  if (key === "rotationReset") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "rotation");
+  }
+
+  return true;
+}
+
+function localLegendKeys(keys: LegendKey[], tokens: DiagramToken[]) {
+  const visibleKeys = keys.filter((key) => panelUsesLegendKey(key, tokens));
+  return visibleKeys.filter((key) => !(key === "zone" && visibleKeys.includes("activityArea")));
 }
 
 function inferredCaption(text: string) {
@@ -359,7 +409,7 @@ function buildFirstTouchPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("show the receiver, server, pressure gate, and receiving box before the first touch happens."),
+      caption: inferredCaption("show the receiver, coach-start ball, pressure gate, and receiving box before the first touch happens."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "zone"],
       tokens: [
         { type: "zone", x: 61, y: 31, width: 38, height: 34, tone: "target" },
@@ -391,7 +441,7 @@ function buildFirstTouchPanels(): DiagramPanel[] {
     },
     {
       title: "Score / Reset",
-      caption: inferredCaption("score through the exit gate, then rotate server to receiver and receiver to pressure."),
+      caption: inferredCaption("score through the exit gate, then rotate coach-start player to receiver and receiver to pressure."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "rotationReset", "coneGate"],
       tokens: [
         { type: "gate", x: 134, y: 54, rotate: 90 },
@@ -474,7 +524,7 @@ function buildPuggFinishingPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("mark a finish lane, a server, a shooter, a recovering defender, a rebound cone, and a Pugg goal."),
+      caption: inferredCaption("mark a finish lane, a coach feeder, a shooter, a recovering defender, a rebound cone, and a Pugg goal."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "cone", "puggGoal", "zone"],
       tokens: [
         { type: "zone", x: 54, y: 30, width: 63, height: 43, label: "Finish lane", tone: "finish" },
@@ -488,7 +538,7 @@ function buildPuggFinishingPanels(): DiagramPanel[] {
     },
     {
       title: "Action",
-      caption: inferredCaption("serve into the finish lane, shoot quickly, and let the defender arrive under controlled pressure."),
+      caption: inferredCaption("feed into the finish lane, shoot quickly, and let the defender arrive under controlled pressure."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "defenderPressure", "puggGoal", "zone"],
       tokens: [
         { type: "zone", x: 54, y: 30, width: 63, height: 43, label: "Finish lane", tone: "finish" },
@@ -504,7 +554,7 @@ function buildPuggFinishingPanels(): DiagramPanel[] {
     },
     {
       title: "Score / Reset",
-      caption: inferredCaption("finish, chase the rebound, then rotate shooter to defender, defender to server, and server to shooter."),
+      caption: inferredCaption("finish, chase the rebound, then rotate shooter to defender, defender to feeder, and feeder to shooter."),
       legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ballAction", "coachedRun", "rotationReset", "cone", "puggGoal"],
       tokens: [
         { type: "miniGoal", x: 133, y: 52, rotate: 90, pugg: true },
@@ -564,10 +614,10 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
       title: "Setup",
       caption: inferredCaption(
         isProgression
-          ? "keep the same four scoring gates, start the ball with the attacker or nearby server, then add support and a second defender."
-          : "set a receiver, coach/server trigger, defender, ball start, and four escape gates with safe spacing between chase lanes."
+          ? "keep the same four scoring gates, start the ball with the attacker or nearby coach, then add support and a second defender."
+          : "set an attacker, coach trigger, defender, ball start, and four escape gates with safe spacing between chase lanes."
       ),
-      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "activityArea", "zone"],
+      legend: ["coneGate", "activityArea"],
       tokens: [
         { type: "zone", x: 23, y: 18, width: 114, height: 69, tone: isProgression ? "finish" : "target" },
         { type: "gate", x: 31, y: 29 },
@@ -596,7 +646,6 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
       legend: [
         "coachedPlayer",
         "oppositionPlayer",
-        "neutralPlayer",
         "ballAction",
         "attackerDribbleLine",
         "defenderPressureLine",
@@ -620,13 +669,12 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
           : []),
         { type: "ball", x: isProgression ? 86 : 48, y: isProgression ? 49 : 52 },
         { type: "arrow", d: "M51 52 C61 48, 70 47, 78 49", action: "ball" },
-        { type: "arrow", d: isProgression ? "M90 49 C103 43, 117 35, 128 29" : "M80 50 C95 43, 113 34, 128 29", action: "carry" },
+        { type: "arrow", d: isProgression ? "M90 49 C100 40, 115 34, 128 29" : "M80 50 C95 43, 113 34, 128 29", action: "carry" },
         { type: "arrow", d: isProgression ? "M101 53 C97 51, 94 50, 90 49" : "M101 53 C94 52, 87 51, 80 50", action: "pressure" },
         ...(isProgression
           ? [
-              { type: "arrow" as const, d: "M106 74 C112 64, 121 51, 128 29", action: "run" as const },
-              { type: "arrow" as const, d: "M116 64 C112 59, 106 53, 98 50", action: "pressure" as const },
-              { type: "arrow" as const, d: "M100 47 C110 43, 121 36, 128 29", action: "ball" as const }
+              { type: "arrow" as const, d: "M106 74 C113 76, 121 77, 129 77", action: "run" as const },
+              { type: "arrow" as const, d: "M116 64 C112 60, 107 56, 101 53", action: "pressure" as const }
             ]
           : [])
       ]
@@ -870,7 +918,7 @@ function ArrowPath({
 }) {
   const color =
     action === "pressure" ? "#ef4444" : action === "rotation" ? "#64748b" : "#2563eb";
-  const dash = action === "pressure" || action === "run" ? "3 3" : action === "carry" ? "1.2 3" : undefined;
+  const dash = action === "pressure" || action === "run" ? "6 4" : action === "carry" ? "1 4" : undefined;
   const markerSuffix = action === "pressure" ? "red" : action === "rotation" ? "slate" : "blue";
 
   return (
@@ -1039,9 +1087,9 @@ function LegendSymbol({ item }: { item: LegendKey }) {
     item === "defenderPressureLine" ||
     item === "supportRunLine" ||
     item === "recoveryDefenderLine"
-      ? "3 3"
+      ? "6 4"
       : item === "dribbleCarry" || item === "attackerDribbleLine"
-        ? "1.2 3"
+        ? "1 4"
         : undefined;
   const path = item === "rotationReset" ? "M4 10 C11 2, 22 2, 29 8" : "M2 7 H28";
 
@@ -1070,8 +1118,8 @@ function PlayerLegendSymbol({ fill }: { fill: string }) {
   );
 }
 
-function PanelLegend({ keys }: { keys: LegendKey[] }) {
-  const orderedKeys = orderedLegendKeys(localLegendKeys(keys));
+function PanelLegend({ keys, tokens }: { keys: LegendKey[]; tokens: DiagramToken[] }) {
+  const orderedKeys = orderedLegendKeys(localLegendKeys(keys, tokens));
 
   if (orderedKeys.length === 0) {
     return null;
@@ -1109,7 +1157,7 @@ function PanelCard({
       <p className="border-t border-slate-100 px-3 py-2 text-xs leading-5 text-slate-600">
         {shortenDiagramText(panel.caption, 120)}
       </p>
-      <PanelLegend keys={panel.legend} />
+      <PanelLegend keys={panel.legend} tokens={panel.tokens} />
     </section>
   );
 }
@@ -1133,30 +1181,58 @@ function extractFinalGameLine(description: string, label: string) {
   return match?.[1]?.trim() || "";
 }
 
+function FinalGameGridVisual() {
+  return (
+    <svg viewBox="0 0 160 105" role="img" aria-label="Tournament grid with four scoring gates" className="h-full min-h-40 w-full">
+      <DiagramMarkers markerBaseId="club-vivo-final-card" />
+      <FieldArea>
+        <rect x="24" y="18" width="112" height="69" rx="5" fill="#dcfce7" fillOpacity="0.5" stroke="#22c55e" strokeDasharray="4 3" />
+        <ConeGate x={31} y={29} />
+        <ConeGate x={129} y={29} />
+        <ConeGate x={31} y={77} />
+        <ConeGate x={129} y={77} />
+        <PlayerToken role="coached" x={58} y={39} />
+        <PlayerToken role="coached" x={58} y={66} />
+        <PlayerToken role="coached" x={76} y={53} />
+        <PlayerToken role="opposition" x={101} y={39} />
+        <PlayerToken role="opposition" x={101} y={66} />
+        <PlayerToken role="opposition" x={86} y={53} />
+        <BallToken x={78} y={53} />
+        <ArrowPath d="M80 53 C92 45, 109 35, 128 29" action="carry" markerBaseId="club-vivo-final-card" />
+      </FieldArea>
+    </svg>
+  );
+}
+
 function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
   const description = activity?.description?.trim() ||
     "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
-  const summaryRows = [
-    ["Format", extractFinalGameLine(description, "Format") || "Small-sided game with fast restarts."],
-    ["Scoring", extractFinalGameLine(description, "Scoring") || extractFinalGameLine(description, "Win condition") || "Clear score target and quick rematch."],
-    ["Constraint", extractFinalGameLine(description, "Constraint") || extractFinalGameLine(description, "Focus") || "Keep the game tied to the session focus."]
+  const rows = [
+    ["Format", extractFinalGameLine(description, "Format") || "Play 4v4 or 5v5 in the same 36 x 28 meter area (39 x 31 yards)."],
+    ["Goals", "Four cone gates or Pugg goals."],
+    ["Game length", extractFinalGameLine(description, "Teams") || "5-minute games or first team to two goals."],
+    ["Bonus", extractFinalGameLine(description, "Scoring") || "A goal counts double within five seconds of escaping pressure or after using support."],
+    ["Winner rule", extractFinalGameLine(description, "Win condition") || "Most goals after 10 minutes, or first team to three goals."]
   ].filter(([, text]) => text);
 
   return (
-    <div className="rounded-2xl border border-teal-100 bg-teal-50/50 p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-teal-800">
-        Final game format
-      </p>
-      <h5 className="mt-2 text-sm font-semibold text-slate-900">
-        {activity?.name || "Competitive close"}
-      </h5>
-      <dl className="mt-3 grid gap-2">
-        {summaryRows.map(([label, text]) => (
-          <div key={label} className="rounded-xl border border-teal-100 bg-white/70 px-3 py-2">
+    <div className="overflow-hidden rounded-2xl border border-teal-100 bg-teal-50/50">
+      <div className="border-b border-teal-100 bg-white/75 px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-teal-800">
+          Competitive close
+        </p>
+        <h5 className="mt-1 text-sm font-semibold text-slate-900">
+          {activity?.name || "Escape Gates Mini Tournament"}
+        </h5>
+      </div>
+      <FinalGameGridVisual />
+      <dl className="grid gap-2 border-t border-teal-100 p-3">
+        {rows.map(([label, text]) => (
+          <div key={label} className="rounded-xl border border-teal-100 bg-white/80 px-3 py-2">
             <dt className="text-[11px] font-semibold uppercase tracking-wide text-teal-800">
               {label}
             </dt>
-            <dd className="mt-1 text-xs leading-5 text-slate-600">{shortenDiagramText(text)}</dd>
+            <dd className="mt-1 text-xs leading-5 text-slate-600">{shortenDiagramText(text, 130)}</dd>
           </div>
         ))}
       </dl>
