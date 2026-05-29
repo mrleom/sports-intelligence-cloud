@@ -19,6 +19,8 @@ type DiagramKind =
   | "transition_to_attack"
   | "pressure_cover_gates"
   | "recover_delay_win"
+  | "reaction_chase_escape"
+  | "reaction_chase_progression"
   | "generic_small_sided"
   | "final_game_format";
 
@@ -101,24 +103,6 @@ const LEGEND_META: Record<LegendKey, { group: LegendGroup; label: string }> = {
   zone: { group: "space", label: "Activity area" }
 };
 const LEGEND_KEY_ORDER = Object.keys(LEGEND_META) as LegendKey[];
-const GLOBAL_LEGEND_KEYS: LegendKey[] = [
-  "coachedPlayer",
-  "oppositionPlayer",
-  "neutralPlayer",
-  "ball",
-  "cone",
-  "ballAction",
-  "coachedRun",
-  "defenderPressure",
-  "dribbleCarry"
-];
-const FOUNDATIONAL_LOCAL_LEGEND_KEYS: LegendKey[] = [
-  ...GLOBAL_LEGEND_KEYS,
-  "rotationReset",
-  "miniGoal",
-  "puggGoal"
-];
-
 function normalizeText(value: string | undefined) {
   return String(value || "").toLowerCase();
 }
@@ -136,6 +120,18 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
 
   if (activityIndex === 0) {
     return "activation_chase_or_reaction";
+  }
+
+  const isReactionChase =
+    /reaction|trigger|chase|escape|safe tag|tagging|caller|receiver/.test(text) &&
+    /gate|first touch|scan|pressure|support|counter/.test(text);
+
+  if (isReactionChase && activityIndex >= 2) {
+    return "reaction_chase_progression";
+  }
+
+  if (isReactionChase) {
+    return "reaction_chase_escape";
   }
 
   if (/pugg/.test(text)) {
@@ -199,7 +195,7 @@ function orderedLegendKeys(keys: LegendKey[]) {
 }
 
 function localLegendKeys(keys: LegendKey[]) {
-  return keys.filter((key) => !FOUNDATIONAL_LOCAL_LEGEND_KEYS.includes(key));
+  return keys;
 }
 
 function inferredCaption(text: string) {
@@ -562,6 +558,84 @@ function buildActivationPanels(): DiagramPanel[] {
   ];
 }
 
+function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption(
+        isProgression
+          ? "keep the same escape-gate start, then add a support player, second defender, and counter gate for the next decision."
+          : "set a receiver, caller, defender, ball start, and four escape gates with safe spacing between chase lanes."
+      ),
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "activityArea", isProgression ? "counterGate" : "zone"],
+      tokens: [
+        { type: "zone", x: 23, y: 18, width: 114, height: 69, tone: isProgression ? "finish" : "target" },
+        { type: "gate", x: 31, y: 29 },
+        { type: "gate", x: 129, y: 29 },
+        { type: "gate", x: 31, y: 77 },
+        { type: "gate", x: 129, y: 77 },
+        ...(isProgression ? [{ type: "gate" as const, x: 140, y: 53, rotate: 90 }] : []),
+        { type: "player", role: "neutral", x: 48, y: 52 },
+        { type: "player", role: "coached", x: 76, y: 52 },
+        { type: "player", role: "opposition", x: 99, y: 50 },
+        ...(isProgression
+          ? [
+              { type: "player" as const, role: "coached" as const, x: 101, y: 73 },
+              { type: "player" as const, role: "opposition" as const, x: 113, y: 64 }
+            ]
+          : []),
+        { type: "ball", x: 48, y: 52 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption(
+        isProgression
+          ? "the receiver scans, escapes first pressure, finds support, then attacks the counter gate before the second defender closes."
+          : "the receiver reacts to the trigger, scans, takes the first touch away from pressure, and escapes through a gate."
+      ),
+      legend: [
+        "coachedPlayer",
+        "oppositionPlayer",
+        "neutralPlayer",
+        "ballAction",
+        "attackerDribbleLine",
+        "defenderPressureLine",
+        isProgression ? "supportRunLine" : "coneGate",
+        isProgression ? "counterGate" : "activityArea"
+      ],
+      tokens: [
+        { type: "zone", x: 23, y: 18, width: 114, height: 69, tone: isProgression ? "finish" : "target" },
+        { type: "gate", x: 31, y: 29 },
+        { type: "gate", x: 129, y: 29 },
+        { type: "gate", x: 31, y: 77 },
+        { type: "gate", x: 129, y: 77 },
+        ...(isProgression ? [{ type: "gate" as const, x: 140, y: 53, rotate: 90 }] : []),
+        { type: "player", role: "neutral", x: 48, y: 52 },
+        { type: "player", role: "coached", x: isProgression ? 89 : 78, y: isProgression ? 48 : 49 },
+        { type: "player", role: "opposition", x: 101, y: 53 },
+        ...(isProgression
+          ? [
+              { type: "player" as const, role: "coached" as const, x: 106, y: 74 },
+              { type: "player" as const, role: "opposition" as const, x: 116, y: 64 }
+            ]
+          : []),
+        { type: "ball", x: 48, y: 52 },
+        { type: "arrow", d: "M51 52 C61 48, 70 47, 78 49", action: "ball" },
+        { type: "arrow", d: isProgression ? "M90 49 C103 43, 117 35, 128 29" : "M80 50 C95 43, 113 34, 128 29", action: "carry" },
+        { type: "arrow", d: isProgression ? "M101 53 C97 51, 94 50, 90 49" : "M101 53 C94 52, 87 51, 80 50", action: "pressure" },
+        ...(isProgression
+          ? [
+              { type: "arrow" as const, d: "M106 74 C114 66, 125 58, 139 53", action: "run" as const },
+              { type: "arrow" as const, d: "M116 64 C112 59, 106 53, 98 50", action: "pressure" as const },
+              { type: "arrow" as const, d: "M100 47 C112 49, 126 51, 140 53", action: "ball" as const }
+            ]
+          : [])
+      ]
+    }
+  ];
+}
+
 function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
   const isProgression = kind === "recover_delay_win" || kind === "transition_to_attack";
 
@@ -652,6 +726,14 @@ function buildDiagramPanels(kind: DiagramKind, activityIndex: number): DiagramPa
     return learningPanels(buildActivationPanels());
   }
 
+  if (kind === "reaction_chase_escape") {
+    return learningPanels(buildReactionChasePanels(false));
+  }
+
+  if (kind === "reaction_chase_progression") {
+    return learningPanels(buildReactionChasePanels(true));
+  }
+
   return learningPanels(buildGenericPanels(kind));
 }
 
@@ -666,7 +748,7 @@ function FieldArea({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PlayerToken({ x, y, role, label }: { x: number; y: number; role: PlayerRole; label?: string }) {
+function PlayerToken({ x, y, role }: { x: number; y: number; role: PlayerRole; label?: string }) {
   const fill = role === "coached" ? "#2563eb" : role === "opposition" ? "#ef4444" : "#94a3b8";
 
   return (
@@ -681,11 +763,6 @@ function PlayerToken({ x, y, role, label }: { x: number; y: number; role: Player
         strokeWidth="0.8"
         opacity="0.9"
       />
-      {label ? (
-        <text x={x} y={y - 7.2} textAnchor="middle" className="fill-slate-700 text-[6.5px] font-semibold">
-          {label}
-        </text>
-      ) : null}
     </g>
   );
 }
@@ -736,9 +813,6 @@ function MiniGoal({ x, y, rotate = 0, pugg = false }: { x: number; y: number; ro
       {pugg ? (
         <g transform="translate(0 10)">
           <rect x="-8" y="-4.2" width="16" height="8.4" rx="2" fill="#0f172a" />
-          <text x="0" y="2.4" textAnchor="middle" className="fill-white text-[5px] font-bold">
-            PUGG
-          </text>
         </g>
       ) : null}
     </g>
@@ -750,7 +824,6 @@ function ZoneBox({
   y,
   width,
   height,
-  label,
   tone = "target"
 }: {
   x: number;
@@ -784,26 +857,7 @@ function ZoneBox({
   return (
     <g>
       <rect x={x} y={y} width={width} height={height} rx="5" fill={fill} fillOpacity="0.56" stroke={stroke} strokeDasharray="4 3" />
-      {label ? <DirectLabel x={x + width / 2} y={y + 9} text={label} anchor="middle" /> : null}
     </g>
-  );
-}
-
-function DirectLabel({
-  x,
-  y,
-  text,
-  anchor = "start"
-}: {
-  x: number;
-  y: number;
-  text: string;
-  anchor?: "start" | "middle" | "end";
-}) {
-  return (
-    <text x={x} y={y} textAnchor={anchor} className="fill-slate-700 text-[5.8px] font-bold">
-      {text}
-    </text>
   );
 }
 
@@ -834,21 +888,13 @@ function ArrowPath({
   );
 }
 
-function ArrowLabel({ d, label }: { d: string; label: string }) {
-  const match = /M\s*([\d.]+)\s+([\d.]+)/.exec(d);
-  const x = match ? Number(match[1]) : 80;
-  const y = match ? Number(match[2]) : 50;
-
-  return <DirectLabel x={x + 6} y={y - 5} text={label} />;
-}
-
 function renderToken(token: DiagramToken, markerBaseId: string) {
   if (token.type === "zone") {
-    return <ZoneBox key={`zone-${token.x}-${token.y}-${token.label || ""}`} {...token} />;
+    return <ZoneBox key={`zone-${token.x}-${token.y}`} {...token} />;
   }
 
   if (token.type === "player") {
-    return <PlayerToken key={`player-${token.role}-${token.x}-${token.y}-${token.label || ""}`} {...token} />;
+    return <PlayerToken key={`player-${token.role}-${token.x}-${token.y}`} {...token} />;
   }
 
   if (token.type === "ball") {
@@ -857,18 +903,16 @@ function renderToken(token: DiagramToken, markerBaseId: string) {
 
   if (token.type === "cone") {
     return (
-      <g key={`cone-${token.x}-${token.y}-${token.label || ""}`}>
+      <g key={`cone-${token.x}-${token.y}`}>
         <ConeToken x={token.x} y={token.y} />
-        {token.label ? <DirectLabel x={token.x + 8} y={token.y - 3} text={token.label} /> : null}
       </g>
     );
   }
 
   if (token.type === "gate") {
     return (
-      <g key={`gate-${token.x}-${token.y}-${token.label || ""}`}>
+      <g key={`gate-${token.x}-${token.y}`}>
         <ConeGate x={token.x} y={token.y} rotate={token.rotate} />
-        {token.label ? <DirectLabel x={token.x + 9} y={token.y - 4} text={token.label} /> : null}
       </g>
     );
   }
@@ -877,19 +921,17 @@ function renderToken(token: DiagramToken, markerBaseId: string) {
     return (
       <g key={`goal-${token.x}-${token.y}-${token.pugg ? "pugg" : "mini"}`}>
         <MiniGoal x={token.x} y={token.y} rotate={token.rotate} pugg={token.pugg} />
-        {token.label ? <DirectLabel x={token.x} y={token.y - 13} text={token.label} anchor="middle" /> : null}
       </g>
     );
   }
 
   if (token.type === "label") {
-    return <DirectLabel key={`label-${token.x}-${token.y}-${token.text}`} x={token.x} y={token.y} text={token.text} anchor={token.anchor} />;
+    return null;
   }
 
   return (
     <g key={`arrow-${token.d}-${token.action}`}>
       <ArrowPath d={token.d} action={token.action} markerBaseId={markerBaseId} />
-      {token.label ? <ArrowLabel d={token.d} label={token.label} /> : null}
     </g>
   );
 }

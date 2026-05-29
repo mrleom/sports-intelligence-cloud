@@ -60,6 +60,7 @@ Current runtime shape:
 - **DiagramSequence** is proposed architecture for structured diagram intent and future animation data.
 - **Match-to-Match Prescription** is parked/future frontend direction only; there is no active Match-to-Match runtime behavior.
 - **Session Feedback** remains a foundation for future learning-loop interpretation; this is not model training, autonomous-agent behavior, dashboards, or analytics.
+- Diagram fields should stay visual-only: no words, player labels, zone labels, or arrow labels inside the SVG field. Use panel titles, captions, and mini legends to explain symbols and actions.
 - Future source-of-truth direction: add a small "playground games to soccer activities" library, not a database yet. Examples include duck duck goose, cat and mouse, and police and robbers. The purpose is to transform familiar cultural games into soccer activities using reaction, scanning, first touch, chase/escape, gates, safe spacing, and short competitive rounds.
 
 ---

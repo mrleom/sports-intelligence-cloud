@@ -1014,6 +1014,17 @@ test("attacking-overload diagram legend code uses team-color line language", () 
   assert.doesNotMatch(staticText, /Solid green|Dotted green|#0f766e|markerBaseId}-green|Movement without the ball|Team coached|Cones or equipment/);
 });
 
+test("diagram placeholder field renderer does not render token text inside the SVG field", () => {
+  const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+
+  assert.doesNotMatch(diagramPlaceholder, /<text\b/);
+  assert.doesNotMatch(diagramPlaceholder, /DirectLabel|ArrowLabel/);
+  assert.doesNotMatch(diagramPlaceholder, /token\.label\s*\?/);
+  assert.match(diagramPlaceholder, /if \(token\.type === "label"\) {\s*return null;\s*}/);
+  assert.match(diagramPlaceholder, /reaction_chase_progression/);
+  assert.match(diagramPlaceholder, /activityIndex === totalActivities - 1/);
+});
+
 test("quick drill-mode requests create one main activity", async () => {
   const result = await processSessionPackRequest({
     sport: "soccer",

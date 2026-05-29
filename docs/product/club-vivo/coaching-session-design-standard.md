@@ -163,9 +163,10 @@ show the first main learning activity. Activity 3 diagrams should show a progres
 recovery, or harder decision, and should not visually repeat Activity 2. Activity 4 should stay as
 a competitive final-game card only, not a full tactical diagram.
 
-Diagram Storytelling Polish v2 keeps the SVG itself minimal. Diagrams should not overload the field
-view with text; use short labels only when they add meaning, such as Start, Ball, Play, Press,
-Recover, Score, or Reset. Put extra explanation in the caption below the SVG.
+Diagram Storytelling Polish v2 keeps the SVG itself minimal. Diagrams should not put words inside
+the field view. Do not render player labels, zone labels, arrow labels, or field text such as
+Start, Ball, Play, Press, Recover, Score, Reset, recovery line, channel, or gate. Put explanation in
+the panel title, caption below the SVG, and mini legend instead.
 
 Activity 1 should stay lighter and use only Setup and Action story views. Activity 2 and Activity
 3 should use Setup, How to play, and How to score / reset. Activity 2 should show the first main
@@ -205,9 +206,14 @@ every caption. Activity 2 and Activity 3 must not reuse the same visual shape; A
 show a different pressure angle, recovery/counter shape, or second decision.
 
 Avoid unexplained grey curved reset arrows. Keep arrows and arrowheads thin, avoid overlap with
-players, labels, gates, and the ball, and use captions for detail so the SVG stays clean. When AI
+players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. When AI
 diagram generation is added later, it should produce structured diagram instructions for this
 deterministic renderer rather than raw images.
+
+Playground and cultural game ideas should be translated into soccer activities, not copied
+literally. For example, duck duck goose, cat and mouse, or police and robbers should become
+soccer-first activities using reaction, scanning, first touch, chase/escape, gates, safe spacing,
+short competitive rounds, and clear scoring.
 
 ## 7. Quick Activity Standard
 
