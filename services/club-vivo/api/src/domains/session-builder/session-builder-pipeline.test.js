@@ -41,8 +41,28 @@ function hasKeyDeep(value, key) {
     Object.values(value).some((item) => hasKeyDeep(item, key));
 }
 
+function findRepoRoot(startDir) {
+  let currentDir = startDir;
+
+  while (true) {
+    if (
+      fs.existsSync(path.join(currentDir, "apps", "club-vivo")) &&
+      fs.existsSync(path.join(currentDir, "services", "club-vivo", "api"))
+    ) {
+      return currentDir;
+    }
+
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) {
+      throw new Error(`Unable to locate repository root from ${startDir}`);
+    }
+
+    currentDir = parentDir;
+  }
+}
+
 function readRepoFile(...parts) {
-  return fs.readFileSync(path.resolve(process.cwd(), "../../..", ...parts), "utf8");
+  return fs.readFileSync(path.join(findRepoRoot(__dirname), ...parts), "utf8");
 }
 
 test("normalizeSessionPackInput returns canonical request shape", () => {

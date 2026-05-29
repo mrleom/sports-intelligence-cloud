@@ -564,17 +564,16 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
       title: "Setup",
       caption: inferredCaption(
         isProgression
-          ? "keep the same escape-gate start, then add a support player, second defender, and counter gate for the next decision."
-          : "set a receiver, caller, defender, ball start, and four escape gates with safe spacing between chase lanes."
+          ? "keep the same four scoring gates, start the ball with the attacker or nearby server, then add support and a second defender."
+          : "set a receiver, coach/server trigger, defender, ball start, and four escape gates with safe spacing between chase lanes."
       ),
-      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "activityArea", isProgression ? "counterGate" : "zone"],
+      legend: ["coachedPlayer", "oppositionPlayer", "neutralPlayer", "ball", "coneGate", "activityArea", "zone"],
       tokens: [
         { type: "zone", x: 23, y: 18, width: 114, height: 69, tone: isProgression ? "finish" : "target" },
         { type: "gate", x: 31, y: 29 },
         { type: "gate", x: 129, y: 29 },
         { type: "gate", x: 31, y: 77 },
         { type: "gate", x: 129, y: 77 },
-        ...(isProgression ? [{ type: "gate" as const, x: 140, y: 53, rotate: 90 }] : []),
         { type: "player", role: "neutral", x: 48, y: 52 },
         { type: "player", role: "coached", x: 76, y: 52 },
         { type: "player", role: "opposition", x: 99, y: 50 },
@@ -584,14 +583,14 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
               { type: "player" as const, role: "opposition" as const, x: 113, y: 64 }
             ]
           : []),
-        { type: "ball", x: 48, y: 52 }
+        { type: "ball", x: isProgression ? 72 : 48, y: isProgression ? 53 : 52 }
       ]
     },
     {
       title: "Action",
       caption: inferredCaption(
         isProgression
-          ? "the receiver scans, escapes first pressure, finds support, then attacks the counter gate before the second defender closes."
+          ? "the attacker scans, escapes first pressure, uses support if needed, then attacks any open scoring gate."
           : "the receiver reacts to the trigger, scans, takes the first touch away from pressure, and escapes through a gate."
       ),
       legend: [
@@ -602,7 +601,7 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
         "attackerDribbleLine",
         "defenderPressureLine",
         isProgression ? "supportRunLine" : "coneGate",
-        isProgression ? "counterGate" : "activityArea"
+        "activityArea"
       ],
       tokens: [
         { type: "zone", x: 23, y: 18, width: 114, height: 69, tone: isProgression ? "finish" : "target" },
@@ -610,7 +609,6 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
         { type: "gate", x: 129, y: 29 },
         { type: "gate", x: 31, y: 77 },
         { type: "gate", x: 129, y: 77 },
-        ...(isProgression ? [{ type: "gate" as const, x: 140, y: 53, rotate: 90 }] : []),
         { type: "player", role: "neutral", x: 48, y: 52 },
         { type: "player", role: "coached", x: isProgression ? 89 : 78, y: isProgression ? 48 : 49 },
         { type: "player", role: "opposition", x: 101, y: 53 },
@@ -620,15 +618,15 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
               { type: "player" as const, role: "opposition" as const, x: 116, y: 64 }
             ]
           : []),
-        { type: "ball", x: 48, y: 52 },
+        { type: "ball", x: isProgression ? 86 : 48, y: isProgression ? 49 : 52 },
         { type: "arrow", d: "M51 52 C61 48, 70 47, 78 49", action: "ball" },
         { type: "arrow", d: isProgression ? "M90 49 C103 43, 117 35, 128 29" : "M80 50 C95 43, 113 34, 128 29", action: "carry" },
         { type: "arrow", d: isProgression ? "M101 53 C97 51, 94 50, 90 49" : "M101 53 C94 52, 87 51, 80 50", action: "pressure" },
         ...(isProgression
           ? [
-              { type: "arrow" as const, d: "M106 74 C114 66, 125 58, 139 53", action: "run" as const },
+              { type: "arrow" as const, d: "M106 74 C112 64, 121 51, 128 29", action: "run" as const },
               { type: "arrow" as const, d: "M116 64 C112 59, 106 53, 98 50", action: "pressure" as const },
-              { type: "arrow" as const, d: "M100 47 C112 49, 126 51, 140 53", action: "ball" as const }
+              { type: "arrow" as const, d: "M100 47 C110 43, 121 36, 128 29", action: "ball" as const }
             ]
           : [])
       ]
