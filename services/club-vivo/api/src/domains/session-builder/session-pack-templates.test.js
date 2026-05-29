@@ -1048,7 +1048,7 @@ test("generatePack turns a quick duck-duck-goose prompt into one soccer chase es
   assertDuckDuckGooseSoccerActivity(activity);
 });
 
-test("generatePack gives full-session duck-duck-goose brainstorm one related soccer activity", () => {
+test("generatePack gives full-session duck-duck-goose brainstorm a soccer progression story", () => {
   const pack = generatePack({
     sport: "soccer",
     ageBand: "u12",
@@ -1061,15 +1061,46 @@ test("generatePack gives full-session duck-duck-goose brainstorm one related soc
   });
 
   const [session] = pack.sessions;
-  const relatedActivities = session.activities.filter((activity) =>
-    /reaction chase escape gates|How to start:.*trigger|How to run it:.*chases? as a defender/i.test(
-      `${activity.name} ${activity.description}`
-    )
-  );
+  const [, activity2, activity3, activity4] = session.activities;
+  const allText = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
 
   assert.equal(session.activities.length, 4);
-  assert.equal(relatedActivities.length, 1);
-  assertDuckDuckGooseSoccerActivity(relatedActivities[0]);
+  assertDuckDuckGooseSoccerActivity(activity2);
+  assert.match(activity3.name, /escape, support, score progression/i);
+  assert.match(activity3.description, /support player|second defender|counter gate|quick pass|carry/i);
+  assert.match(activity4.name, /mini tournament|final game|competitive/i);
+  assert.match(activity4.description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
+  assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
+});
+
+test("generatePack turns attacking create-chances duck-duck-goose note into coach-ready full-session quality", () => {
+  const pack = generatePack({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMin: 60,
+    theme: "Primary session objective: Attacking | Specific focus: Create chances",
+    sessionMode: "full_session",
+    coachNotes: "game like activity similar to duck duck goose",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [session] = pack.sessions;
+  const [activity1, activity2, activity3, activity4] = session.activities;
+  const allText = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
+  assert.match(activity1.name, /trigger touch activation/i);
+  assertDuckDuckGooseSoccerActivity(activity2);
+  assert.match(activity2.description, /receiver scans|trigger call|safe tagging|forcing the ball out|rotate the caller/i);
+  assert.match(activity3.name, /escape, support, score progression/i);
+  assert.match(activity3.description, /support player|second defender|counter gate|quick chance/i);
+  assert.match(activity3.description, /scan before receiving|first touch away|support/i);
+  assert.match(activity4.name, /escape gates mini tournament/i);
+  assert.match(activity4.description, /visible score|bonus point|first touch away from pressure|first team to three goals|winner stays on|quick rematch/i);
+  assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
+  assert.doesNotMatch(allText, /team:|originalTeamAgeBand|apiAgeBand|programType|coachingStyle|raw pipe/i);
+  assert.doesNotMatch(activity3.name, /Final Game|Tournament|Competitive/i);
 });
 
 test("generatePack applies a quick-session bias that feels playful and easy to run", () => {
