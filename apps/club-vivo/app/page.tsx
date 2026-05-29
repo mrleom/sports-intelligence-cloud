@@ -24,40 +24,24 @@ export default function Home() {
             </p>
 
             <p className="mt-8 text-sm font-medium uppercase tracking-wide text-teal-800">
-              Two spaces built for what you need.
+              Current product
             </p>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <article className="rounded-3xl border border-slate-200 bg-white/75 p-5">
-                <h2 className="text-lg font-semibold text-teal-800">Coach Workspace</h2>
-                <p className="mt-3 text-sm leading-6 text-slate-700">
-                  Start as a coach by creating your team, building game-like sessions, and turning
-                  practice ideas into activities that help athletes learn, play, and grow.
-                </p>
-                <Link
-                  href="/login/start?mode=signup"
-                  prefetch={false}
-                  className="mt-5 inline-flex rounded-full bg-teal-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-teal-800"
-                >
-                  Sign up here
-                </Link>
-              </article>
-
-              <article className="rounded-3xl border border-slate-200 bg-white/75 p-5">
-                <h2 className="text-lg font-semibold text-teal-800">Club&apos;s Workspace</h2>
-                <p className="mt-3 text-sm leading-6 text-slate-700">
-                  Take control of your organization, manage coaches, teams, equipment inventory,
-                  and see how your club is growing.
-                </p>
-                <Link
-                  href="/club/start"
-                  prefetch={false}
-                  className="mt-5 inline-flex rounded-full border border-slate-300 bg-white/80 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-white"
-                >
-                  Sign up here
-                </Link>
-              </article>
-            </div>
+            <article className="mt-4 max-w-2xl rounded-3xl border border-slate-200 bg-white/75 p-5">
+              <h2 className="text-lg font-semibold text-teal-800">Coach Workspace</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-700">
+                Start as a coach by creating your team, building game-like sessions, managing
+                equipment context, and turning practice ideas into activities that help athletes
+                learn, play, and grow.
+              </p>
+              <Link
+                href="/login/start?mode=signup"
+                prefetch={false}
+                className="mt-5 inline-flex rounded-full bg-teal-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-teal-800"
+              >
+                Sign up here
+              </Link>
+            </article>
 
             <p className="mt-6 max-w-2xl text-sm leading-6 text-slate-600">
               Already have an account?{" "}

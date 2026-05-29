@@ -494,7 +494,7 @@ function getScoringTargets(equipment) {
 }
 
 function getCoachNotesSnippet(value) {
-  const normalized = compactText(value, "").replace(/\.+$/, "");
+  const normalized = stripInternalCoachSignals(compactText(value, "")).replace(/\.+$/, "");
 
   if (normalized.length <= 240) {
     return normalized;
@@ -508,6 +508,38 @@ function getCoachNotesSnippet(value) {
 
   const wordSafe = normalized.slice(0, 240).replace(/\s+\S*$/, "").trim();
   return wordSafe || normalized.slice(0, 240).trim();
+}
+
+function stripInternalCoachSignals(value) {
+  return String(value || "")
+    .split("|")
+    .map((segment) => segment.trim())
+    .filter((segment) => {
+      const normalized = segment.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+      return !(
+        normalized.startsWith("team ") ||
+        normalized.startsWith("team context ") ||
+        normalized.startsWith("env ") ||
+        normalized.startsWith("environment context ") ||
+        normalized.startsWith("primary session objective ") ||
+        normalized.startsWith("coach brainstorming and extra details for today ") ||
+        normalized.startsWith("notes ") ||
+        normalized.startsWith("originalteamageband ") ||
+        normalized.startsWith("apiageband ") ||
+        normalized.startsWith("programtype ") ||
+        normalized.startsWith("coachingstyle ") ||
+        normalized.startsWith("mixedage ") ||
+        normalized.startsWith("assumedagerange ")
+      );
+    })
+    .join(" ")
+    .replace(/\b(?:team|env|environment context|team context|notes)\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\bPrimary session objective\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\bCoach brainstorming and extra details for today\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\b(?:originalTeamAgeBand|apiAgeBand|programType|coachingStyle|mixedAge|assumedAgeRange)\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function getProgramStyle(promptSignals) {
@@ -843,7 +875,7 @@ function detectSoccerActivityArchetype(promptSignals) {
   if (hasDuckDuckGoose && hasDefending) {
     return {
       key: "duck-duck-goose-defending-gates",
-      name: has3v3 ? "3v3 Duck Duck Goose Defending Gates" : "Duck Duck Goose Defending Gates",
+      name: has3v3 ? "3v3 Reaction Chase Defending Gates" : "Reaction Chase Defending Gates",
       tags: mergeUniqueStrings(
         ["defending", "pressure", "reaction", "chase", "escape"],
         has3v3 ? ["3v3", "overloads"] : []
@@ -854,7 +886,7 @@ function detectSoccerActivityArchetype(promptSignals) {
   if (hasDuckDuckGoose) {
     return {
       key: "duck-duck-goose-escape",
-      name: "Duck Duck Goose Escape Gates",
+      name: "Reaction Chase Escape Gates",
       tags: ["dribbling", "reaction", "1v1", "escape"],
     };
   }
@@ -900,32 +932,32 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
       : phase === "progression"
         ? "make the chase live from the first touch and add a recovery run after the gate"
         : isDefendingActivity
-          ? "play 3v3 waves when numbers allow, with one defender released by the goose call to pressure, delay, and recover"
+          ? "play 3v3 waves when numbers allow, with one defender released by the trigger call to pressure, delay, and recover"
           : "keep every round short, loud, and competitive so players react instead of waiting";
 
   return capDescription(
     [
       isDefendingActivity
-        ? `Setup: Field: 20x18 yards with two end gates, two side gates, and ${equipmentText}; split players into 3v3 groups when possible and place spare balls beside the coach for fast restarts${playerCount}.`
+        ? `Setup: Field: 20x18 yards with two end gates, two side gates, and ${equipmentText}; use 3v3 groups when possible and keep spare balls ready${playerCount}.`
         : `Setup: Grid: 16x16 yards with four outside cone gates and ${equipmentText}; give players balls when possible${playerCount}.`,
-      "How to start: players dribble or toe-tap while one caller says duck, duck, goose; on goose, the named player takes a first touch into space.",
+      "How to start: players dribble or toe-tap while one caller names a player or calls the trigger; the receiver scans and takes a first touch into space.",
       isDefendingActivity
-        ? `How to run it: the goose tries to escape through a gate while the first defender chases and the other defenders recover to cover angles; ${phaseDetail}.`
-        : `How to run it: the goose tries to escape through any cone gate while the caller chases as a defender; ${phaseDetail}.`,
+        ? `How to run it: the attacker escapes through a gate while the first defender chases and teammates recover to cover angles; ${phaseDetail}.`
+        : `How to run it: the attacker escapes through any cone gate while the caller chases as a defender; ${phaseDetail}.`,
       isDefendingActivity
-        ? "Rules / scoring: attackers score by escaping through a gate or connecting two passes after the trigger; defenders score by delaying for five seconds, winning the ball, tagging safely, or forcing play out."
-        : "Rules / scoring: attacker scores by dribbling through a gate under control; defender scores by tagging or forcing the ball out.",
+        ? "Rules / scoring: attackers score by escaping through a gate or connecting two passes; defenders score by delaying, winning it, safe tagging, or forcing play out."
+        : "Rules / scoring: attacker scores by dribbling through a gate under control; defender scores by safe tagging or forcing the ball out.",
       isDefendingActivity
-        ? "Coaching cues: close space fast, slow down under control, angle the run, recover goal-side, communicate cover, and win the ball when the touch gets loose."
-        : "Coaching cues: first touch away from pressure, explode on the trigger, keep the ball close, and look up before choosing a gate.",
-      "What to watch for: long lines, the caller camping one gate, collisions, or attackers kicking the ball too far ahead.",
+        ? "Coaching cues: close fast, slow under control, angle the run, recover goal-side, scan before receiving, and win it when the touch gets loose."
+        : "Coaching cues: first touch away from pressure, explode on the trigger, keep it close, scan before receiving, and choose a gate.",
+      "What to watch for: long lines, unsafe spacing, one gate getting crowded, or attackers kicking too far ahead.",
+      "Safety / space adjustment: keep chase lanes clear, rotate the caller every rep, and enlarge the grid if paths cross.",
       isDefendingActivity
-        ? "Progression: make it live 3v3 after the chase, add a counter gate for defenders, or give bonus points for forcing play into help."
-        : "Progression: add a second defender, require a change of direction, or give bonus points for the far gate.",
+        ? "Progression: make it live 3v3 after the chase, add a counter gate, or give bonus points for forcing play into help."
+        : "Progression: add a second defender, require a change of direction, or reward the far gate.",
       isDefendingActivity
-        ? "Regression: widen gates, start with 2v2 plus a coach server, let defenders shadow first, or give the attacker one step of separation."
-        : "Regression: widen gates, let the attacker start one step ahead, rehearse without a ball, or make the defender shadow.",
-      "Safety / space adjustment: keep chases outside the circle, rotate the caller every rep, and enlarge the grid if paths cross.",
+        ? "Regression: widen gates, start 2v2 plus a server, let defenders shadow, or give one step of separation."
+        : "Regression: widen gates, start the attacker one step ahead, rehearse without a ball, or make the defender shadow.",
     ].join(" ")
   );
 }

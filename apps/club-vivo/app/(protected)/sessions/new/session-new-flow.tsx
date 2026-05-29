@@ -7,11 +7,6 @@ import {
   SessionBuilderTopBlock,
   type SessionEnvironmentOption
 } from "../../../../components/coach/SessionBuilderTopBlock";
-import {
-  TrainingBriefDraftReview,
-  type TrainingBriefDraftApplyInput
-} from "../../../../components/coach/TrainingBriefDraftReview";
-import { MatchToMatchPrescriptionDraft } from "./match-to-match-prescription-draft";
 import { ActivityOutput } from "../../../../components/coach/ActivityOutput";
 import { DiagramPlaceholder } from "../../../../components/coach/DiagramPlaceholder";
 import { type SessionBuilderMode } from "../../../../components/coach/ModeSelector";
@@ -20,9 +15,7 @@ import type {
   GeneratedSession,
   ImageAnalysisMode,
   ImageAnalysisResult,
-  SessionPack,
-  TrainingBriefDraftPreview,
-  TrainingBriefDraftPreviewInput
+  SessionPack
 } from "../../../../lib/session-builder-api";
 import { buildBuilderSessionLabelFromSession } from "../../../../lib/builder-session-label";
 
@@ -57,16 +50,8 @@ type GenerateAction = (
   formData: FormData
 ) => Promise<GenerateFormState>;
 
-type AnalyzeAction = (state: AnalyzeFormState, formData: FormData) => Promise<AnalyzeFormState>;
-type TrainingBriefPreviewAction = (
-  input: TrainingBriefDraftPreviewInput
-) => Promise<{
-  trainingBriefDraft?: TrainingBriefDraftPreview;
-  error?: string;
-}>;
 type SaveAction = (state: SaveFormState, formData: FormData) => Promise<SaveFormState>;
 type SaveFormDispatch = (formData: FormData) => void;
-type PlanningPath = "custom" | "training_brief" | "match_to_match";
 type WorkGroupMode = "team" | "age_band";
 
 const FULL_SESSION_DEFAULT_DURATION = "60";
@@ -87,20 +72,6 @@ const DEFAULT_ENVIRONMENT_OPTIONS: SessionEnvironmentOption[] = [
   { value: "indoor_gym_floor", label: "Indoor gym floor" },
   { value: "hardcourt_grid", label: "Cement / hardcourt grid" }
 ];
-
-function AnalyzeButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      className="inline-flex rounded-full border border-transparent bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-      disabled={pending}
-    >
-      {pending ? "Analyzing..." : "Analyze image"}
-    </button>
-  );
-}
 
 function GenerateButton() {
   const { pending } = useFormStatus();
@@ -367,36 +338,28 @@ function CandidateCard({
 }
 
 export function NewSessionFlow({
-  initialAnalyzeState,
   initialGenerateState,
   initialSaveState,
   teamOptions,
   initialEquipmentOptions,
   initialConstraints,
-  analyzeAction,
-  previewTrainingBriefDraftAction,
   generateAction,
   saveAction
 }: {
-  initialAnalyzeState: AnalyzeFormState;
   initialGenerateState: GenerateFormState;
   initialSaveState: SaveFormState;
   teamOptions: WorkspaceTeamOption[];
   initialEquipmentOptions: string[];
   initialConstraints?: string;
-  analyzeAction: AnalyzeAction;
-  previewTrainingBriefDraftAction: TrainingBriefPreviewAction;
   generateAction: GenerateAction;
   saveAction: SaveAction;
 }) {
-  const [analyzeState, analyzeFormAction] = useActionState(analyzeAction, initialAnalyzeState);
   const [generateState, generateFormAction] = useActionState(generateAction, initialGenerateState);
   const [saveState, saveFormAction] = useActionState(saveAction, initialSaveState);
   const [selectedTeamId, setSelectedTeamId] = useState(teamOptions[0]?.id ?? "");
   const [workGroupMode, setWorkGroupMode] = useState<WorkGroupMode>(
     initialGenerateState.values.workGroupMode || (teamOptions.length > 0 ? "team" : "age_band")
   );
-  const [planningPath, setPlanningPath] = useState<PlanningPath>("custom");
   const [workspaceMode, setWorkspaceMode] = useState<SessionBuilderMode>("full_session");
   const [sport, setSport] = useState(initialGenerateState.values.sport);
   const [ageBand, setAgeBand] = useState(initialGenerateState.values.ageBand);
@@ -407,21 +370,8 @@ export function NewSessionFlow({
   const [constraints, setConstraints] = useState(initialConstraints ?? "");
   const [equipment, setEquipment] = useState(initialGenerateState.values.equipment);
   const equipmentOptions = initialEquipmentOptions;
-  const [profileEditorValue, setProfileEditorValue] = useState("");
-  const [confirmedProfileJson, setConfirmedProfileJson] = useState("");
-  const [profileNotice, setProfileNotice] = useState<string>();
   const reviewSectionRef = useRef<HTMLElement | null>(null);
   const lastScrolledPackIdRef = useRef<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (!analyzeState.analysis?.profile) {
-      return;
-    }
-
-    setProfileEditorValue(JSON.stringify(analyzeState.analysis.profile, null, 2));
-    setConfirmedProfileJson("");
-    setProfileNotice("Review and edit the draft profile, then confirm it before generation.");
-  }, [analyzeState.analysis]);
 
   useEffect(() => {
     setSport(generateState.values.sport);
@@ -459,41 +409,9 @@ export function NewSessionFlow({
 
   const minimumDuration = workspaceMode === "quick_drill" ? QUICK_DRILL_MIN_DURATION : FULL_SESSION_MIN_DURATION;
   const maximumDuration = workspaceMode === "quick_drill" ? QUICK_DRILL_MAX_DURATION : FULL_SESSION_MAX_DURATION;
-  const hasDraftProfile = Boolean(analyzeState.analysis?.profile);
   const selectedTeam = teamOptions.find((team) => team.id === selectedTeamId);
   const activeTeam = workGroupMode === "team" ? selectedTeam : undefined;
   const ageBandGroupName = `${ageBand.toUpperCase()} age-band group`;
-
-  function handleProfileEditorChange(nextValue: string) {
-    setProfileEditorValue(nextValue);
-
-    if (confirmedProfileJson) {
-      setConfirmedProfileJson("");
-      setProfileNotice("Profile changed. Confirm again before generating sessions.");
-    }
-  }
-
-  function handleConfirmProfile() {
-    try {
-      const parsed = JSON.parse(profileEditorValue) as Record<string, unknown>;
-      if (!parsed || Array.isArray(parsed) || typeof parsed !== "object") {
-        throw new Error("invalid");
-      }
-
-      const confirmed = {
-        ...parsed,
-        status: "confirmed"
-      };
-      const confirmedJson = JSON.stringify(confirmed);
-
-      setProfileEditorValue(JSON.stringify(confirmed, null, 2));
-      setConfirmedProfileJson(confirmedJson);
-      setProfileNotice("Profile confirmed. Generation will now use the reviewed profile.");
-    } catch {
-      setConfirmedProfileJson("");
-      setProfileNotice("Profile JSON is invalid. Fix it before confirming.");
-    }
-  }
 
   function handleModeChange(mode: SessionBuilderMode) {
     setWorkspaceMode(mode);
@@ -542,263 +460,40 @@ export function NewSessionFlow({
 
   return (
     <div className="mt-8 grid gap-8">
-      <section className="rounded-3xl border border-slate-200 bg-white/70 p-5">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-900">How do you want to start?</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">
-            Start with the everyday coach-led builder, draft from match notes, or open the parked
-            advanced preview for future match-to-match ideas.
-          </p>
-        </div>
-
-        <div className="mt-4 grid gap-3 lg:grid-cols-3">
-          {[
-            {
-              value: "custom" as const,
-              title: "Custom Build",
-              description: "Everyday coach-led full session or drill/activity builder."
-            },
-            {
-              value: "training_brief" as const,
-              title: "Training Brief Draft",
-              description: "Review match notes, then apply the draft to the normal builder."
-            },
-            {
-              value: "match_to_match" as const,
-              title: "Match-to-Match Prescription",
-              description: "Advanced frontend draft preview for future intelligence."
-            }
-          ].map((option) => {
-            const selected = planningPath === option.value;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => setPlanningPath(option.value)}
-                className={[
-                  "rounded-2xl border px-4 py-3 text-left transition",
-                  selected
-                    ? "border-teal-700 bg-teal-50 text-teal-950"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-                ].join(" ")}
-                aria-pressed={selected}
-              >
-                <span className="block text-sm font-semibold">{option.title}</span>
-                <span className="mt-1 block text-xs leading-5 text-slate-500">
-                  {option.description}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {planningPath === "training_brief" ? (
-        <TrainingBriefDraftReview
-          sport={sport}
-          ageBand={ageBand}
-          durationMin={durationMin}
-          equipment={equipment}
-          equipmentOptions={equipmentOptions}
-          selectedTeamName={activeTeam?.label}
-          selectedTeamAgeBand={activeTeam?.ageBand}
-          selectedTeamPlayerCount={activeTeam?.playerCount}
-          previewAction={previewTrainingBriefDraftAction}
-          onApply={(draft: TrainingBriefDraftApplyInput) => {
-            setPlanningPath("custom");
-            setWorkspaceMode(draft.sessionMode);
-            setObjective(draft.objective);
-            setConstraints(draft.constraints);
-            setDurationMin(draft.durationMin);
-            setEquipment(draft.equipment);
-            setAgeBand(draft.ageBand);
-          }}
-        />
-      ) : planningPath === "match_to_match" ? (
-        <MatchToMatchPrescriptionDraft
-          teams={teamOptions}
-          selectedTeamId={selectedTeamId}
-          onTeamChange={handleTeamChange}
-          environment={environment}
-          environmentOptions={environmentOptions}
-          onEnvironmentChange={setEnvironment}
-          onUseOption={({
-            objective: nextObjective,
-            constraints: nextConstraints,
-            environment: nextEnvironment,
-            durationMin: nextDurationMin,
-            mode: nextMode
-          }) => {
-            setPlanningPath("custom");
-            setWorkspaceMode(nextMode);
-            setObjective(nextObjective);
-            setConstraints(nextConstraints);
-            setEnvironment(nextEnvironment);
-            setDurationMin(nextDurationMin);
-          }}
-        />
-      ) : (
-        <>
-          <SessionBuilderTopBlock
-            formAction={generateFormAction}
-            confirmedProfileJson={confirmedProfileJson}
-            error={generateState.error}
-            teams={teamOptions}
-            selectedTeamId={selectedTeamId}
-            onTeamChange={handleTeamChange}
-            workGroupMode={workGroupMode}
-            onWorkGroupModeChange={handleWorkGroupModeChange}
-            mode={workspaceMode}
-            onModeChange={handleModeChange}
-            sport={sport}
-            ageBand={ageBand}
-            onAgeBandChange={setAgeBand}
-            durationMin={durationMin}
-            onDurationMinChange={setDurationMin}
-            minimumDuration={minimumDuration}
-            maximumDuration={maximumDuration}
-            environment={environment}
-            environmentOptions={environmentOptions}
-            onEnvironmentChange={setEnvironment}
-            objective={objective}
-            onObjectiveChange={setObjective}
-            constraints={constraints}
-            onConstraintsChange={setConstraints}
-            equipment={equipment}
-            onEquipmentChange={setEquipment}
-            equipmentOptions={equipmentOptions}
-            selectedTeamName={activeTeam?.label || ""}
-            selectedTeamAgeBand={activeTeam?.ageBand}
-            selectedTeamProgramType={activeTeam?.programType}
-            selectedTeamPlayerCount={activeTeam?.playerCount}
-            actions={<GenerateButton />}
-          />
-
-          <details className="rounded-3xl border border-slate-200 bg-white/70 p-6">
-        <summary className="cursor-pointer list-none">
-          <span className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <span className="block">
-              <h2 className="text-lg font-semibold text-slate-900">Image-assisted intake</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Optional support for coaches who want extra help from one field image.
-              </p>
-            </span>
-
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium uppercase tracking-wide text-slate-600">
-              Secondary
-            </span>
-          </span>
-        </summary>
-
-        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <div className="grid gap-6">
-            <form
-              action={analyzeFormAction}
-              className="rounded-3xl border border-slate-200 bg-slate-50/70 p-6"
-            >
-              <h2 className="text-lg font-semibold text-slate-900">Analyze one image</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Upload one image to draft an intake profile, then review it before using it in the
-                main builder.
-              </p>
-
-              <div className="mt-6 grid gap-4">
-                <label className="grid gap-2 text-sm text-slate-700">
-                  <span className="font-medium">Mode</span>
-                  <select
-                    name="mode"
-                    defaultValue={analyzeState.values.mode}
-                    className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
-                    required
-                  >
-                    <option value="environment_profile">Environment profile</option>
-                    <option value="setup_to_drill">Setup to drill</option>
-                  </select>
-                  <span className="text-xs leading-5 text-slate-500">
-                    Environment profile reads the space. Setup to drill drafts a starting drill
-                    idea from the image.
-                  </span>
-                </label>
-
-                <label className="grid gap-2 text-sm text-slate-700">
-                  <span className="font-medium">Image</span>
-                  <input
-                    name="sourceImage"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-teal-700"
-                    required
-                  />
-                  <span className="text-xs leading-5 text-slate-500">
-                    Upload one JPG, PNG, or WebP image per analysis request.
-                  </span>
-                </label>
-              </div>
-
-              {analyzeState.error ? (
-                <p className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  {analyzeState.error}
-                </p>
-              ) : null}
-
-              <div className="mt-6">
-                <AnalyzeButton />
-              </div>
-            </form>
-          </div>
-
-          <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-6">
-            <h2 className="text-lg font-semibold text-slate-900">Draft image profile</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Confirm the reviewed profile only when you want the main builder to use it.
-            </p>
-
-            {hasDraftProfile ? (
-              <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50/70 p-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <h3 className="text-base font-semibold text-slate-900">Draft image profile</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Edit the draft JSON if needed. The builder only uses it after you confirm it.
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleConfirmProfile}
-                    className="inline-flex rounded-full border border-transparent bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-800"
-                  >
-                    Confirm profile
-                  </button>
-                </div>
-
-                <textarea
-                  value={profileEditorValue}
-                  onChange={(event) => handleProfileEditorChange(event.target.value)}
-                  className="mt-4 min-h-80 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-mono text-sm leading-6 text-slate-800 outline-none transition focus:border-teal-700"
-                  spellCheck={false}
-                />
-
-                {profileNotice ? (
-                  <p className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
-                    {profileNotice}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
-
-            {!hasDraftProfile ? (
-              <div className="mt-6 rounded-3xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center">
-                <h3 className="text-base font-semibold text-slate-900">No analyzed profile yet</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  Use image intake only when you want extra environment or setup guidance.
-                </p>
-              </div>
-            ) : null}
-          </section>
-        </div>
-      </details>
+      <SessionBuilderTopBlock
+        formAction={generateFormAction}
+        confirmedProfileJson=""
+        error={generateState.error}
+        teams={teamOptions}
+        selectedTeamId={selectedTeamId}
+        onTeamChange={handleTeamChange}
+        workGroupMode={workGroupMode}
+        onWorkGroupModeChange={handleWorkGroupModeChange}
+        mode={workspaceMode}
+        onModeChange={handleModeChange}
+        sport={sport}
+        ageBand={ageBand}
+        onAgeBandChange={setAgeBand}
+        durationMin={durationMin}
+        onDurationMinChange={setDurationMin}
+        minimumDuration={minimumDuration}
+        maximumDuration={maximumDuration}
+        environment={environment}
+        environmentOptions={environmentOptions}
+        onEnvironmentChange={setEnvironment}
+        objective={objective}
+        onObjectiveChange={setObjective}
+        constraints={constraints}
+        onConstraintsChange={setConstraints}
+        equipment={equipment}
+        onEquipmentChange={setEquipment}
+        equipmentOptions={equipmentOptions}
+        selectedTeamName={activeTeam?.label || ""}
+        selectedTeamAgeBand={activeTeam?.ageBand}
+        selectedTeamProgramType={activeTeam?.programType}
+        selectedTeamPlayerCount={activeTeam?.playerCount}
+        actions={<GenerateButton />}
+      />
 
       <section ref={reviewSectionRef} className="rounded-3xl border border-slate-200 bg-white/70 p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -843,8 +538,6 @@ export function NewSessionFlow({
           </div>
         )}
       </section>
-        </>
-      )}
     </div>
   );
 }

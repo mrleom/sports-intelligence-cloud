@@ -10,16 +10,18 @@
 SIC’s intro product is the **Session Builder**, a coach-facing generation surface that converts a coach’s **environment + constraints** into a **ready-to-run session pack** (and optionally a PDF).
 Even though it may feel like “a unique tool per organization,” SIC should implement **one shared coach-facing platform capability** with **tenant-scoped configuration + tenant-scoped knowledge**, so every organization experiences the right workflow without separate deployments.
 
-Week 21 keeps Session Builder as the active wedge, but hardens the product direction toward a more complete **Coach Workspace** shape:
+The current active frontend product is **Coach Workspace**. Session Builder remains the active planning wedge inside that coach-facing workspace, while **Club Workspace** is parked/future and should not be presented as an active frontend surface.
 
-- first-time coach setup
-- returning-coach fast entry into session creation
+The active Coach Workspace shape is:
+
+- Home as an About/orientation page, not a dashboard
 - team-level program context
 - team-level methodology defaults
 - Custom Build as the everyday coach-led path
 - Full Session and Drill / Activity modes inside Custom Build
-- bounded Training Brief -> Diagrams -> Coach Feedback direction as proposed future workflow
-- coach-admin governance direction
+- saved sessions and feedback foundations
+- Teams, Equipment, and Methodology as supporting coach workspace areas
+- Training Brief Draft, Match-to-Match Prescription, and image-assisted intake as parked/future frontend lanes
 
 **Wedge message:**
 > “Tell us what you have today (players, space, cones, balls, time, goal). We’ll design a session you can run now.”
@@ -44,15 +46,20 @@ Week 21 keeps Session Builder as the active wedge, but hardens the product direc
 
 Current runtime shape:
 
+- **Coach Workspace** is the current active frontend product.
+- **Club Workspace** is parked/future and should not be shown as an active frontend offer.
+- **Home** is an About/orientation page for the coach workspace, not a dashboard.
 - **Custom Build** is the everyday coach-led builder.
 - Custom Build includes **Full Session** and **Drill / Activity** modes.
 - Full Session supports 45-120 minutes.
 - Drill / Activity supports 15-25 minutes.
-- **Quick Activity** remains the separate fast activity lane.
+- **Quick Activity** no longer lives as a separate Home feature; the active short-form path is Session Builder **Drill / Activity** mode with the coaching note / activity idea field.
 - Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
-- **Training Brief** is a proposed bridge object from evidence and coach observations into Session Builder objectives and activity direction.
+- **Training Brief Draft** backend foundations may remain for future reuse, but the frontend lane is parked.
+- **Image-analysis** backend foundations may remain for future reuse, but image-assisted intake is parked as a frontend lane.
 - **DiagramSequence** is proposed architecture for structured diagram intent and future animation data.
-- **Match-to-Match Prescription** is parked for later and outside the near-term agentic path.
+- **Match-to-Match Prescription** is parked/future frontend direction only; there is no active Match-to-Match runtime behavior.
+- **Session Feedback** remains a foundation for future learning-loop interpretation; this is not model training, autonomous-agent behavior, dashboards, or analytics.
 
 ---
 
@@ -198,12 +205,12 @@ Current repo grounding:
 
 This should happen inside the existing shared app and shared tenant-safe product path.
 
-### Future Tenant Knowledge (Parked RAG Direction)
+### Future Tenant Knowledge (Parked)
 - club playbook, philosophy, drill library
 - field availability and facility constraints
 - equipment inventory defaults
 
-This is future direction only. Broad RAG, FAISS/vector search, and tenant knowledge retrieval are not active shipped Session Builder runtime behavior unless implementation later proves otherwise. Any future retrieval must remain stored/queryable **within tenant boundary**.
+This is future direction only. RAG, FAISS/vector search, and tenant knowledge retrieval are not active shipped Session Builder runtime behavior. Any future retrieval would need a separate product decision and must remain stored/queryable **within tenant boundary**.
 
 ---
 
@@ -254,7 +261,7 @@ This is future direction only. Broad RAG, FAISS/vector search, and tenant knowle
 - **Clubs/Teams/Membership (RBAC)**
   - Determines permissions and personalization scope
   - “Who can save for a team?” etc.
-- **Future Knowledge Service (RAG)**
+- **Future Knowledge Service (parked)**
   - Tenant-scoped retrieval of docs/snippets
   - Enforces per-tenant knowledge boundaries
 - **Entitlements / Tenant Context**
@@ -370,15 +377,18 @@ It is the adoption surface that makes SIC valuable immediately while building th
 
 Week 21 keeps that foundation intact while moving the product direction from narrow Session Builder toward a more realistic Coach Workspace:
 
-- first-time setup once
-- faster returning-coach entry
+- Coach Workspace as the current active frontend product
+- Home as About/orientation rather than a dashboard
 - team-aware generation context
 - methodology-aware defaults
 - Custom Build with Full Session and Drill / Activity modes
-- Training Brief as a proposed bridge object into objectives and activities
+- Quick Activity folded into Drill / Activity mode and coaching notes / activity idea
+- Training Brief Draft parked as a frontend lane while backend foundations remain reusable
+- image-assisted intake parked as a frontend lane while backend foundations remain reusable
 - structured diagram intent / DiagramSequence as the proposed diagram path
 - Coach Feedback as the future learning-loop signal
-- Match-to-Match Prescription parked for later
+- Match-to-Match Prescription parked for later with no active runtime behavior
+- Club Workspace parked/future
 - coach-admin governance direction
 
 ---

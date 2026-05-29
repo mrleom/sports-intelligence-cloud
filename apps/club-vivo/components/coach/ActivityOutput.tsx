@@ -39,6 +39,7 @@ const SECTION_LABELS = [
   "Safety / space adjustment",
   "Numbers",
   "Coach notes",
+  "Note",
   "Challenge"
 ];
 
@@ -91,6 +92,7 @@ function removeControlFragments(value: string) {
         normalized.startsWith("mode ") ||
         normalized.startsWith("notes ") ||
         normalized.startsWith("originalteamageband ") ||
+        normalized.startsWith("apiageband ") ||
         normalized.startsWith("programtype ") ||
         normalized.startsWith("coachingstyle ") ||
         normalized.startsWith("mixedage ") ||
@@ -105,7 +107,7 @@ function sanitizeCoachFacingText(value: string) {
     .replace(/\b(?:team|env|environment context|team context|format|mode|notes)\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\bPrimary session objective\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\bCoach brainstorming and extra details for today\s*:\s*[^.;|]+[.;]?/gi, " ")
-    .replace(/\boriginalTeamAgeBand\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\b(?:originalTeamAgeBand|apiAgeBand)\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\b(?:programType|coachingStyle|mixedAge|assumedAgeRange)\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -184,7 +186,7 @@ function buildActivitySections(
         text: sanitizeCoachFacingText(section.text)
       }))
       .filter((section) => section.text)
-      .filter((section) => normalizeComparisonText(section.label) !== "coach notes")
+      .filter((section) => !["coach notes", "note"].includes(normalizeComparisonText(section.label)))
       .filter(
         (section) => !sentenceRepeatsObjective(`${section.label}: ${section.text}`, objective, objectiveTags)
       );

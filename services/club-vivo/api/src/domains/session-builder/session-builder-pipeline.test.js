@@ -1076,7 +1076,8 @@ test("quick activity prompt with under 12 age wording creates one U12 activity",
   assert.match(description, /What to watch for:/);
   assert.match(description, /Progression:/);
   assert.match(description, /Regression:/);
-  assert.match(description, /duck, duck, goose|duck duck goose/i);
+  assert.doesNotMatch(description, /duck, duck, goose|duck duck goose/i);
+  assert.match(description, /trigger|reaction|first touch|escape gate/i);
 });
 
 test("processSessionImageAnalysisRequest stores one tenant-scoped image and returns a draft profile", async () => {

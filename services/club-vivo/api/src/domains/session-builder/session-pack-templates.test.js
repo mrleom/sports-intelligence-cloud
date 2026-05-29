@@ -361,7 +361,7 @@ test("generatePack carries OST mixed-age playful context into activity text", ()
     theme: "attacking gates",
     sessionMode: "drill",
     coachNotes:
-      "originalTeamAgeBand:Mixed age | mixedAge:true | assumedAgeRange:6-11 | programType:OST | coachingStyle:playful beginner-friendly inclusive simple rules easy/harder variations",
+      "team:Blue | originalTeamAgeBand:Mixed age | apiAgeBand:u10 | mixedAge:true | assumedAgeRange:6-11 | programType:OST | coachingStyle:playful beginner-friendly inclusive simple rules easy/harder variations",
     sessionsCount: 1,
     equipment: ["cones", "balls"],
   });
@@ -369,8 +369,8 @@ test("generatePack carries OST mixed-age playful context into activity text", ()
   const description = pack.sessions[0].activities[0].description;
 
   assert.equal(pack.sessions[0].ageBand, "u10");
-  assert.match(description, /programType:OST/);
-  assert.match(description, /playful beginner-friendly inclusive/i);
+  assert.doesNotMatch(description, /team:|originalTeamAgeBand|apiAgeBand|mixedAge|assumedAgeRange|programType|coachingStyle/i);
+  assert.match(description, /playful competition|inclusive restarts|simple/i);
   assert.match(description, /Progress:/);
   assert.match(description, /Regress:/);
 });
@@ -391,8 +391,8 @@ test("generatePack carries Travel U10 context into activity text", () => {
   const description = pack.sessions[0].activities[0].description;
 
   assert.equal(pack.sessions[0].ageBand, "u10");
-  assert.match(description, /programType:Travel/);
-  assert.match(description, /technical tactical decision-making/i);
+  assert.doesNotMatch(description, /originalTeamAgeBand|programType|coachingStyle/i);
+  assert.match(description, /trigger|tempo|support angle|transition/i);
 });
 
 test("generatePack treats quick_activity theme format as one activity for legacy callers", () => {
@@ -1001,13 +1001,14 @@ test("generatePack preserves meaningful coach notes instead of tiny truncation",
 
   const description = pack.sessions[0].activities[0].description;
 
-  assert.match(description, /duck, duck, goose|duck duck goose/i);
-  assert.match(description, /first-touch escape|first touch escape|first touch into space/i);
+  assert.doesNotMatch(description, /duck, duck, goose|duck duck goose/i);
+  assert.match(description, /first touch|first-touch|first touch into space/i);
+  assert.match(description, /reaction|trigger|escape/i);
   assert.equal(/give me a drill sim\./i.test(description), false);
 });
 
 function assertDuckDuckGooseSoccerActivity(activity) {
-  assert.match(activity.name, /duck duck goose escape gates/i);
+  assert.match(activity.name, /reaction chase escape gates/i);
   assert.match(activity.description, /Setup:/);
   assert.match(activity.description, /How to start:/);
   assert.match(activity.description, /How to run it:/);
@@ -1017,7 +1018,8 @@ function assertDuckDuckGooseSoccerActivity(activity) {
   assert.match(activity.description, /Progression:/);
   assert.match(activity.description, /Regression:/);
   assert.match(activity.description, /Safety \/ space adjustment:/);
-  assert.match(activity.description, /duck, duck, goose/i);
+  assert.doesNotMatch(activity.description, /duck, duck, goose|duck duck goose/i);
+  assert.match(activity.description, /trigger|reaction/i);
   assert.match(activity.description, /first touch/i);
   assert.match(activity.description, /chases? as a defender|defender chases/i);
   assert.match(activity.description, /cone gates?|gate/i);
@@ -1060,7 +1062,7 @@ test("generatePack gives full-session duck-duck-goose brainstorm one related soc
 
   const [session] = pack.sessions;
   const relatedActivities = session.activities.filter((activity) =>
-    /duck duck goose escape gates|How to start:.*duck, duck, goose|How to run it:.*chases? as a defender/i.test(
+    /reaction chase escape gates|How to start:.*trigger|How to run it:.*chases? as a defender/i.test(
       `${activity.name} ${activity.description}`
     )
   );
@@ -1138,11 +1140,12 @@ test("generatePack combines quick 3v3 defending and duck-duck-goose into one str
   const [activity] = session.activities;
 
   assert.equal(session.activities.length, 1);
-  assert.equal(activity.name, "3v3 Duck Duck Goose Defending Gates");
+  assert.equal(activity.name, "3v3 Reaction Chase Defending Gates");
   assert.equal(session.objectiveTags.includes("3v3"), true);
   assert.equal(session.objectiveTags.includes("defending"), true);
   assert.equal(session.objectiveTags.includes("reaction"), true);
-  assert.match(activity.description, /duck, duck, goose/i);
+  assert.doesNotMatch(activity.description, /duck, duck, goose|duck duck goose/i);
+  assert.match(activity.description, /trigger|reaction/i);
   assert.match(activity.description, /3v3/i);
   assert.match(activity.description, /defenders score by delaying|defender/i);
   assert.match(activity.description, /pressure|delay|angle|recover|win the ball/i);
@@ -1173,7 +1176,7 @@ test("generatePack distributes full-session multi-intent defending chase ideas a
     "Defending Gates Tournament",
   ]);
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
-  assert.match(descriptions[0], /duck, duck, goose|chase/i);
+  assert.match(descriptions[0], /trigger|reaction|chase/i);
   assert.match(descriptions[1], /3v3|pressure|cover|gate/i);
   assert.match(descriptions[2], /recover|delay|transition|opposite gate/i);
   assert.match(descriptions[3], /real Defending Gates Tournament|competitive|Run:/i);
