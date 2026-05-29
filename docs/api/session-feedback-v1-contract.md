@@ -64,6 +64,7 @@ Allowed body fields only:
 - `sessionQuality` required integer
 - `drillUsefulness` required integer
 - `imageAnalysisAccuracy` required string enum
+- `favoriteActivity` optional string
 - `missingFeatures` required string
 - `flowMode` optional string enum
 
@@ -76,6 +77,7 @@ Unknown fields are rejected.
   "sessionQuality": 4,
   "drillUsefulness": 5,
   "imageAnalysisAccuracy": "high",
+  "favoriteActivity": "Activity 2 because the scoring rule made players compete.",
   "missingFeatures": "Wanted easier drill editing.",
   "flowMode": "setup_to_drill"
 }
@@ -92,6 +94,7 @@ Unknown fields are rejected.
   - `low`
   - `medium`
   - `high`
+- `favoriteActivity`, when present, must be a string, is trimmed, is optional, and must be `1..280` chars after trim
 - `missingFeatures` must be a string, is trimmed, and must be `1..280` chars after trim
 - `flowMode` when present must be one of:
   - `session_builder`
@@ -119,6 +122,7 @@ Unknown fields are rejected.
     "sessionQuality": 4,
     "drillUsefulness": 5,
     "imageAnalysisAccuracy": "high",
+    "favoriteActivity": "Activity 2 because the scoring rule made players compete.",
     "missingFeatures": "Wanted easier drill editing.",
     "flowMode": "setup_to_drill",
     "schemaVersion": 2

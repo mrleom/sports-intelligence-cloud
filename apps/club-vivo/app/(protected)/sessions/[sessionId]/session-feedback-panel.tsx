@@ -46,10 +46,12 @@ function SubmitButton() {
 
 export function SessionFeedbackPanel({
   initialState,
-  submitAction
+  submitAction,
+  activityOptions
 }: {
   initialState: FeedbackPanelState;
   submitAction: FeedbackPanelAction;
+  activityOptions: string[];
 }) {
   const [state, formAction] = useActionState(submitAction, initialState);
   const isLocked = state.status === "success" || state.status === "already-submitted";
@@ -58,7 +60,11 @@ export function SessionFeedbackPanel({
     <article className="mt-8 rounded-3xl border border-slate-200 bg-white/70 p-5">
       <h2 className="text-lg font-semibold text-slate-900">Coach feedback after field test</h2>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-        Run the session with your team first, then capture what worked, what missed, and what would make the next generated plan stronger.
+        Run the session with your team first, then record one field-test note for what worked,
+        what needs adjustment, and what should shape future session generation.
+      </p>
+      <p className="mt-2 text-xs leading-5 text-slate-500">
+        One feedback submission is saved per session.
       </p>
 
       {isLocked ? (
@@ -104,31 +110,41 @@ export function SessionFeedbackPanel({
           </div>
 
           <input type="hidden" name="imageAnalysisAccuracy" value="not_used" />
-          <input type="hidden" name="flowMode" value="" />
+          <input type="hidden" name="flowMode" value={state.values.flowMode} />
 
           <label className="grid gap-2 text-sm text-slate-700">
-            <span className="font-medium">Favorite activity from this session</span>
-            <textarea
+            <span className="font-medium">Most useful activity</span>
+            <select
               name="favoriteActivity"
               defaultValue={state.values.favoriteActivity}
-              maxLength={280}
-              rows={3}
-              placeholder="Example: Activity 2 because the scoring rule created better decisions under pressure."
               className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
-            />
+            >
+              <option value="">Choose activity</option>
+              {activityOptions.map((activity) => (
+                <option key={activity} value={activity}>
+                  {activity}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs leading-5 text-slate-500">
+              Pick the activity that produced the clearest learning or competition.
+            </span>
           </label>
 
           <label className="grid gap-2 text-sm text-slate-700">
-            <span className="font-medium">What was missing or confusing?</span>
+            <span className="font-medium">What should improve in the next generated plan?</span>
             <textarea
               name="missingFeatures"
               defaultValue={state.values.missingFeatures}
               maxLength={280}
               rows={4}
-              placeholder="Example: Needed clearer setup spacing, player counts, or an easier regression."
+              placeholder="Example: Activity 2 worked, but the next plan needs clearer setup spacing and an easier regression."
               className="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-700"
               required
             />
+            <span className="text-xs leading-5 text-slate-500">
+              Mention missing setup detail, confusing wording, activity fit, progressions, regressions, or what should be repeated.
+            </span>
           </label>
 
           {state.status === "error" && state.message ? (
