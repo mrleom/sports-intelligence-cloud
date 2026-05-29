@@ -178,7 +178,9 @@ Validation completed during this milestone:
 
 ## Next Best Slice
 
-The next best slice is to wire the Training Brief Draft UI to the backend `POST /session-packs` preview mode.
+Level 3 backend-confirmed Training Brief Preview is now complete. The Training Brief Draft UI is wired to the backend `POST /session-packs` preview mode, and the preview returns sanitized coach-review fields plus clean Session Builder handoff fields.
+
+The next best slice is to improve generated session quality from reviewed Training Brief handoff fields.
 
 Constraints for that slice:
 
@@ -191,8 +193,7 @@ Constraints for that slice:
 
 After that, the maturity order should remain:
 
-1. improve generated session quality from reviewed Training Brief handoff fields
-2. improve feedback UI and connect feedback signals to future learning-loop design
-3. add validated DiagramSequence runtime rendering
-4. add Bedrock-assisted generation only with validation, logging, cost guardrails, and failure handling
-5. add RAG/vector search only after curated soccer knowledge exists and a tenant-safe retrieval contract is justified
+1. improve feedback UI and connect feedback signals to future learning-loop design
+2. add validated DiagramSequence runtime rendering
+3. add Bedrock-assisted generation only with validation, logging, cost guardrails, and failure handling
+4. add RAG/vector search only after curated soccer knowledge exists and a tenant-safe retrieval contract is justified

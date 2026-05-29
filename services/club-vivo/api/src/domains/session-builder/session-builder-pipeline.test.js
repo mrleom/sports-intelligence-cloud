@@ -557,6 +557,80 @@ test("processTrainingBriefSessionPackRequest passes only clean Session Builder f
   assert.equal(Object.hasOwn(result.sessionPackResult.normalizedInput, "activityRecommendations"), false);
 });
 
+test("processTrainingBriefSessionPackRequest routes defensive transition handoff into compact recovery activities", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMinutes: 60,
+    playerCount: 14,
+    evidenceSummary:
+      "The team loses compactness after possession loss and allows central counterattacks.",
+    nextGameObjective:
+      "Improve defensive transition after losing possession and recover compact central shape.",
+    coachNotes: "Use cones and bibs. Keep the recovery compact after turnovers.",
+    availableEquipment: ["balls", "cones", "bibs"],
+  });
+
+  const [session] = result.sessionPackResult.validatedPack.sessions;
+  const names = session.activities.map((activity) => activity.name);
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(result.sessionPackResult.normalizedInput.theme, "Improve defensive transition after losing possession and rec");
+  assert.deepEqual(names, [
+    "Dynamic warmup + ball mastery",
+    "Compact Recovery Transition Game",
+    "Recover And Protect Central Spaces",
+    "Compact Recovery Final Game",
+  ]);
+  assert.match(text, /after losing possession|react on loss|nearest player presses/i);
+  assert.match(text, /protect central space|central lane|compact recovery/i);
+  assert.match(text, /cones|bibs/i);
+  assert.doesNotMatch(text, /wide player or support run before the bonus point counts/i);
+  assert.equal(hasKeyDeep(result.sessionPackResult.validatedPack, "tenantId"), false);
+});
+
+test("processTrainingBriefSessionPackRequest adapts finishing objectives to gates when goals are unavailable", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u12",
+    durationMinutes: 60,
+    evidenceSummary: "The group created chances but had no goals available at training.",
+    nextGameObjective: "Improve finishing through attacking gates when no goals are available.",
+    coachNotes: "Use gate scoring and quick rebounds.",
+    availableEquipment: ["balls", "cones", "bibs"],
+  });
+
+  const [session] = result.sessionPackResult.validatedPack.sessions;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.deepEqual(session.equipment, ["balls", "cones", "bibs"]);
+  assert.match(text, /cone gates/i);
+  assert.match(text, /finishing lane|first-time finishes|rebounds?/i);
+  assert.doesNotMatch(text, /full-size goals?|pugg goals|mini goals/i);
+});
+
+test("processTrainingBriefSessionPackRequest routes build-out under pressure handoff into soccer-specific activity language", async () => {
+  const result = await processTrainingBriefSessionPackRequest({
+    sport: "soccer",
+    ageBand: "u14",
+    durationMinutes: 60,
+    evidenceSummary: "The back line struggled to build out when pressed.",
+    nextGameObjective: "Build out under pressure with better support angles.",
+    coachNotes: "Use a goalkeeper/server and midfield target gates.",
+    availableEquipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [session] = result.sessionPackResult.validatedPack.sessions;
+  const [, activity2, activity3, activity4] = session.activities;
+  const text = session.activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
+
+  assert.equal(activity2.name, "Build-Out Support Angles");
+  assert.equal(activity3.name, "Build-Out Under Pressure Game");
+  assert.equal(activity4.name, "Build-Out Pressure Final Game");
+  assert.match(text, /goalkeeper or server|support angles|midfield target|first pressing line/i);
+  assert.match(text, /playing away from pressure|calm first pass/i);
+});
+
 test("processTrainingBriefSessionPackRequest does not persist or require public route state", async () => {
   const result = await processTrainingBriefSessionPackRequest({
     sport: "soccer",

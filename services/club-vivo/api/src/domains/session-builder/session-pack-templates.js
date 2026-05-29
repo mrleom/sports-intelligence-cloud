@@ -588,7 +588,8 @@ function isDefending1v1Text(text) {
 function isPossessionUnderPressureText(text) {
   return (
     text.includes("possession under pressure") ||
-    (text.includes("possession") && text.includes("play through pressure"))
+    (text.includes("possession") && text.includes("play through pressure")) ||
+    isBuildOutUnderPressureText(text)
   );
 }
 
@@ -603,14 +604,95 @@ function isFirstTouchReceivingText(text) {
 function isRecoveryRunText(text) {
   return (
     text.includes("recover quickly") ||
+    text.includes("compact recovery") ||
     text.includes("recovery run") ||
     text.includes("recovery runs")
+  );
+}
+
+function isDefensiveTransitionText(text) {
+  const hasTransitionMoment =
+    text.includes("defensive transition") ||
+    text.includes("after losing possession") ||
+    text.includes("after possession loss") ||
+    text.includes("loss of possession") ||
+    text.includes("lost possession") ||
+    text.includes("after turnovers") ||
+    text.includes("after turnover") ||
+    text.includes("when the ball is lost");
+  const hasDefensiveResponse =
+    text.includes("compact") ||
+    text.includes("recover") ||
+    text.includes("press") ||
+    text.includes("counterpress") ||
+    text.includes("counter press") ||
+    text.includes("protect central") ||
+    text.includes("central space");
+
+  return hasTransitionMoment && hasDefensiveResponse;
+}
+
+function isPressingText(text) {
+  return (
+    text.includes("pressing") ||
+    text.includes("press trigger") ||
+    text.includes("press as a unit") ||
+    text.includes("counterpress") ||
+    text.includes("counter press")
+  );
+}
+
+function isBuildOutUnderPressureText(text) {
+  return (
+    /\bbuild[- ]?(?:out|up)\s+(?:\w+\s+){0,3}under pressure\b/.test(text) ||
+    /\b(?:play|playing) out\s+(?:\w+\s+){0,3}under pressure\b/.test(text) ||
+    /\bunder pressure\s+(?:\w+\s+){0,3}build[- ]?(?:out|up)\b/.test(text)
   );
 }
 
 function getThemeSpecificLanguage(promptSignals, phase) {
   const text = getPromptSignalText(promptSignals);
   const isSingleActivity = phase === "single";
+
+  if (isDefensiveTransitionText(text)) {
+    return {
+      setup:
+        phase === "progression"
+          ? "build a directional transition field with a possession zone, a counter gate, a recovery line, and two compact central gates to protect"
+          : "use a compact central grid with two counter gates, a coach server, and recovery lines so players can react immediately after losing the ball",
+      run:
+        phase === "progression"
+          ? "start with a possession action, call turnover, then demand the nearest player presses while teammates recover inside to protect the central lane"
+          : "play short possession rounds, trigger a live turnover, and coach the first three seconds: press the ball, recover inside, communicate, and delay the counter",
+      scoring:
+        "possession team scores by connecting passes before the turnover; defending team scores by forcing the counter wide, delaying for five seconds, or winning it back through compact recovery",
+      cues: "react on loss, nearest player presses, second player covers, recover goal-side, protect central space, and win it when support arrives",
+      watch:
+        "players dropping straight back without pressure, wide gaps between defenders, slow recovery runs, or the counter pass splitting the group centrally",
+      progress: "shorten the recovery time, add a second counter runner, or require the regain team to find the first forward pass",
+      regress: "start with a coach-called turnover, widen the recovery lane, or let defenders freeze once to see the compact shape",
+    };
+  }
+
+  if (isPressingText(text)) {
+    return {
+      setup:
+        phase === "progression"
+          ? "create a directional pressing field with a build-out team, a pressing team, target gates, and a counter gate after the regain"
+          : "use a 20x18 yard field with a build-out line, two wide escape gates, one central target, and restart balls beside the coach",
+      run:
+        phase === "progression"
+          ? "let the build-out team try to play through pressure, then reward the pressing team for regaining and countering within six seconds"
+          : "start each round from the build-out line and press on a bad touch, back pass, square pass, or sideline trap",
+      scoring:
+        "pressing team scores by winning the ball or forcing play through a trap gate; build-out team scores by escaping pressure through a target gate",
+      cues: "press together, curve the first run, cover the next pass, lock the sideline, communicate the trigger, and counter quickly after the regain",
+      watch:
+        "one player pressing alone, straight pressing runs, gaps behind the first defender, or slow reactions after the ball is won",
+      progress: "limit build-out touches, shrink the field, or add a six-second counter target after the regain",
+      regress: "make the field wider, start 3v2 for the pressing team, or rehearse the trigger before going live",
+    };
+  }
 
   if (text.includes("overload")) {
     return {
@@ -668,22 +750,40 @@ function getThemeSpecificLanguage(promptSignals, phase) {
   }
 
   if (isPossessionUnderPressureText(text)) {
+    const buildOut = isBuildOutUnderPressureText(text);
+
     return {
       setup:
         phase === "progression"
-          ? "build a directional possession field with two target zones, touchline outlets, and mini goals for the counter"
-          : "start with a rondo grid that has clear support angles, pressing defenders, and an escape target",
+          ? buildOut
+            ? "build a half-field build-out channel with a goalkeeper or server, two defenders, midfield targets, pressing forwards, and counter gates"
+            : "build a directional possession field with two target zones, touchline outlets, and mini goals for the counter"
+          : buildOut
+            ? "start with a build-out grid from a goalkeeper or server, two support angles, pressing defenders, and a midfield target gate"
+            : "start with a rondo grid that has clear support angles, pressing defenders, and an escape target",
       run:
         phase === "progression"
-          ? "play directional possession toward target zones, then let defenders counter to mini goals immediately after a regain"
-          : "keep the ball under active pressure, receive with support angles, score for split passes or escape passes, and rotate defenders quickly",
+          ? buildOut
+            ? "play out from the back under active pressure, find the midfield target, then react immediately if the pressing team regains"
+            : "play directional possession toward target zones, then let defenders counter to mini goals immediately after a regain"
+          : buildOut
+            ? "serve from the back line, open support angles, scan before receiving, and play through or around the first pressing line"
+            : "keep the ball under active pressure, receive with support angles, score for split passes or escape passes, and rotate defenders quickly",
       scoring:
         phase === "progression"
-          ? "possession team scores by connecting to a target zone; defenders score by winning it and countering to mini goals"
-          : "score for five passes, a split pass, or an escape pass out of pressure",
-      cues: "scan early, receive under pressure, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
+          ? buildOut
+            ? "build-out team scores by finding the midfield target; pressing team scores by winning it and countering through a gate"
+            : "possession team scores by connecting to a target zone; defenders score by winning it and countering to mini goals"
+          : buildOut
+            ? "score by breaking the first pressing line through a target gate or third-player pass"
+            : "score for five passes, a split pass, or an escape pass out of pressure",
+      cues: buildOut
+        ? "scan early, split wide, create a clear support angle, receive side-on, play away from pressure, and be ready for the next pass"
+        : "scan early, receive under pressure, open the passing lane, support at angles, move after passing, and play away from the pressing defender",
       watch:
-        "players hiding behind defenders, flat support, slow ball speed, or the first pass after pressure going into trouble",
+        buildOut
+          ? "defenders hiding on the same line, slow goalkeeper/server decisions, square support, or the first pass inviting pressure"
+          : "players hiding behind defenders, flat support, slow ball speed, or the first pass after pressure going into trouble",
       progress: "reduce touch count, add a pressing trigger, or require a forward target pass after the escape",
       regress: "add a neutral player, increase the grid, or let the possession team restart after three passes",
     };
@@ -852,7 +952,7 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   const scoringTargets = getScoringTargets(promptSignals?.equipment);
   const style = getProgramStyle(promptSignals);
   const themeLanguage = phase === "arrival" ? null : getThemeSpecificLanguage(promptSignals, phase);
-  const noteText = coachNotes && !themeLanguage ? `Note: ${coachNotes}.` : "";
+  const noteText = coachNotes ? `Note: ${coachNotes}.` : "";
   const phaseRun =
     phase === "final"
       ? "Run: apply the same theme from the session, restart like a real game, keep score, and coach briefly on balls out."
@@ -878,7 +978,7 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   const setupText = themeLanguage?.setup
     ? `${setupByPhase}; ${themeLanguage.setup}`
     : setupByPhase;
-  const runText = themeLanguage?.run ? `${phaseRun} ${themeLanguage.run}.` : phaseRun;
+  const runText = themeLanguage?.run ? `Run: ${themeLanguage.run}.` : phaseRun;
   const scoringText = themeLanguage?.scoring
     ? `Scoring: use ${scoringTargets}; ${themeLanguage.scoring}.`
     : `Scoring: use ${scoringTargets}; rotate after scores, turnovers, or short rounds.`;
@@ -920,6 +1020,16 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
 function refineActivityName(name, promptSignals, phase) {
   const text = getPromptSignalText(promptSignals);
 
+  if (isDefensiveTransitionText(text)) {
+    if (phase === "main") return "Compact Recovery Transition Game";
+    if (phase === "progression") return "Recover And Protect Central Spaces";
+  }
+
+  if (isPressingText(text)) {
+    if (phase === "main") return "Pressing Trigger Game";
+    if (phase === "progression") return "Press And Counter Progression";
+  }
+
   if (text.includes("overload")) {
     if (phase === "main") return "Wide Overload Decision Game";
     if (phase === "progression") return "Overload Recovery Counter Game";
@@ -931,6 +1041,11 @@ function refineActivityName(name, promptSignals, phase) {
   }
 
   if (isPossessionUnderPressureText(text)) {
+    if (isBuildOutUnderPressureText(text)) {
+      if (phase === "main") return "Build-Out Support Angles";
+      if (phase === "progression") return "Build-Out Under Pressure Game";
+    }
+
     if (phase === "main") return "Rondo Under Pressure";
     if (phase === "progression") return "Directional Possession To Targets";
   }
@@ -973,6 +1088,9 @@ function buildFinalGameName({ promptSignals, ageBand }) {
   const promptText = getPromptSignalText(promptSignals);
 
   if (archetype?.key === "duck-duck-goose-defending-gates") return "Defending Gates Tournament";
+  if (isDefensiveTransitionText(promptText)) return "Compact Recovery Final Game";
+  if (isPressingText(promptText)) return "Press And Counter Final Game";
+  if (isBuildOutUnderPressureText(promptText)) return "Build-Out Pressure Final Game";
   if (promptText.includes("overload")) return "Overload Gate Battle Final Game";
   if (playerCount && playerCount >= 22) return "11v11 Defending Tournament";
   if (playerCount && playerCount >= 18) return "9v9 Gate Battle Final Game";
@@ -990,19 +1108,38 @@ function buildFinalGameName({ promptSignals, ageBand }) {
 function buildFinalGameDescription({ promptSignals, ageBand }) {
   const objective = compactText(promptSignals?.primaryObjective, "the session theme");
   const gameName = buildFinalGameName({ promptSignals, ageBand });
+  const text = getPromptSignalText(promptSignals);
 
   const scoringTargetText = hasGoalEquipment(promptSignals?.equipment)
     ? getScoringTargets(promptSignals?.equipment)
     : "cone gates";
+  const finalGameConstraint = isDefensiveTransitionText(text)
+    ? "when possession is lost, the nearest player presses and the rest recover inside before the counter can split them"
+    : isPressingText(text)
+      ? "the pressing bonus only counts when the team presses together on a clear trigger before countering"
+      : isBuildOutUnderPressureText(text)
+        ? "the build-out bonus only counts when the team creates two support angles before breaking the first pressing line"
+        : text.includes("overload")
+          ? "the attacking team must find a wide player or support run before the bonus point counts"
+          : "the bonus only counts when the team uses the session focus before scoring";
+  const focusText = isDefensiveTransitionText(text)
+    ? "compact recovery, central protection, fast reaction after loss, and game flow"
+    : isPressingText(text)
+      ? "pressing triggers, connected pressure-cover, quick counters, and game flow"
+      : isBuildOutUnderPressureText(text)
+        ? "support angles, calm first pass, playing away from pressure, and game flow"
+        : text.includes("overload")
+          ? "fast restarts, brave overload decisions, competitive energy, and game flow"
+          : "fast restarts, clear decisions, competitive energy, and game flow";
 
   return capDescription(
     [
       `Format: ${gameName} on a 36x28 yard field with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
       "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
       `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
-      "Constraint: the attacking team must find a wide player or support run before the bonus point counts.",
+      `Constraint: ${finalGameConstraint}.`,
       "Win condition: first team to three goals.",
-      "Focus: fast restarts, brave overload decisions, competitive energy, and game flow.",
+      `Focus: ${focusText}.`,
     ].join(" ")
   );
 }
