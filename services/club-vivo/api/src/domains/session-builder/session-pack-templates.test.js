@@ -1074,6 +1074,9 @@ test("generatePack gives full-session duck-duck-goose brainstorm a soccer progre
   assertDuckDuckGooseSoccerActivity(activity2);
   assert.match(activity3.name, /escape, support, score progression/i);
   assert.match(activity3.description, /support player|second defender|open gate|quick gate score/i);
+  assert.match(activity3.description, /Safety \/ space adjustment:/i);
+  assert.match(activity3.description, /Progression:/i);
+  assert.match(activity3.description, /Regression:/i);
   assert.doesNotMatch(activity3.description, /counter gate/i);
   assert.match(activity4.name, /mini tournament|final game|competitive/i);
   assert.match(activity4.description, /Format:|Teams:|Scoring:|Constraint:|Win condition:|Focus:/i);
@@ -1112,10 +1115,13 @@ test("generatePack turns attacking create-chances duck-duck-goose note into coac
   assert.match(activity2.description, /counter through any open gate/i);
   assert.match(activity3.name, /escape, support, score progression/i);
   assert.match(activity3.description, /24 x 20 meter field \(26 x 22 yards\)/i);
-  assert.match(activity3.description, /same four cone gates|same cone gate is the scoring gate/i);
-  assert.match(activity3.description, /ball starts with the attacker|coach clearly beside the attacker/i);
+  assert.match(activity3.description, /four cone gates/i);
+  assert.match(activity3.description, /ball starts with the attacker|coach pass near the attacker/i);
   assert.match(activity3.description, /support player|second defender|open gate|quick gate score/i);
   assert.match(activity3.description, /scan before receiving|first touch away|support/i);
+  assert.match(activity3.description, /Safety \/ space adjustment: keep the support player outside the main pressure lane/i);
+  assert.match(activity3.description, /Progression: limit the attacker to three touches after receiving support/i);
+  assert.match(activity3.description, /Regression: remove the second defender/i);
   assert.doesNotMatch(activity3.description, /counter gate/i);
   assert.match(activity4.name, /escape gates mini tournament/i);
   assert.match(activity4.description, /4v4 or 5v5/i);

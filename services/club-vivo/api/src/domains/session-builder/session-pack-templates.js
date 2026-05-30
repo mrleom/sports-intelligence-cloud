@@ -971,15 +971,14 @@ function buildDuckDuckGooseEscapeDescription({ promptSignals, phase = "main" }) 
   if (!isDefendingActivity && phase === "progression") {
     return capDescription(
       [
-        `Setup: Use a 24 x 20 meter field (26 x 22 yards) with the same four cone gates, one support player, two defenders, and ${equipmentText}${playerCount}; the ball starts with the attacker or with the coach clearly beside the attacker.`,
-        "How to start: the coach passes to the attacker, who scans before receiving and prepares to escape first pressure.",
-        "How to run it: the attacker receives, escapes the first defender/chaser, finds the support player if needed, then attacks an open gate; if defenders win the ball, they counter through any open gate.",
-        "Rules / scoring: attackers score two points for escaping pressure and creating a quick gate score, or one point for using support before scoring; defenders score by safe tagging, forcing out, winning it, or countering through an open gate.",
-        "Coaching cues: scan before receiving, first touch away from pressure, protect the ball, use support when the gate is blocked, and attack quickly once space opens.",
-        "What to watch for: attackers forcing the first gate, support standing behind pressure, second defenders diving in, or players forgetting the same cone gate is the scoring gate for whoever has the ball.",
-        "Progression: release the second defender earlier or add a bonus for a one-touch support pass before the gate score.",
-        "Regression: delay the second defender, make the support player neutral for both teams, or widen the gates.",
-        "Safety / space adjustment: separate chase lanes, keep tags below shoulder height, and rotate attacker, defender/chaser, and support player.",
+        `Setup: Use a 24 x 20 meter field (26 x 22 yards) with four cone gates, one support player, two defenders, and ${equipmentText}${playerCount}; the ball starts with the attacker or from a coach pass near the attacker.`,
+        "How to start: the coach passes in; the attacker scans before receiving.",
+        "How to run it: the attacker escapes the first defender/chaser, uses support if the gate is blocked, then attacks an open gate; if defenders win it, they counter through any gate.",
+        "Rules / scoring: attackers score two for escape plus quick gate score, or one for using support before scoring; defenders score by safe tag, forcing out, or countering.",
+        "Coaching cues: scan early, first touch away, protect, use support, and attack quickly.",
+        "Safety / space adjustment: keep the support player outside the main pressure lane, use safe tagging only, and widen the area if players collide.",
+        "Progression: limit the attacker to three touches after receiving support, add a recovery defender, or require the support pass before scoring.",
+        "Regression: remove the second defender, make the support player neutral, or give the attacker one free touch before pressure arrives.",
       ].join(" ")
     );
   }
