@@ -221,6 +221,18 @@ function isFinalGameActivity(activity: ActivityOutputActivity) {
   return /final game|gate battle final|competitive final|tournament/i.test(activity.name);
 }
 
+function keepFinalGameLeftSections(
+  activity: ActivityOutputActivity,
+  sections: ActivitySection[]
+) {
+  if (!isFinalGameActivity(activity)) {
+    return sections;
+  }
+
+  const allowedLabels = new Set(["format", "teams", "focus"]);
+  return sections.filter((section) => allowedLabels.has(normalizeComparisonText(section.label)));
+}
+
 function buildFallbackSections(activity: ActivityOutputActivity): ActivitySection[] {
   if (!isFinalGameActivity(activity)) {
     return [];
@@ -228,10 +240,7 @@ function buildFallbackSections(activity: ActivityOutputActivity): ActivitySectio
 
   return [
     { label: "Format", text: "Small-sided gate battle with fast restarts." },
-    { label: "Teams", text: "Balanced blue and red teams; winner stays on or reset for a quick rematch." },
-    { label: "Rules / scoring", text: "Score through gates, with a bonus for finding a wide player or support run first." },
-    { label: "Constraint", text: "The bonus only counts when the overload creates the chance." },
-    { label: "Win condition", text: "First team to three goals." },
+    { label: "Teams", text: "Play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly." },
     { label: "Focus", text: "Keep it competitive, fun, and flowing." }
   ];
 }
@@ -253,8 +262,11 @@ export function ActivityOutput({
   aside?: ReactNode;
   compact?: boolean;
 }) {
-  const sections = mergeDuplicateSections(
-    buildActivitySections(activity.description, objective, objectiveTags)
+  const sections = keepFinalGameLeftSections(
+    activity,
+    mergeDuplicateSections(
+      buildActivitySections(activity.description, objective, objectiveTags)
+    )
   );
   const displaySections = sections.length > 0 ? sections : buildFallbackSections(activity);
   const durationLabel = timing?.durationLabel || `${activity.minutes} minutes`;

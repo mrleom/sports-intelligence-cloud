@@ -1048,7 +1048,8 @@ test("attacking-overload diagram legend code uses team-color line language", () 
   assert.match(sessionBuilderApi, /Format: small-sided gate battle/);
   assert.match(sessionBuilderApi, /Win condition: first team to three goals/);
   assert.match(activityOutput, /buildFallbackSections/);
-  assert.match(activityOutput, /First team to three goals/);
+  assert.doesNotMatch(activityOutput, /First team to three goals/);
+  assert.match(diagramPlaceholder, /First team to three goals wins, or most goals after five minutes/);
   assert.doesNotMatch(sessionNewFlow, /Cone gate|Target gate|Wide channel|Counter gate|Recovery line/);
   assert.doesNotMatch(sessionNewFlow, /Blue line = coached team action|Red line = opponent \/ defender action|Gray line = neutral \/ free-player action/);
   assert.doesNotMatch(staticText, /Solid green|Dotted green|#0f766e|markerBaseId}-green|Movement without the ball|Team coached|Cones or equipment/);
@@ -1110,6 +1111,13 @@ test("reaction chase progression and final card stay coach-readable", () => {
   assert.match(diagramPlaceholder, /FinalGameGridVisual/);
   assert.match(activityOutput, /"Format",\s*"Teams",\s*"Focus",/);
   assert.doesNotMatch(activityOutput, /team context\|format\|mode/);
+  assert.match(activityOutput, /function keepFinalGameLeftSections/);
+  assert.match(activityOutput, /new Set\(\["format", "teams", "focus"\]\)/);
+  assert.match(activityOutput, /allowedLabels\.has\(normalizeComparisonText\(section\.label\)\)/);
+  assert.match(activityOutput, /Play 3v3, 4v4, or 5v5 depending on numbers\. Winner stays on or teams rotate quickly\./);
+  assert.doesNotMatch(activityOutput, /\{ label: "Rules \/ scoring", text: "Score through gates/);
+  assert.doesNotMatch(activityOutput, /\{ label: "Constraint", text: "The bonus only counts/);
+  assert.doesNotMatch(activityOutput, /\{ label: "Win condition", text: "First team to three goals\."/);
   assert.match(diagramPlaceholder, /\["Rules \/ scoring", rulesScoringText\]/);
   assert.match(diagramPlaceholder, /\["Bonus \+ winner rule", `\$\{bonusText\} \$\{winnerRuleText\}`\]/);
   assert.doesNotMatch(diagramPlaceholder, /\["Format", extractFinalGameLine/);
