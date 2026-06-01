@@ -112,7 +112,9 @@ variation, or different game condition.
 
 Activity 4: 12-minute final game, mini tournament, or competitive close that applies the theme.
 This block should not need a full tactical diagram; the coach needs the game format, teams,
-scoring, and final constraint.
+scoring, and final constraint. Keep those details in the main activity description. Under the
+visual, show one compact Bonus + Winner Rule card only; do not repeat format, teams, goals, or game
+length in a second stack of cards.
 
 For a 90-minute session, use a longer four-block shape: 20-minute activation, two 25-minute main
 activities, and a 20-minute competitive close.
@@ -206,6 +208,10 @@ yellow dots are cones, goals, or equipment. Two yellow cone dots connected by a 
 cone gate. A solid arrow means pass, shot, or ball action. A dotted blue arrow means dribble or
 carry. A blue dashed arrow means coached-team off-ball run, support movement, or recovery run. A
 red dashed arrow means opposition pressure, chase, or defensive movement.
+
+Dotted dribble/carry lines should render as small round dots, not short dashes. Keep enough spacing
+between dots that they stay visibly different from dashed movement, support, recovery, and pressure
+lines.
 
 The ball must be visible as a small ball symbol, not as the word "Ball." Player positions should
 change across Setup, How to play, and How to score / reset so movement is visible without reading

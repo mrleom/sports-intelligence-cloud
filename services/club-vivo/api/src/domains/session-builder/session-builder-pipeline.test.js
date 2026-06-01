@@ -1091,11 +1091,11 @@ test("diagram mini legends stay local and line styles are distinct", () => {
   assert.match(diagramPlaceholder, /!\(key === "zone" && visibleKeys\.includes\("activityArea"\)\)/);
   assert.match(diagramPlaceholder, /legend: \["coneGate", "activityArea"\]/);
   assert.match(diagramPlaceholder, /strokeDasharray=\{dash\}/);
-  assert.match(diagramPlaceholder, /action === "carry" \? "1 4"/);
+  assert.match(diagramPlaceholder, /action === "carry" \? "0\.1 3\.5"/);
   assert.match(diagramPlaceholder, /action === "pressure" \|\| action === "run" \? "6 4"/);
-  assert.match(sessionNewFlow, /LineLegendSymbol dash="1 4"/);
+  assert.match(sessionNewFlow, /LineLegendSymbol dash="0\.1 3\.5"/);
   assert.match(sessionNewFlow, /LineLegendSymbol dash="6 4"/);
-  assert.match(savedSessionPage, /LineLegendSymbol dash="1 4"/);
+  assert.match(savedSessionPage, /LineLegendSymbol dash="0\.1 3\.5"/);
   assert.match(savedSessionPage, /LineLegendSymbol dash="6 4"/);
 });
 
@@ -1107,12 +1107,10 @@ test("reaction chase progression and final card stay coach-readable", () => {
   assert.match(diagramPlaceholder, /attacks any open scoring gate/);
   assert.doesNotMatch(diagramPlaceholder, blockedReactionCaptionPattern);
   assert.match(diagramPlaceholder, /FinalGameGridVisual/);
-  assert.match(diagramPlaceholder, /Format/);
-  assert.match(diagramPlaceholder, /Goals/);
-  assert.match(diagramPlaceholder, /Game length/);
-  assert.match(diagramPlaceholder, /Bonus/);
-  assert.match(diagramPlaceholder, /Winner rule/);
-  assert.match(diagramPlaceholder, /4v4 or 5v5/);
+  assert.match(diagramPlaceholder, /\["Bonus \+ winner rule", `Bonus: \$\{bonusText\} Winner rule: \$\{winnerRuleText\}`\]/);
+  assert.doesNotMatch(diagramPlaceholder, /\["Format", extractFinalGameLine/);
+  assert.doesNotMatch(diagramPlaceholder, /\["Goals", "Four cone gates or Pugg goals\."\]/);
+  assert.doesNotMatch(diagramPlaceholder, /\["Game length", extractFinalGameLine/);
   assert.match(diagramPlaceholder, /5-minute games or first team to two goals/);
   assert.match(diagramPlaceholder, /goal counts double/i);
 });

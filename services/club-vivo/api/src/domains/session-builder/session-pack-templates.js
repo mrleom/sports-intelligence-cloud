@@ -1203,7 +1203,7 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
       : isBuildOutUnderPressureText(text)
         ? "the build-out bonus only counts when the team creates two support angles before breaking the first pressing line"
         : detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-          ? "the bonus only counts when the attack starts from a trigger call, first touch away from pressure, and quick escape decision"
+          ? "the attack must start from a trigger call, first touch away from pressure, and quick escape decision"
         : text.includes("overload")
           ? "the attacking team must find a wide player or support run before the bonus point counts"
           : "the bonus only counts when the team uses the session focus before scoring";
@@ -1222,20 +1222,20 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
   return capDescription(
     [
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? `Format: ${gameName}: play 4v4 or 5v5 in the same 36 x 28 meter area (39 x 31 yards) with the four cone gates or Pugg goals as goals.`
+        ? `Format: ${gameName}: use the same 36 x 28 meter area (39 x 31 yards) with the four cone gates or Pugg goals as goals.`
         : `Format: ${gameName} on a 36 x 28 meter field (39 x 31 yards) with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Teams: play 5-minute games or first team to two goals; winner stays on or teams reset for a quick rematch."
+        ? "Teams: play 4v4 or 5v5 with balanced blue and red teams."
         : "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Scoring: score by dribbling or passing through any gate; the goal counts double if a team scores within five seconds of escaping pressure or after using a support player."
+        ? "Scoring: score by dribbling or passing through any gate."
         : `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
       `Constraint: ${finalGameConstraint}.`,
       detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Win condition: most goals after 10 minutes wins, or first team to three goals."
+        ? ""
         : "Win condition: first team to three goals.",
       `Focus: ${focusText}.`,
-    ].join(" ")
+    ].filter(Boolean).join(" ")
   );
 }
 
