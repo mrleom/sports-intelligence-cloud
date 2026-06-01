@@ -227,6 +227,11 @@ counter threats. Reserve orange for target gates or a central danger/protection 
 mini-legend item whenever that orange zone is visible. The activation visual should be a simple
 passing-to-turnover picture rather than a reused chase/escape picture.
 
+Within each compact-recovery activity, Setup and Action panels must preserve the same player
+identities and roles. The Action panel may move those players and add arrows, but it should not
+remove a visible counter attacker or introduce unexplained recovery players. If a higher counter
+runner enters for the progression, the caption should say that the runner is released.
+
 Avoid unexplained grey curved reset arrows. Keep arrows and arrowheads thin, avoid overlap with
 players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. Mini
 legends should stay local to each diagram: only include visible symbols or actions, avoid duplicate

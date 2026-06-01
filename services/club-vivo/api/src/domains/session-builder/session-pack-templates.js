@@ -1179,7 +1179,7 @@ function refineActivityName(name, promptSignals, phase) {
 
   if (isCompactRecoveryText(text)) {
     if (phase === "main") return "Compact Recovery Transition Game";
-    if (phase === "progression") return "Recover And Protect Central Spaces";
+    if (phase === "progression") return "Recover and Protect Central Spaces";
   }
 
   if (isPressingText(text)) {
@@ -1413,7 +1413,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
           : archetype?.key === "duck-duck-goose-escape"
             ? "Escape, Support, Score Progression"
           : isCompactRecovery
-            ? "Recover And Protect Central Spaces"
+            ? "Recover and Protect Central Spaces"
           : refineActivityName(third.name, promptSignals, "progression"),
       minutes: minutes[2],
       description:
@@ -1460,7 +1460,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
           : archetype?.key === "duck-duck-goose-escape"
             ? "Trigger Touch Activation"
           : isCompactRecovery
-            ? "Ball-And-Reaction Activation"
+            ? "Ball and Reaction Activation"
           : getPromptSignalText(promptSignals).includes("overload")
             ? "Overload Gates Activation"
             : first.name,

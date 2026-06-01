@@ -130,7 +130,7 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
   }
 
   const isCompactRecovery =
-    /ball-and-reaction activation|compact recovery transition game|recover and protect central spaces|first three seconds after loss|recover inside.*protect the middle|central danger gate/.test(text);
+    /ball[- ]and[- ]reaction activation|compact recovery transition game|recover and protect central spaces|first three seconds after loss|recover inside.*protect the middle|central danger gate/.test(text);
 
   if (isCompactRecovery && activityIndex === 0) {
     return "compact_recovery_activation";
@@ -724,7 +724,7 @@ function buildCompactRecoveryActivationPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("begin with a small passing group and one orange central lane so the first recovery job is easy to see."),
+      caption: inferredCaption("begin with the same two blue players and one red counter attacker; the blue pass becomes the turnover moment."),
       legend: ["activityArea", "centralProtectionZone", "ballAction"],
       tokens: [
         { type: "zone", x: 30, y: 18, width: 100, height: 69, tone: "target" },
@@ -738,7 +738,7 @@ function buildCompactRecoveryActivationPanels(): DiagramPanel[] {
     },
     {
       title: "Action",
-      caption: inferredCaption("on the turnover call, the nearest defender presses and the partner recovers inside to protect the middle."),
+      caption: inferredCaption("the same red counter attacker receives the turnover; the nearest blue player presses and the second blue player recovers inside."),
       legend: ["activityArea", "centralProtectionZone", "turnoverBall", "compactRecoveryRun"],
       tokens: [
         { type: "zone", x: 30, y: 18, width: 100, height: 69, tone: "target" },
@@ -758,7 +758,7 @@ function buildCompactRecoveryTransitionPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("show the ball-loss point, red counter threat, blue first pressure, cover, inside recovery, and two counter gates."),
+      caption: inferredCaption("keep three blue recovery players and two red counter players visible around the ball-loss point and counter gates."),
       legend: ["activityArea", "centralProtectionZone", "counterGate", "turnoverBall"],
       tokens: [
         { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "target" },
@@ -766,6 +766,7 @@ function buildCompactRecoveryTransitionPanels(): DiagramPanel[] {
         { type: "gate", x: 136, y: 38, rotate: 90 },
         { type: "gate", x: 136, y: 70, rotate: 90 },
         { type: "player", role: "opposition", x: 89, y: 53 },
+        { type: "player", role: "opposition", x: 113, y: 39 },
         { type: "player", role: "coached", x: 74, y: 43 },
         { type: "player", role: "coached", x: 66, y: 64 },
         { type: "player", role: "coached", x: 47, y: 74 },
@@ -774,7 +775,7 @@ function buildCompactRecoveryTransitionPanels(): DiagramPanel[] {
     },
     {
       title: "Action",
-      caption: inferredCaption("in the first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter."),
+      caption: inferredCaption("the same red pair counters toward a gate while blue presses the ball, covers, recovers inside, communicates, and delays."),
       legend: ["activityArea", "centralProtectionZone", "counterGate", "turnoverBall", "compactRecoveryRun", "counterThreatLine"],
       tokens: [
         { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "target" },
@@ -782,11 +783,12 @@ function buildCompactRecoveryTransitionPanels(): DiagramPanel[] {
         { type: "gate", x: 136, y: 38, rotate: 90 },
         { type: "gate", x: 136, y: 70, rotate: 90 },
         { type: "player", role: "opposition", x: 90, y: 53 },
+        { type: "player", role: "opposition", x: 115, y: 39 },
         { type: "player", role: "coached", x: 77, y: 44 },
         { type: "player", role: "coached", x: 69, y: 65 },
         { type: "player", role: "coached", x: 50, y: 74 },
         { type: "ball", x: 90, y: 53 },
-        { type: "arrow", d: "M90 53 C105 48, 119 42, 136 38", action: "counter" },
+        { type: "arrow", d: "M90 53 C100 47, 107 42, 115 39 C123 38, 130 38, 136 38", action: "counter" },
         { type: "arrow", d: "M77 44 C81 48, 85 51, 90 53", action: "run" },
         { type: "arrow", d: "M69 65 C73 60, 78 56, 83 54", action: "run" },
         { type: "arrow", d: "M50 74 C58 67, 64 61, 71 55", action: "run" }
@@ -799,7 +801,7 @@ function buildCompactRecoveryProgressionPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption("add a recovery line, central danger lane, and a high counter runner so the next defensive decision is clear."),
+      caption: inferredCaption("keep the same recovery group, then release a higher red counter runner beyond the recovery line toward the central danger lane."),
       legend: ["activityArea", "centralProtectionZone", "counterGate", "recoveryLine", "turnoverBall"],
       tokens: [
         { type: "zone", x: 18, y: 20, width: 124, height: 65, tone: "target" },
@@ -816,7 +818,7 @@ function buildCompactRecoveryProgressionPanels(): DiagramPanel[] {
     },
     {
       title: "Action",
-      caption: inferredCaption("first pressure slows the ball while cover and inside recovery protect the orange lane before the counter runner reaches the target."),
+      caption: inferredCaption("the released red counter runner attacks the target while the same blue group presses, covers, and recovers inside before the orange lane opens."),
       legend: ["activityArea", "centralProtectionZone", "counterGate", "recoveryLine", "turnoverBall", "compactRecoveryRun", "counterThreatLine"],
       tokens: [
         { type: "zone", x: 18, y: 20, width: 124, height: 65, tone: "target" },
@@ -1390,6 +1392,7 @@ function CompactRecoveryFinalGameVisual() {
         <ConeGate x={132} y={70} rotate={90} />
         <PlayerToken role="opposition" x={88} y={53} />
         <PlayerToken role="opposition" x={111} y={58} />
+        <PlayerToken role="opposition" x={108} y={35} />
         <PlayerToken role="coached" x={73} y={44} />
         <PlayerToken role="coached" x={65} y={65} />
         <PlayerToken role="coached" x={51} y={73} />
