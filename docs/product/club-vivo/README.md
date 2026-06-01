@@ -9,6 +9,9 @@ Draft v1
 
 ## Related Product Direction
 
+- `soccer-development-taxonomy-v1.md`
+  - Source-of-truth taxonomy for age bands, objectives, specific focuses, golden-template planning,
+    future routing, and Spanish/i18n terminology.
 - `training-prescription-layer.md`
   - Proposed Club Vivo Training Prescription Layer product direction. Not shipped runtime behavior.
 
