@@ -19,6 +19,8 @@ type DiagramKind =
   | "transition_to_attack"
   | "pressure_cover_gates"
   | "recover_delay_win"
+  | "compact_recovery_transition"
+  | "compact_recovery_progression"
   | "reaction_chase_escape"
   | "reaction_chase_progression"
   | "generic_small_sided"
@@ -120,6 +122,17 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
 
   if (activityIndex === 0) {
     return "activation_chase_or_reaction";
+  }
+
+  const isCompactRecovery =
+    /compact recovery transition game|recover and protect central spaces|first three seconds after loss|recover inside.*protect the middle|central danger gate/.test(text);
+
+  if (isCompactRecovery && activityIndex >= 2) {
+    return "compact_recovery_progression";
+  }
+
+  if (isCompactRecovery) {
+    return "compact_recovery_transition";
   }
 
   const isReactionChase =
@@ -682,6 +695,67 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
   ];
 }
 
+function buildCompactRecoveryPanels(isProgression: boolean): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption(
+        isProgression
+          ? "add a counter runner, recovery line, and central danger gates so the recovery team sees the middle it must protect."
+          : "start with a loss trigger, first pressure player, covering teammate, and inside recovery runner."
+      ),
+      legend: ["activityArea", "targetGate", ...(isProgression ? ["recoveryLine" as const] : [])],
+      tokens: [
+        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "pressure" },
+        { type: "zone", x: 67, y: 17, width: 28, height: 71, tone: "recovery" },
+        { type: "gate", x: 136, y: 39, rotate: 90 },
+        { type: "gate", x: 136, y: 69, rotate: 90 },
+        ...(isProgression
+          ? [
+              { type: "zone" as const, x: 49, y: 17, width: 2, height: 71, tone: "recovery" as const },
+              { type: "player" as const, role: "opposition" as const, x: 108, y: 53 }
+            ]
+          : []),
+        { type: "player", role: "opposition", x: 82, y: 53 },
+        { type: "player", role: "coached", x: 68, y: 43 },
+        { type: "player", role: "coached", x: 59, y: 65 },
+        { type: "player", role: "coached", x: 40, y: 74 },
+        { type: "ball", x: 82, y: 53 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption(
+        isProgression
+          ? "nearest player presses, cover protects the middle, and the recovery runner gets inside before the counter runner reaches a danger gate."
+          : "in the first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter."
+      ),
+      legend: ["activityArea", "targetGate", "coachedRun", ...(isProgression ? ["recoveryLine" as const] : [])],
+      tokens: [
+        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "pressure" },
+        { type: "zone", x: 67, y: 17, width: 28, height: 71, tone: "recovery" },
+        { type: "gate", x: 136, y: 39, rotate: 90 },
+        { type: "gate", x: 136, y: 69, rotate: 90 },
+        ...(isProgression
+          ? [
+              { type: "zone" as const, x: 49, y: 17, width: 2, height: 71, tone: "recovery" as const },
+              { type: "player" as const, role: "opposition" as const, x: 111, y: 53 },
+              { type: "arrow" as const, d: "M111 53 C121 48, 128 43, 136 39", action: "ball" as const }
+            ]
+          : []),
+        { type: "player", role: "opposition", x: 84, y: 53 },
+        { type: "player", role: "coached", x: 73, y: 46 },
+        { type: "player", role: "coached", x: 67, y: 64 },
+        { type: "player", role: "coached", x: 53, y: 72 },
+        { type: "ball", x: 84, y: 53 },
+        { type: "arrow", d: "M73 46 C77 48, 80 51, 84 53", action: "run" },
+        { type: "arrow", d: "M67 64 C70 59, 74 56, 79 54", action: "run" },
+        { type: "arrow", d: "M53 72 C59 66, 64 60, 69 55", action: "run" }
+      ]
+    }
+  ];
+}
+
 function buildGenericPanels(kind: DiagramKind): DiagramPanel[] {
   const isProgression = kind === "recover_delay_win" || kind === "transition_to_attack";
 
@@ -778,6 +852,14 @@ function buildDiagramPanels(kind: DiagramKind, activityIndex: number): DiagramPa
 
   if (kind === "reaction_chase_progression") {
     return learningPanels(buildReactionChasePanels(true));
+  }
+
+  if (kind === "compact_recovery_transition") {
+    return learningPanels(buildCompactRecoveryPanels(false));
+  }
+
+  if (kind === "compact_recovery_progression") {
+    return learningPanels(buildCompactRecoveryPanels(true));
   }
 
   return learningPanels(buildGenericPanels(kind));
@@ -1204,17 +1286,47 @@ function FinalGameGridVisual() {
   );
 }
 
+function CompactRecoveryFinalGameVisual() {
+  return (
+    <svg viewBox="0 0 160 105" role="img" aria-label="Directional compact recovery final game grid" className="h-full min-h-40 w-full">
+      <DiagramMarkers markerBaseId="club-vivo-compact-recovery-final-card" />
+      <FieldArea>
+        <rect x="23" y="18" width="114" height="69" rx="5" fill="#fee2e2" fillOpacity="0.38" stroke="#f87171" strokeDasharray="4 3" />
+        <rect x="68" y="18" width="25" height="69" rx="5" fill="#fef3c7" fillOpacity="0.52" stroke="#f59e0b" strokeDasharray="4 3" />
+        <ConeGate x={132} y={36} rotate={90} />
+        <ConeGate x={132} y={70} rotate={90} />
+        <PlayerToken role="opposition" x={88} y={53} />
+        <PlayerToken role="opposition" x={111} y={58} />
+        <PlayerToken role="coached" x={73} y={44} />
+        <PlayerToken role="coached" x={65} y={65} />
+        <PlayerToken role="coached" x={51} y={73} />
+        <BallToken x={88} y={53} />
+        <ArrowPath d="M73 44 C78 47, 83 50, 88 53" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
+        <ArrowPath d="M65 65 C71 61, 76 57, 81 54" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
+        <ArrowPath d="M51 73 C58 67, 65 60, 71 54" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
+      </FieldArea>
+    </svg>
+  );
+}
+
 function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
   const description = activity?.description?.trim() ||
     "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
   const isEscapeGatesTournament = /escape gates mini tournament/i.test(activity?.name || "");
-  const rulesScoringText = isEscapeGatesTournament
+  const isCompactRecoveryFinalGame = /compact recovery final game/i.test(activity?.name || "");
+  const rulesScoringText = isCompactRecoveryFinalGame
+    ? "When possession is lost, react in the first three seconds: press the ball, recover inside, communicate, protect the middle, and delay the counter."
+    : isEscapeGatesTournament
     ? "Score by escaping pressure and playing or dribbling through any open gate."
     : extractFinalGameLine(description, "Scoring") || "Score through any open gate.";
-  const bonusText = isEscapeGatesTournament
+  const bonusText = isCompactRecoveryFinalGame
+    ? "Bonus point if the team regains once support arrives."
+    : isEscapeGatesTournament
     ? "Bonus point if the team uses support before scoring."
     : "Add one bonus point when the session focus creates the chance.";
-  const winnerRuleText = isEscapeGatesTournament
+  const winnerRuleText = isCompactRecoveryFinalGame
+    ? "First team to three goals wins, or most goals after five minutes."
+    : isEscapeGatesTournament
     ? "First team to three goals wins, or most goals after five minutes."
     : extractFinalGameLine(description, "Win condition") || "First team to three goals; winner stays on or reset for a quick rematch.";
   const rows = [
@@ -1232,7 +1344,7 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
           {activity?.name || "Escape Gates Mini Tournament"}
         </h5>
       </div>
-      <FinalGameGridVisual />
+      {isCompactRecoveryFinalGame ? <CompactRecoveryFinalGameVisual /> : <FinalGameGridVisual />}
       <dl className="grid gap-2 border-t border-teal-100 p-3">
         {rows.map(([label, text]) => (
           <div key={label} className="rounded-xl border border-teal-100 bg-white/80 px-3 py-2">

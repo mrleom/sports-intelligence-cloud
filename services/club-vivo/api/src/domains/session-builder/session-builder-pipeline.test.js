@@ -612,7 +612,7 @@ test("processTrainingBriefSessionPackRequest routes defensive transition handoff
 
   assert.equal(result.sessionPackResult.normalizedInput.theme, "Improve defensive transition after losing possession and rec");
   assert.deepEqual(names, [
-    "Dynamic warmup + ball mastery",
+    "Ball-And-Reaction Activation",
     "Compact Recovery Transition Game",
     "Recover And Protect Central Spaces",
     "Compact Recovery Final Game",
@@ -622,6 +622,42 @@ test("processTrainingBriefSessionPackRequest routes defensive transition handoff
   assert.match(text, /cones|bibs/i);
   assert.doesNotMatch(text, /wide player or support run before the bonus point counts/i);
   assert.equal(hasKeyDeep(result.sessionPackResult.validatedPack, "tenantId"), false);
+});
+
+test("guided Transition to defend focus routes into Defensive Transition Compact Recovery", async () => {
+  const result = await processSessionPackRequest({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand: "u14",
+    durationMin: 60,
+    theme: "Transition to defend: protect central space.",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const [session] = result.validatedPack.sessions;
+  const [activity1, activity2, activity3, activity4] = session.activities;
+  const learningText = [activity1, activity2, activity3].map((activity) => activity.description).join(" ");
+
+  assert.deepEqual(session.activities.map((activity) => activity.name), [
+    "Ball-And-Reaction Activation",
+    "Compact Recovery Transition Game",
+    "Recover And Protect Central Spaces",
+    "Compact Recovery Final Game",
+  ]);
+  assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
+  assert.match(learningText, /first three seconds after loss|first three seconds: press the ball/i);
+  assert.match(learningText, /press the ball/i);
+  assert.match(learningText, /recover inside/i);
+  assert.match(learningText, /communicate|talk early/i);
+  assert.match(learningText, /protect the middle/i);
+  assert.match(learningText, /delay the counter|delay/i);
+  assert.match(learningText, /regain when support arrives|regaining together/i);
+  assert.match(activity3.description, /counter runner|central danger gates/i);
+  assert.notEqual(activity2.description, activity3.description);
+  assert.match(activity4.description, /^Format: .* Teams: .* Focus: /i);
+  assert.doesNotMatch(activity4.description, /Rules \/ scoring:|Scoring:|Constraint:|Win condition:|Winner rule:/i);
 });
 
 test("processTrainingBriefSessionPackRequest adapts finishing objectives to gates when goals are unavailable", async () => {
@@ -1129,6 +1165,21 @@ test("reaction chase progression and final card stay coach-readable", () => {
   assert.match(diagramPlaceholder, /Score by escaping pressure and playing or dribbling through any open gate/);
   assert.match(diagramPlaceholder, /Bonus point if the team uses support before scoring/);
   assert.match(diagramPlaceholder, /First team to three goals wins, or most goals after five minutes/);
+});
+
+test("compact recovery diagrams show loss reaction, inside recovery, and directional final game", () => {
+  const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+
+  assert.match(diagramPlaceholder, /compact_recovery_transition/);
+  assert.match(diagramPlaceholder, /compact_recovery_progression/);
+  assert.match(diagramPlaceholder, /function buildCompactRecoveryPanels/);
+  assert.match(diagramPlaceholder, /start with a loss trigger, first pressure player, covering teammate, and inside recovery runner/);
+  assert.match(diagramPlaceholder, /add a counter runner, recovery line, and central danger gates/);
+  assert.match(diagramPlaceholder, /first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter/);
+  assert.match(diagramPlaceholder, /function CompactRecoveryFinalGameVisual/);
+  assert.match(diagramPlaceholder, /Directional compact recovery final game grid/);
+  assert.match(diagramPlaceholder, /When possession is lost, react in the first three seconds: press the ball, recover inside, communicate, protect the middle, and delay the counter/);
+  assert.match(diagramPlaceholder, /Bonus point if the team regains once support arrives/);
 });
 
 test("quick drill-mode requests create one main activity", async () => {
