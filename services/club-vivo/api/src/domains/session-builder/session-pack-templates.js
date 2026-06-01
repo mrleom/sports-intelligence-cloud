@@ -1130,14 +1130,14 @@ function buildCompactRecoveryDescription({ phase, promptSignals }) {
   if (phase === "arrival") {
     return capDescription(
       [
-        `Setup: Grid: 16 x 15 meters (18 x 16 yards) with pairs, central safety gates, recovery cones, and ${equipmentText}.`,
-        `How to start: partners pass until the coach calls turnover.${coachNoteText}`,
-        "How to run it: nearest player presses for three seconds while the partner recovers inside, communicates, protects the middle, and delays.",
-        "Rules / scoring: score when the pair gets compact and regains once support arrives.",
-        "Coaching cues: react, press the ball, recover inside, talk, protect the middle, delay, then regain together.",
-        "What to watch for: jogging back, both players chasing, or the middle staying open.",
-        "Safety / space adjustment: keep lanes clear and widen the grid if paths cross.",
-        `Progression: add one counter runner after the turnover.${u10Rule}`,
+        `Setup: Grid: 16 x 15 meters (18 x 16 yards) with small passing groups, a central protect lane, recovery cones, and ${equipmentText}.`,
+        `How to start: groups pass one ball until the coach calls turnover and points to the counter attacker.${coachNoteText}`,
+        "How to run it: the counter attacker carries forward, the nearest defender presses, and a partner recovers inside to protect the middle. End the rep after a regain, five-second delay, or counter finish, then rotate roles.",
+        "Rules / scoring: recovery pair scores by pressing quickly, getting one player inside, and regaining together.",
+        "Coaching cues: react, press the ball, recover inside, talk early, protect the middle, delay, then regain together.",
+        "What to watch for: jogging back, both defenders chasing the ball, or the middle staying open.",
+        "Safety / space adjustment: keep recovery lanes clear and widen the grid if paths cross.",
+        `Progression: add one live counter runner after the turnover.${u10Rule}`,
         "Regression: walk through the turnover, shorten the recovery, or freeze once to show the compact shape.",
       ].join(" ")
     );
@@ -1146,11 +1146,11 @@ function buildCompactRecoveryDescription({ phase, promptSignals }) {
   if (phase === "progression") {
     return capDescription(
       [
-        `Setup: Field: 24 x 20 meters (26 x 22 yards) with a possession zone, counter runner, recovery line, central danger gates, and ${equipmentText}.`,
-        `How to start: call turnover and release the counter runner toward the danger gates.${coachNoteText}`,
-        "How to run it: nearest player presses, one covers, and the rest recover inside to protect the middle, delay, and regain when support arrives.",
+        `Setup: Field: 24 x 20 meters (26 x 22 yards) with a possession zone, recovery line, counter runner, central danger gates, and ${equipmentText}.`,
+        `How to start: play a short possession round, then release the counter runner toward the central danger gates when the ball changes teams.${coachNoteText}`,
+        "How to run it: the nearest defender presses, one teammate covers, and the rest recover inside before the runner reaches the middle. End on a regain, five-second delay, or counter score, then reset quickly.",
         "Rules / scoring: score for passes before loss; recovery team scores by protecting the gates for five seconds or regaining together.",
-        "Coaching cues: react in three seconds, press, cover, recover inside, talk, protect the middle, delay, then regain.",
+        "Coaching cues: react in three seconds, press, cover, recover inside, talk early, protect the middle, delay, then regain.",
         "What to watch for: a central counter, no cover, or recovery players staying wide.",
         "Safety / space adjustment: release one runner at a time and widen the lane if players collide.",
         `Progression: add a second counter runner or require the regain team to find the first forward pass.${u10Rule}`,
@@ -1162,10 +1162,10 @@ function buildCompactRecoveryDescription({ phase, promptSignals }) {
   return capDescription(
     [
       `Setup: Grid: 20 x 18 meters (22 x 20 yards) with a possession area, counter gates, restart balls, recovery lines, and ${equipmentText}.`,
-      `How to start: play a short possession round, then coach calls turnover.${coachNoteText}`,
-      "How to run it: coach the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay, and regain when support arrives.",
+      `How to start: play a short possession round, then the coach calls turnover or lets a loose pass start the counter attack.${coachNoteText}`,
+      "How to run it: the team that loses the ball defends immediately while the other team attacks the counter gates. In the first three seconds after loss, press the ball, recover inside, communicate, protect the middle, delay, and regain when support arrives. End on a regain, five-second delay, or counter score, then restart.",
       "Rules / scoring: score for connected passes; recovery team scores by forcing wide, delaying five seconds, or regaining together.",
-      "Coaching cues: react on loss, press, cover, recover inside for compact recovery, talk, protect the middle, and regain together.",
+      "Coaching cues: react on loss, press, cover, recover inside, talk early, protect the middle, and regain together.",
       "What to watch for: dropping without pressure, wide recovery gaps, or a central split pass.",
       "Safety / space adjustment: keep gates wide, release one counter at a time, and enlarge the grid if paths cross.",
       `Progression: shorten recovery time or add a second counter runner.${u10Rule}`,
@@ -1274,9 +1274,9 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
   if (isCompactRecoveryFinalGame) {
     return capDescription(
       [
-        "Format: directional small-sided transition game with fast restarts.",
-        "Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly.",
-        "Focus: react in the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay the counter, and regain when support arrives.",
+        "Format: Directional small-sided transition game with fast restarts.",
+        "Teams: Play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly.",
+        "Focus: When possession is lost, press the ball, recover inside, protect the middle, delay the counter, and regain together.",
       ].join(" ")
     );
   }

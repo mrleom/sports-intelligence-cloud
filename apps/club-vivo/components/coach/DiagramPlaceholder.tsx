@@ -19,6 +19,7 @@ type DiagramKind =
   | "transition_to_attack"
   | "pressure_cover_gates"
   | "recover_delay_win"
+  | "compact_recovery_activation"
   | "compact_recovery_transition"
   | "compact_recovery_progression"
   | "reaction_chase_escape"
@@ -47,6 +48,10 @@ type LegendKey =
   | "wideChannel"
   | "counterGate"
   | "recoveryLine"
+  | "centralProtectionZone"
+  | "turnoverBall"
+  | "compactRecoveryRun"
+  | "counterThreatLine"
   | "targetGate"
   | "attackerDribbleLine"
   | "defenderPressureLine"
@@ -56,10 +61,10 @@ type LegendKey =
   | "zone";
 
 type PlayerRole = "coached" | "opposition" | "neutral";
-type ArrowAction = "ball" | "run" | "pressure" | "carry" | "rotation";
+type ArrowAction = "ball" | "run" | "pressure" | "carry" | "rotation" | "counter";
 
 type DiagramToken =
-  | { type: "zone"; x: number; y: number; width: number; height: number; label?: string; tone?: "wide" | "target" | "pressure" | "finish" | "recovery" }
+  | { type: "zone"; x: number; y: number; width: number; height: number; label?: string; tone?: "wide" | "target" | "pressure" | "finish" | "recovery" | "danger" | "line" }
   | { type: "player"; role: PlayerRole; x: number; y: number; label?: string }
   | { type: "ball"; x: number; y: number }
   | { type: "cone"; x: number; y: number; label?: string }
@@ -94,8 +99,12 @@ const LEGEND_META: Record<LegendKey, { group: LegendGroup; label: string }> = {
   freePlayer: { group: "roles", label: "Gray player = free player" },
   activityArea: { group: "space", label: "Activity area = marked working space" },
   wideChannel: { group: "space", label: "Wide channel = free-player lane" },
-  counterGate: { group: "space", label: "Counter gate = defender counter target" },
+  counterGate: { group: "space", label: "Counter gate = counter target" },
   recoveryLine: { group: "space", label: "Recovery line = defender release line" },
+  centralProtectionZone: { group: "space", label: "Orange zone = central space to protect" },
+  turnoverBall: { group: "equipment", label: "Ball = turnover / counter start" },
+  compactRecoveryRun: { group: "movement", label: "Blue dashed line = pressure / cover / inside recovery" },
+  counterThreatLine: { group: "movement", label: "Red solid line = counter threat" },
   targetGate: { group: "space", label: "Target gate = attacking target" },
   attackerDribbleLine: { group: "movement", label: "Blue dotted line = attacker dribbles to gate" },
   defenderPressureLine: { group: "movement", label: "Red dashed line = defender pressures" },
@@ -120,12 +129,12 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
     return "final_game_format";
   }
 
-  if (activityIndex === 0) {
-    return "activation_chase_or_reaction";
-  }
-
   const isCompactRecovery =
-    /compact recovery transition game|recover and protect central spaces|first three seconds after loss|recover inside.*protect the middle|central danger gate/.test(text);
+    /ball-and-reaction activation|compact recovery transition game|recover and protect central spaces|first three seconds after loss|recover inside.*protect the middle|central danger gate/.test(text);
+
+  if (isCompactRecovery && activityIndex === 0) {
+    return "compact_recovery_activation";
+  }
 
   if (isCompactRecovery && activityIndex >= 2) {
     return "compact_recovery_progression";
@@ -133,6 +142,10 @@ function inferDiagramKind(activity: DiagramActivity | undefined, activityIndex: 
 
   if (isCompactRecovery) {
     return "compact_recovery_transition";
+  }
+
+  if (activityIndex === 0) {
+    return "activation_chase_or_reaction";
   }
 
   const isReactionChase =
@@ -235,7 +248,19 @@ function panelUsesLegendKey(key: LegendKey, tokens: DiagramToken[]) {
     return panelHasToken(tokens, (token) => token.type === "zone" && token.tone === "wide");
   }
   if (key === "recoveryLine") {
-    return panelHasToken(tokens, (token) => token.type === "zone" && token.tone === "recovery");
+    return panelHasToken(tokens, (token) => token.type === "zone" && (token.tone === "recovery" || token.tone === "line"));
+  }
+  if (key === "centralProtectionZone") {
+    return panelHasToken(tokens, (token) => token.type === "zone" && token.tone === "danger");
+  }
+  if (key === "turnoverBall") {
+    return panelHasToken(tokens, (token) => token.type === "ball");
+  }
+  if (key === "compactRecoveryRun") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "run");
+  }
+  if (key === "counterThreatLine") {
+    return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "counter");
   }
   if (key === "ballAction" || key === "passFreePlayerLine") {
     return panelHasToken(tokens, (token) => token.type === "arrow" && token.action === "ball");
@@ -695,62 +720,119 @@ function buildReactionChasePanels(isProgression: boolean): DiagramPanel[] {
   ];
 }
 
-function buildCompactRecoveryPanels(isProgression: boolean): DiagramPanel[] {
+function buildCompactRecoveryActivationPanels(): DiagramPanel[] {
   return [
     {
       title: "Setup",
-      caption: inferredCaption(
-        isProgression
-          ? "add a counter runner, recovery line, and central danger gates so the recovery team sees the middle it must protect."
-          : "start with a loss trigger, first pressure player, covering teammate, and inside recovery runner."
-      ),
-      legend: ["activityArea", "targetGate", ...(isProgression ? ["recoveryLine" as const] : [])],
+      caption: inferredCaption("begin with a small passing group and one orange central lane so the first recovery job is easy to see."),
+      legend: ["activityArea", "centralProtectionZone", "ballAction"],
       tokens: [
-        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "pressure" },
-        { type: "zone", x: 67, y: 17, width: 28, height: 71, tone: "recovery" },
-        { type: "gate", x: 136, y: 39, rotate: 90 },
-        { type: "gate", x: 136, y: 69, rotate: 90 },
-        ...(isProgression
-          ? [
-              { type: "zone" as const, x: 49, y: 17, width: 2, height: 71, tone: "recovery" as const },
-              { type: "player" as const, role: "opposition" as const, x: 108, y: 53 }
-            ]
-          : []),
-        { type: "player", role: "opposition", x: 82, y: 53 },
-        { type: "player", role: "coached", x: 68, y: 43 },
-        { type: "player", role: "coached", x: 59, y: 65 },
-        { type: "player", role: "coached", x: 40, y: 74 },
-        { type: "ball", x: 82, y: 53 }
+        { type: "zone", x: 30, y: 18, width: 100, height: 69, tone: "target" },
+        { type: "zone", x: 70, y: 19, width: 20, height: 67, tone: "danger" },
+        { type: "player", role: "coached", x: 50, y: 42 },
+        { type: "player", role: "coached", x: 51, y: 68 },
+        { type: "player", role: "opposition", x: 109, y: 53 },
+        { type: "ball", x: 50, y: 42 },
+        { type: "arrow", d: "M53 43 C68 48, 84 52, 105 53", action: "ball" }
       ]
     },
     {
       title: "Action",
-      caption: inferredCaption(
-        isProgression
-          ? "nearest player presses, cover protects the middle, and the recovery runner gets inside before the counter runner reaches a danger gate."
-          : "in the first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter."
-      ),
-      legend: ["activityArea", "targetGate", "coachedRun", ...(isProgression ? ["recoveryLine" as const] : [])],
+      caption: inferredCaption("on the turnover call, the nearest defender presses and the partner recovers inside to protect the middle."),
+      legend: ["activityArea", "centralProtectionZone", "turnoverBall", "compactRecoveryRun"],
       tokens: [
-        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "pressure" },
-        { type: "zone", x: 67, y: 17, width: 28, height: 71, tone: "recovery" },
-        { type: "gate", x: 136, y: 39, rotate: 90 },
-        { type: "gate", x: 136, y: 69, rotate: 90 },
-        ...(isProgression
-          ? [
-              { type: "zone" as const, x: 49, y: 17, width: 2, height: 71, tone: "recovery" as const },
-              { type: "player" as const, role: "opposition" as const, x: 111, y: 53 },
-              { type: "arrow" as const, d: "M111 53 C121 48, 128 43, 136 39", action: "ball" as const }
-            ]
-          : []),
-        { type: "player", role: "opposition", x: 84, y: 53 },
-        { type: "player", role: "coached", x: 73, y: 46 },
-        { type: "player", role: "coached", x: 67, y: 64 },
-        { type: "player", role: "coached", x: 53, y: 72 },
-        { type: "ball", x: 84, y: 53 },
-        { type: "arrow", d: "M73 46 C77 48, 80 51, 84 53", action: "run" },
-        { type: "arrow", d: "M67 64 C70 59, 74 56, 79 54", action: "run" },
-        { type: "arrow", d: "M53 72 C59 66, 64 60, 69 55", action: "run" }
+        { type: "zone", x: 30, y: 18, width: 100, height: 69, tone: "target" },
+        { type: "zone", x: 70, y: 19, width: 20, height: 67, tone: "danger" },
+        { type: "player", role: "opposition", x: 106, y: 53 },
+        { type: "player", role: "coached", x: 91, y: 43 },
+        { type: "player", role: "coached", x: 52, y: 69 },
+        { type: "ball", x: 106, y: 53 },
+        { type: "arrow", d: "M91 43 C96 47, 101 50, 106 53", action: "run" },
+        { type: "arrow", d: "M52 69 C60 62, 67 56, 74 52", action: "run" }
+      ]
+    }
+  ];
+}
+
+function buildCompactRecoveryTransitionPanels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("show the ball-loss point, red counter threat, blue first pressure, cover, inside recovery, and two counter gates."),
+      legend: ["activityArea", "centralProtectionZone", "counterGate", "turnoverBall"],
+      tokens: [
+        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "target" },
+        { type: "zone", x: 68, y: 17, width: 23, height: 71, tone: "danger" },
+        { type: "gate", x: 136, y: 38, rotate: 90 },
+        { type: "gate", x: 136, y: 70, rotate: 90 },
+        { type: "player", role: "opposition", x: 89, y: 53 },
+        { type: "player", role: "coached", x: 74, y: 43 },
+        { type: "player", role: "coached", x: 66, y: 64 },
+        { type: "player", role: "coached", x: 47, y: 74 },
+        { type: "ball", x: 89, y: 53 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("in the first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter."),
+      legend: ["activityArea", "centralProtectionZone", "counterGate", "turnoverBall", "compactRecoveryRun", "counterThreatLine"],
+      tokens: [
+        { type: "zone", x: 22, y: 16, width: 116, height: 73, tone: "target" },
+        { type: "zone", x: 68, y: 17, width: 23, height: 71, tone: "danger" },
+        { type: "gate", x: 136, y: 38, rotate: 90 },
+        { type: "gate", x: 136, y: 70, rotate: 90 },
+        { type: "player", role: "opposition", x: 90, y: 53 },
+        { type: "player", role: "coached", x: 77, y: 44 },
+        { type: "player", role: "coached", x: 69, y: 65 },
+        { type: "player", role: "coached", x: 50, y: 74 },
+        { type: "ball", x: 90, y: 53 },
+        { type: "arrow", d: "M90 53 C105 48, 119 42, 136 38", action: "counter" },
+        { type: "arrow", d: "M77 44 C81 48, 85 51, 90 53", action: "run" },
+        { type: "arrow", d: "M69 65 C73 60, 78 56, 83 54", action: "run" },
+        { type: "arrow", d: "M50 74 C58 67, 64 61, 71 55", action: "run" }
+      ]
+    }
+  ];
+}
+
+function buildCompactRecoveryProgressionPanels(): DiagramPanel[] {
+  return [
+    {
+      title: "Setup",
+      caption: inferredCaption("add a recovery line, central danger lane, and a high counter runner so the next defensive decision is clear."),
+      legend: ["activityArea", "centralProtectionZone", "counterGate", "recoveryLine", "turnoverBall"],
+      tokens: [
+        { type: "zone", x: 18, y: 20, width: 124, height: 65, tone: "target" },
+        { type: "zone", x: 91, y: 21, width: 23, height: 63, tone: "danger" },
+        { type: "zone", x: 53, y: 21, width: 2, height: 63, tone: "line" },
+        { type: "gate", x: 140, y: 53, rotate: 90 },
+        { type: "player", role: "opposition", x: 78, y: 61 },
+        { type: "player", role: "opposition", x: 116, y: 40 },
+        { type: "player", role: "coached", x: 66, y: 50 },
+        { type: "player", role: "coached", x: 59, y: 72 },
+        { type: "player", role: "coached", x: 38, y: 36 },
+        { type: "ball", x: 78, y: 61 }
+      ]
+    },
+    {
+      title: "Action",
+      caption: inferredCaption("first pressure slows the ball while cover and inside recovery protect the orange lane before the counter runner reaches the target."),
+      legend: ["activityArea", "centralProtectionZone", "counterGate", "recoveryLine", "turnoverBall", "compactRecoveryRun", "counterThreatLine"],
+      tokens: [
+        { type: "zone", x: 18, y: 20, width: 124, height: 65, tone: "target" },
+        { type: "zone", x: 91, y: 21, width: 23, height: 63, tone: "danger" },
+        { type: "zone", x: 53, y: 21, width: 2, height: 63, tone: "line" },
+        { type: "gate", x: 140, y: 53, rotate: 90 },
+        { type: "player", role: "opposition", x: 80, y: 61 },
+        { type: "player", role: "opposition", x: 118, y: 40 },
+        { type: "player", role: "coached", x: 69, y: 53 },
+        { type: "player", role: "coached", x: 64, y: 74 },
+        { type: "player", role: "coached", x: 41, y: 35 },
+        { type: "ball", x: 80, y: 61 },
+        { type: "arrow", d: "M80 61 C95 52, 106 44, 118 40 C126 42, 133 47, 140 53", action: "counter" },
+        { type: "arrow", d: "M69 53 C73 56, 76 59, 80 61", action: "run" },
+        { type: "arrow", d: "M64 74 C72 68, 81 62, 92 56", action: "run" },
+        { type: "arrow", d: "M41 35 C52 41, 64 47, 75 54", action: "run" }
       ]
     }
   ];
@@ -854,12 +936,16 @@ function buildDiagramPanels(kind: DiagramKind, activityIndex: number): DiagramPa
     return learningPanels(buildReactionChasePanels(true));
   }
 
+  if (kind === "compact_recovery_activation") {
+    return learningPanels(buildCompactRecoveryActivationPanels());
+  }
+
   if (kind === "compact_recovery_transition") {
-    return learningPanels(buildCompactRecoveryPanels(false));
+    return learningPanels(buildCompactRecoveryTransitionPanels());
   }
 
   if (kind === "compact_recovery_progression") {
-    return learningPanels(buildCompactRecoveryPanels(true));
+    return learningPanels(buildCompactRecoveryProgressionPanels());
   }
 
   return learningPanels(buildGenericPanels(kind));
@@ -959,7 +1045,7 @@ function ZoneBox({
   width: number;
   height: number;
   label?: string;
-  tone?: "wide" | "target" | "pressure" | "finish" | "recovery";
+  tone?: "wide" | "target" | "pressure" | "finish" | "recovery" | "danger" | "line";
 }) {
   const fill =
     tone === "wide"
@@ -968,7 +1054,7 @@ function ZoneBox({
         ? "#fee2e2"
         : tone === "finish"
           ? "#dcfce7"
-          : tone === "recovery"
+          : tone === "recovery" || tone === "danger"
             ? "#fef3c7"
             : "#f1f5f9";
   const stroke =
@@ -978,7 +1064,7 @@ function ZoneBox({
         ? "#f87171"
         : tone === "finish"
           ? "#22c55e"
-          : tone === "recovery"
+          : tone === "recovery" || tone === "danger"
             ? "#f59e0b"
             : "#94a3b8";
 
@@ -999,9 +1085,9 @@ function ArrowPath({
   markerBaseId: string;
 }) {
   const color =
-    action === "pressure" ? "#ef4444" : action === "rotation" ? "#64748b" : "#2563eb";
+    action === "pressure" || action === "counter" ? "#ef4444" : action === "rotation" ? "#64748b" : "#2563eb";
   const dash = action === "pressure" || action === "run" ? "6 4" : action === "carry" ? "0.1 3.5" : undefined;
-  const markerSuffix = action === "pressure" ? "red" : action === "rotation" ? "slate" : "blue";
+  const markerSuffix = action === "pressure" || action === "counter" ? "red" : action === "rotation" ? "slate" : "blue";
 
   return (
     <path
@@ -1117,7 +1203,7 @@ function LegendSymbol({ item }: { item: LegendKey }) {
     return <PlayerLegendSymbol fill="#94a3b8" />;
   }
 
-  if (item === "ball") {
+  if (item === "ball" || item === "turnoverBall") {
     return <span className="h-2.5 w-2.5 rounded-full border border-slate-900 bg-white" />;
   }
 
@@ -1153,12 +1239,16 @@ function LegendSymbol({ item }: { item: LegendKey }) {
       : <span className="h-3 w-5 rounded-sm border border-dashed border-slate-400 bg-slate-100" />;
   }
 
+  if (item === "centralProtectionZone") {
+    return <span className="h-3 w-5 rounded-sm border border-dashed border-amber-500 bg-amber-100" />;
+  }
+
   if (item === "recoveryLine") {
-    return <span className="h-4 w-px border-l border-dashed border-amber-500" />;
+    return <span className="h-4 w-px border-l border-dashed border-slate-400" />;
   }
 
   const color =
-    item === "defenderPressure" || item === "defenderPressureLine" || item === "recoveryDefenderLine"
+    item === "defenderPressure" || item === "defenderPressureLine" || item === "recoveryDefenderLine" || item === "counterThreatLine"
       ? "#ef4444"
       : item === "rotationReset"
         ? "#64748b"
@@ -1166,6 +1256,7 @@ function LegendSymbol({ item }: { item: LegendKey }) {
   const dash =
     item === "defenderPressure" ||
     item === "coachedRun" ||
+    item === "compactRecoveryRun" ||
     item === "defenderPressureLine" ||
     item === "supportRunLine" ||
     item === "recoveryDefenderLine"
@@ -1291,8 +1382,10 @@ function CompactRecoveryFinalGameVisual() {
     <svg viewBox="0 0 160 105" role="img" aria-label="Directional compact recovery final game grid" className="h-full min-h-40 w-full">
       <DiagramMarkers markerBaseId="club-vivo-compact-recovery-final-card" />
       <FieldArea>
-        <rect x="23" y="18" width="114" height="69" rx="5" fill="#fee2e2" fillOpacity="0.38" stroke="#f87171" strokeDasharray="4 3" />
+        <rect x="23" y="18" width="114" height="69" rx="5" fill="#f1f5f9" fillOpacity="0.62" stroke="#94a3b8" strokeDasharray="4 3" />
         <rect x="68" y="18" width="25" height="69" rx="5" fill="#fef3c7" fillOpacity="0.52" stroke="#f59e0b" strokeDasharray="4 3" />
+        <ConeGate x={28} y={36} rotate={90} />
+        <ConeGate x={28} y={70} rotate={90} />
         <ConeGate x={132} y={36} rotate={90} />
         <ConeGate x={132} y={70} rotate={90} />
         <PlayerToken role="opposition" x={88} y={53} />
@@ -1304,8 +1397,24 @@ function CompactRecoveryFinalGameVisual() {
         <ArrowPath d="M73 44 C78 47, 83 50, 88 53" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
         <ArrowPath d="M65 65 C71 61, 76 57, 81 54" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
         <ArrowPath d="M51 73 C58 67, 65 60, 71 54" action="run" markerBaseId="club-vivo-compact-recovery-final-card" />
+        <ArrowPath d="M88 53 C102 48, 117 41, 132 36" action="counter" markerBaseId="club-vivo-compact-recovery-final-card" />
       </FieldArea>
     </svg>
+  );
+}
+
+function CompactRecoveryFinalGameLegend() {
+  const keys: LegendKey[] = ["centralProtectionZone", "counterGate", "compactRecoveryRun", "counterThreatLine"];
+
+  return (
+    <div className="grid gap-1.5 border-t border-teal-100 bg-white/70 px-3 py-2 text-[11px] leading-4 text-slate-500 sm:grid-cols-2">
+      {keys.map((item) => (
+        <p key={item} className="flex items-center gap-2">
+          <LegendSymbol item={item} />
+          {LEGEND_META[item].label}
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -1345,6 +1454,7 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
         </h5>
       </div>
       {isCompactRecoveryFinalGame ? <CompactRecoveryFinalGameVisual /> : <FinalGameGridVisual />}
+      {isCompactRecoveryFinalGame ? <CompactRecoveryFinalGameLegend /> : null}
       <dl className="grid gap-2 border-t border-teal-100 p-3">
         {rows.map(([label, text]) => (
           <div key={label} className="rounded-xl border border-teal-100 bg-white/80 px-3 py-2">

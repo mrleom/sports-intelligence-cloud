@@ -1170,14 +1170,28 @@ test("reaction chase progression and final card stay coach-readable", () => {
 test("compact recovery diagrams show loss reaction, inside recovery, and directional final game", () => {
   const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
 
+  assert.match(diagramPlaceholder, /compact_recovery_activation/);
   assert.match(diagramPlaceholder, /compact_recovery_transition/);
   assert.match(diagramPlaceholder, /compact_recovery_progression/);
-  assert.match(diagramPlaceholder, /function buildCompactRecoveryPanels/);
-  assert.match(diagramPlaceholder, /start with a loss trigger, first pressure player, covering teammate, and inside recovery runner/);
-  assert.match(diagramPlaceholder, /add a counter runner, recovery line, and central danger gates/);
+  assert.match(diagramPlaceholder, /function buildCompactRecoveryActivationPanels/);
+  assert.match(diagramPlaceholder, /begin with a small passing group and one orange central lane/);
+  assert.match(diagramPlaceholder, /on the turnover call, the nearest defender presses and the partner recovers inside/);
+  assert.match(diagramPlaceholder, /function buildCompactRecoveryTransitionPanels/);
+  assert.match(diagramPlaceholder, /show the ball-loss point, red counter threat, blue first pressure, cover, inside recovery, and two counter gates/);
+  assert.match(diagramPlaceholder, /action: "counter"/);
+  assert.match(diagramPlaceholder, /function buildCompactRecoveryProgressionPanels/);
+  assert.match(diagramPlaceholder, /add a recovery line, central danger lane, and a high counter runner/);
   assert.match(diagramPlaceholder, /first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter/);
+  assert.match(diagramPlaceholder, /centralProtectionZone: \{ group: "space", label: "Orange zone = central space to protect" \}/);
+  assert.match(diagramPlaceholder, /counterThreatLine: \{ group: "movement", label: "Red solid line = counter threat" \}/);
+  assert.match(diagramPlaceholder, /compactRecoveryRun: \{ group: "movement", label: "Blue dashed line = pressure \/ cover \/ inside recovery" \}/);
   assert.match(diagramPlaceholder, /function CompactRecoveryFinalGameVisual/);
   assert.match(diagramPlaceholder, /Directional compact recovery final game grid/);
+  assert.match(diagramPlaceholder, /fill="#f1f5f9" fillOpacity="0\.62" stroke="#94a3b8"/);
+  assert.match(diagramPlaceholder, /fill="#fef3c7" fillOpacity="0\.52" stroke="#f59e0b"/);
+  assert.doesNotMatch(diagramPlaceholder, /function CompactRecoveryFinalGameVisual\(\)[\s\S]*?fill="#fee2e2" fillOpacity="0\.38" stroke="#f87171"/);
+  assert.match(diagramPlaceholder, /function CompactRecoveryFinalGameLegend/);
+  assert.match(diagramPlaceholder, /\["centralProtectionZone", "counterGate", "compactRecoveryRun", "counterThreatLine"\]/);
   assert.match(diagramPlaceholder, /When possession is lost, react in the first three seconds: press the ball, recover inside, communicate, protect the middle, and delay the counter/);
   assert.match(diagramPlaceholder, /Bonus point if the team regains once support arrives/);
 });

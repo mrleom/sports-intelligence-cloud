@@ -717,7 +717,7 @@ test("generatePack routes supported guided focuses into Defensive Transition Com
     assert.match(activity3.description, /counter runner|central danger gates/i);
     assert.equal(
       activity4.description,
-      "Format: directional small-sided transition game with fast restarts. Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly. Focus: react in the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay the counter, and regain when support arrives."
+      "Format: Directional small-sided transition game with fast restarts. Teams: Play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly. Focus: When possession is lost, press the ball, recover inside, protect the middle, delay the counter, and regain together."
     );
     assert.doesNotMatch(activity4.description, /Rules \/ scoring:|Scoring:|Constraint:|Win condition:|Winner rule:/i);
   }
