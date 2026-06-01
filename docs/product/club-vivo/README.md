@@ -12,6 +12,9 @@ Draft v1
 - `soccer-development-taxonomy-v1.md`
   - Source-of-truth taxonomy for age bands, objectives, specific focuses, golden-template planning,
     future routing, and Spanish/i18n terminology.
+- `golden-template-library-v1.md`
+  - Docs-first golden-template library plan for reviewed soccer session patterns, quality gates,
+    Wave 1 implementation evidence, and future deterministic routing.
 - `training-prescription-layer.md`
   - Proposed Club Vivo Training Prescription Layer product direction. Not shipped runtime behavior.
 
