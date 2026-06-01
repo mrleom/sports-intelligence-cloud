@@ -648,7 +648,7 @@ test("generatePack routes guided Recover quickly focus to compact-recovery langu
   const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
 
   assert.equal(activity2.name, "Compact Recovery Transition Game");
-  assert.equal(activity3.name, "Recover And Protect Central Spaces");
+  assert.equal(activity3.name, "Recover and Protect Central Spaces");
   assert.match(text, /first three seconds after loss|press the ball|recover inside/i);
   assert.match(text, /protect the middle|delay the counter|regain when support arrives/i);
 });
@@ -692,9 +692,9 @@ test("generatePack routes supported guided focuses into Defensive Transition Com
     assert.deepEqual(
       pack.sessions[0].activities.map((activity) => activity.name),
       [
-        "Ball-And-Reaction Activation",
+        "Ball and Reaction Activation",
         "Compact Recovery Transition Game",
-        "Recover And Protect Central Spaces",
+        "Recover and Protect Central Spaces",
         "Compact Recovery Final Game",
       ]
     );

@@ -612,9 +612,9 @@ test("processTrainingBriefSessionPackRequest routes defensive transition handoff
 
   assert.equal(result.sessionPackResult.normalizedInput.theme, "Improve defensive transition after losing possession and rec");
   assert.deepEqual(names, [
-    "Ball-And-Reaction Activation",
+    "Ball and Reaction Activation",
     "Compact Recovery Transition Game",
-    "Recover And Protect Central Spaces",
+    "Recover and Protect Central Spaces",
     "Compact Recovery Final Game",
   ]);
   assert.match(text, /after losing possession|react on loss|nearest player presses/i);
@@ -641,9 +641,9 @@ test("guided Transition to defend focus routes into Defensive Transition Compact
   const learningText = [activity1, activity2, activity3].map((activity) => activity.description).join(" ");
 
   assert.deepEqual(session.activities.map((activity) => activity.name), [
-    "Ball-And-Reaction Activation",
+    "Ball and Reaction Activation",
     "Compact Recovery Transition Game",
-    "Recover And Protect Central Spaces",
+    "Recover and Protect Central Spaces",
     "Compact Recovery Final Game",
   ]);
   assert.deepEqual(session.activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
@@ -1112,9 +1112,15 @@ test("generated session At a Glance includes coach note and session story fallba
   assert.match(sessionNewFlow, /Add chase pressure/);
   assert.match(sessionNewFlow, /Add support and a second decision/);
   assert.match(sessionNewFlow, /Finish with an escape-gates mini tournament/);
+  assert.match(sessionNewFlow, /Start with a simple passing-to-turnover reaction/);
+  assert.match(sessionNewFlow, /Add a live counter threat/);
+  assert.match(sessionNewFlow, /Progress into protecting the central lane, then finish with a directional transition game where teams must react immediately after losing the ball/);
   assert.match(sessionNewFlow, /coachNote=\{generateState\.values\.constraints\}/);
   assert.match(savedSessionPage, /Session story/);
   assert.match(savedSessionPage, /Introduce gates and first-touch scoring/);
+  assert.match(savedSessionPage, /Start with a simple passing-to-turnover reaction/);
+  assert.match(savedSessionPage, /Add a live counter threat/);
+  assert.match(savedSessionPage, /Progress into protecting the central lane, then finish with a directional transition game where teams must react immediately after losing the ball/);
 });
 
 test("diagram mini legends stay local and line styles are distinct", () => {
@@ -1169,19 +1175,35 @@ test("reaction chase progression and final card stay coach-readable", () => {
 
 test("compact recovery diagrams show loss reaction, inside recovery, and directional final game", () => {
   const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+  const activityOutput = readRepoFile("apps", "club-vivo", "components", "coach", "ActivityOutput.tsx");
+  const extractFunction = (startName, endName) => diagramPlaceholder.slice(
+    diagramPlaceholder.indexOf(`function ${startName}`),
+    diagramPlaceholder.indexOf(`function ${endName}`)
+  );
+  const countMatches = (value, pattern) => (value.match(pattern) || []).length;
+  const activationPanels = extractFunction("buildCompactRecoveryActivationPanels", "buildCompactRecoveryTransitionPanels");
+  const transitionPanels = extractFunction("buildCompactRecoveryTransitionPanels", "buildCompactRecoveryProgressionPanels");
+  const progressionPanels = extractFunction("buildCompactRecoveryProgressionPanels", "buildGenericPanels");
 
   assert.match(diagramPlaceholder, /compact_recovery_activation/);
   assert.match(diagramPlaceholder, /compact_recovery_transition/);
   assert.match(diagramPlaceholder, /compact_recovery_progression/);
   assert.match(diagramPlaceholder, /function buildCompactRecoveryActivationPanels/);
-  assert.match(diagramPlaceholder, /begin with a small passing group and one orange central lane/);
-  assert.match(diagramPlaceholder, /on the turnover call, the nearest defender presses and the partner recovers inside/);
+  assert.match(diagramPlaceholder, /begin with the same two blue players and one red counter attacker/);
+  assert.match(diagramPlaceholder, /the same red counter attacker receives the turnover/);
   assert.match(diagramPlaceholder, /function buildCompactRecoveryTransitionPanels/);
-  assert.match(diagramPlaceholder, /show the ball-loss point, red counter threat, blue first pressure, cover, inside recovery, and two counter gates/);
+  assert.match(diagramPlaceholder, /keep three blue recovery players and two red counter players visible around the ball-loss point and counter gates/);
+  assert.match(diagramPlaceholder, /the same red pair counters toward a gate while blue presses the ball, covers, recovers inside/);
   assert.match(diagramPlaceholder, /action: "counter"/);
   assert.match(diagramPlaceholder, /function buildCompactRecoveryProgressionPanels/);
-  assert.match(diagramPlaceholder, /add a recovery line, central danger lane, and a high counter runner/);
-  assert.match(diagramPlaceholder, /first three seconds after loss, press the ball, cover behind it, recover inside, communicate, and delay the counter/);
+  assert.match(diagramPlaceholder, /release a higher red counter runner beyond the recovery line toward the central danger lane/);
+  assert.match(diagramPlaceholder, /the released red counter runner attacks the target while the same blue group presses, covers, and recovers inside/);
+  assert.equal(countMatches(activationPanels, /role: "coached"/g), 4);
+  assert.equal(countMatches(activationPanels, /role: "opposition"/g), 2);
+  assert.equal(countMatches(transitionPanels, /role: "coached"/g), 6);
+  assert.equal(countMatches(transitionPanels, /role: "opposition"/g), 4);
+  assert.equal(countMatches(progressionPanels, /role: "coached"/g), 6);
+  assert.equal(countMatches(progressionPanels, /role: "opposition"/g), 4);
   assert.match(diagramPlaceholder, /centralProtectionZone: \{ group: "space", label: "Orange zone = central space to protect" \}/);
   assert.match(diagramPlaceholder, /counterThreatLine: \{ group: "movement", label: "Red solid line = counter threat" \}/);
   assert.match(diagramPlaceholder, /compactRecoveryRun: \{ group: "movement", label: "Blue dashed line = pressure \/ cover \/ inside recovery" \}/);
@@ -1194,6 +1216,10 @@ test("compact recovery diagrams show loss reaction, inside recovery, and directi
   assert.match(diagramPlaceholder, /\["centralProtectionZone", "counterGate", "compactRecoveryRun", "counterThreatLine"\]/);
   assert.match(diagramPlaceholder, /When possession is lost, react in the first three seconds: press the ball, recover inside, communicate, protect the middle, and delay the counter/);
   assert.match(diagramPlaceholder, /Bonus point if the team regains once support arrives/);
+  assert.match(activityOutput, /function buildCompactRecoveryFinalGameSections/);
+  assert.match(activityOutput, /Directional small-sided transition game with fast restarts/);
+  assert.match(activityOutput, /When possession is lost, press the ball, recover inside, protect the middle, delay the counter, and regain together/);
+  assert.match(activityOutput, /if \(isCompactRecoveryFinalGame\(activity\)\) {\s*return buildCompactRecoveryFinalGameSections\(\);\s*}/);
 });
 
 test("quick drill-mode requests create one main activity", async () => {

@@ -215,6 +215,18 @@ function buildSessionStory(activities: GeneratedSession["activities"]) {
     ].join(" ");
   }
 
+  if (
+    activities.length === 4 &&
+    activityText.includes("compact recovery transition game") &&
+    activityText.includes("compact recovery final game")
+  ) {
+    return [
+      "Start with a simple passing-to-turnover reaction.",
+      "Add a live counter threat.",
+      "Progress into protecting the central lane, then finish with a directional transition game where teams must react immediately after losing the ball."
+    ].join(" ");
+  }
+
   const steps = activities
     .map((activity, index) => {
       const name = activity.name.replace(/\s+/g, " ").trim();

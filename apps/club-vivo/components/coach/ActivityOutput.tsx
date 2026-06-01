@@ -221,12 +221,28 @@ function isFinalGameActivity(activity: ActivityOutputActivity) {
   return /final game|gate battle final|competitive final|tournament/i.test(activity.name);
 }
 
+function isCompactRecoveryFinalGame(activity: ActivityOutputActivity) {
+  return /compact recovery final game/i.test(activity.name);
+}
+
+function buildCompactRecoveryFinalGameSections(): ActivitySection[] {
+  return [
+    { label: "Format", text: "Directional small-sided transition game with fast restarts." },
+    { label: "Teams", text: "Play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly." },
+    { label: "Focus", text: "When possession is lost, press the ball, recover inside, protect the middle, delay the counter, and regain together." }
+  ];
+}
+
 function keepFinalGameLeftSections(
   activity: ActivityOutputActivity,
   sections: ActivitySection[]
 ) {
   if (!isFinalGameActivity(activity)) {
     return sections;
+  }
+
+  if (isCompactRecoveryFinalGame(activity)) {
+    return buildCompactRecoveryFinalGameSections();
   }
 
   const allowedLabels = new Set(["format", "teams", "focus"]);
@@ -236,6 +252,10 @@ function keepFinalGameLeftSections(
 function buildFallbackSections(activity: ActivityOutputActivity): ActivitySection[] {
   if (!isFinalGameActivity(activity)) {
     return [];
+  }
+
+  if (isCompactRecoveryFinalGame(activity)) {
+    return buildCompactRecoveryFinalGameSections();
   }
 
   return [
