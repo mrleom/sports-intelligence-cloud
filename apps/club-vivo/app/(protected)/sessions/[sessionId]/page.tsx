@@ -223,7 +223,7 @@ function DiagramLegendCard() {
           label="Solid line = pass / shot / ball action"
           />
           <DiagramLegendItem
-            symbol={<LineLegendSymbol dash="1 4" />}
+            symbol={<LineLegendSymbol dash="0.1 3.5" />}
             label="Dotted line = dribble / carry"
           />
           <DiagramLegendItem

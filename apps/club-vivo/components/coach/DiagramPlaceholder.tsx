@@ -918,7 +918,7 @@ function ArrowPath({
 }) {
   const color =
     action === "pressure" ? "#ef4444" : action === "rotation" ? "#64748b" : "#2563eb";
-  const dash = action === "pressure" || action === "run" ? "6 4" : action === "carry" ? "1 4" : undefined;
+  const dash = action === "pressure" || action === "run" ? "6 4" : action === "carry" ? "0.1 3.5" : undefined;
   const markerSuffix = action === "pressure" ? "red" : action === "rotation" ? "slate" : "blue";
 
   return (
@@ -1089,7 +1089,7 @@ function LegendSymbol({ item }: { item: LegendKey }) {
     item === "recoveryDefenderLine"
       ? "6 4"
       : item === "dribbleCarry" || item === "attackerDribbleLine"
-        ? "1 4"
+        ? "0.1 3.5"
         : undefined;
   const path = item === "rotationReset" ? "M4 10 C11 2, 22 2, 29 8" : "M2 7 H28";
 
@@ -1207,13 +1207,16 @@ function FinalGameGridVisual() {
 function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
   const description = activity?.description?.trim() ||
     "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
+  const isEscapeGatesTournament = /escape gates mini tournament/i.test(activity?.name || "");
+  const bonusText = isEscapeGatesTournament
+    ? "A goal counts double within five seconds of escaping pressure or after using a support player."
+    : extractFinalGameLine(description, "Scoring") || "Add one bonus point when the session focus creates the chance.";
+  const winnerRuleText = isEscapeGatesTournament
+    ? "Play 5-minute games or first team to two goals; winner stays on or teams reset for a quick rematch."
+    : extractFinalGameLine(description, "Win condition") || "First team to three goals; winner stays on or reset for a quick rematch.";
   const rows = [
-    ["Format", extractFinalGameLine(description, "Format") || "Play 4v4 or 5v5 in the same 36 x 28 meter area (39 x 31 yards)."],
-    ["Goals", "Four cone gates or Pugg goals."],
-    ["Game length", extractFinalGameLine(description, "Teams") || "5-minute games or first team to two goals."],
-    ["Bonus", extractFinalGameLine(description, "Scoring") || "A goal counts double within five seconds of escaping pressure or after using support."],
-    ["Winner rule", extractFinalGameLine(description, "Win condition") || "Most goals after 10 minutes, or first team to three goals."]
-  ].filter(([, text]) => text);
+    ["Bonus + winner rule", `Bonus: ${bonusText} Winner rule: ${winnerRuleText}`]
+  ];
 
   return (
     <div className="overflow-hidden rounded-2xl border border-teal-100 bg-teal-50/50">
@@ -1232,7 +1235,7 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
             <dt className="text-[11px] font-semibold uppercase tracking-wide text-teal-800">
               {label}
             </dt>
-            <dd className="mt-1 text-xs leading-5 text-slate-600">{shortenDiagramText(text, 130)}</dd>
+            <dd className="mt-1 text-xs leading-5 text-slate-600">{shortenDiagramText(text, 220)}</dd>
           </div>
         ))}
       </dl>
