@@ -219,6 +219,10 @@ change across Setup, How to play, and How to score / reset so movement is visibl
 every caption. Activity 2 and Activity 3 must not reuse the same visual shape; Activity 3 should
 show a different pressure angle, recovery/counter shape, or second decision.
 
+For compact defensive-transition sessions, Activity 2 should show the loss trigger, first pressure,
+cover, and inside recovery. Activity 3 should add a counter runner or central danger gate. Activity
+4 should use a simple directional final-game grid with compact-recovery scoring detail below it.
+
 Avoid unexplained grey curved reset arrows. Keep arrows and arrowheads thin, avoid overlap with
 players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. Mini
 legends should stay local to each diagram: only include visible symbols or actions, avoid duplicate

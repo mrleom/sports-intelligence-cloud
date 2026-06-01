@@ -134,6 +134,7 @@ function extractPromptSignals(theme, options = {}) {
       playerCountMatch?.[1] ? Number.parseInt(playerCountMatch[1], 10) : options.playerCount || null,
     equipment: Array.isArray(options.equipment) ? options.equipment : [],
     methodologyInfluence: options.methodologyInfluence || null,
+    ageBand: normalizeTheme(options.ageBand),
     quickSession: inferredThemeMode === "quick",
     sessionMode,
   };
@@ -645,6 +646,7 @@ function isRecoveryRunText(text) {
 function isDefensiveTransitionText(text) {
   const hasTransitionMoment =
     text.includes("defensive transition") ||
+    text.includes("transition to defend") ||
     text.includes("after losing possession") ||
     text.includes("after possession loss") ||
     text.includes("loss of possession") ||
@@ -662,6 +664,23 @@ function isDefensiveTransitionText(text) {
     text.includes("central space");
 
   return hasTransitionMoment && hasDefensiveResponse;
+}
+
+function isCompactRecoveryText(text) {
+  if (isDefensiveTransitionText(text)) {
+    return true;
+  }
+
+  const hasSupportedFocus =
+    text.includes("delay and recover") ||
+    text.includes("compact defending") ||
+    text.includes("recover quickly");
+  const hasSupportedObjective =
+    text.includes("defending") ||
+    text.includes("team shape") ||
+    text.includes("physical / reaction / speed");
+
+  return hasSupportedObjective && hasSupportedFocus;
 }
 
 function isPressingText(text) {
@@ -686,7 +705,7 @@ function getThemeSpecificLanguage(promptSignals, phase) {
   const text = getPromptSignalText(promptSignals);
   const isSingleActivity = phase === "single";
 
-  if (isDefensiveTransitionText(text)) {
+  if (isCompactRecoveryText(text)) {
     return {
       setup:
         phase === "progression"
@@ -1099,10 +1118,66 @@ function buildCoachReadyDescription({ phase, baseDescription, promptSignals }) {
   );
 }
 
+function buildCompactRecoveryDescription({ phase, promptSignals }) {
+  const isU10 = promptSignals?.ageBand === "u10";
+  const equipmentText = describeEquipment(promptSignals?.equipment);
+  const coachNote = getCoachNotesSnippet(promptSignals?.coachNotes);
+  const coachNoteText = coachNote ? ` Coach note: ${coachNote}.` : "";
+  const u10Rule = isU10
+    ? " For U10, use one counter runner and coach three words: press, inside, delay."
+    : "";
+
+  if (phase === "arrival") {
+    return capDescription(
+      [
+        `Setup: Grid: 16 x 15 meters (18 x 16 yards) with pairs, central safety gates, recovery cones, and ${equipmentText}.`,
+        `How to start: partners pass until the coach calls turnover.${coachNoteText}`,
+        "How to run it: nearest player presses for three seconds while the partner recovers inside, communicates, protects the middle, and delays.",
+        "Rules / scoring: score when the pair gets compact and regains once support arrives.",
+        "Coaching cues: react, press the ball, recover inside, talk, protect the middle, delay, then regain together.",
+        "What to watch for: jogging back, both players chasing, or the middle staying open.",
+        "Safety / space adjustment: keep lanes clear and widen the grid if paths cross.",
+        `Progression: add one counter runner after the turnover.${u10Rule}`,
+        "Regression: walk through the turnover, shorten the recovery, or freeze once to show the compact shape.",
+      ].join(" ")
+    );
+  }
+
+  if (phase === "progression") {
+    return capDescription(
+      [
+        `Setup: Field: 24 x 20 meters (26 x 22 yards) with a possession zone, counter runner, recovery line, central danger gates, and ${equipmentText}.`,
+        `How to start: call turnover and release the counter runner toward the danger gates.${coachNoteText}`,
+        "How to run it: nearest player presses, one covers, and the rest recover inside to protect the middle, delay, and regain when support arrives.",
+        "Rules / scoring: score for passes before loss; recovery team scores by protecting the gates for five seconds or regaining together.",
+        "Coaching cues: react in three seconds, press, cover, recover inside, talk, protect the middle, delay, then regain.",
+        "What to watch for: a central counter, no cover, or recovery players staying wide.",
+        "Safety / space adjustment: release one runner at a time and widen the lane if players collide.",
+        `Progression: add a second counter runner or require the regain team to find the first forward pass.${u10Rule}`,
+        "Regression: keep one runner, widen the gates, or use a coach-called turnover.",
+      ].join(" ")
+    );
+  }
+
+  return capDescription(
+    [
+      `Setup: Grid: 20 x 18 meters (22 x 20 yards) with a possession area, counter gates, restart balls, recovery lines, and ${equipmentText}.`,
+      `How to start: play a short possession round, then coach calls turnover.${coachNoteText}`,
+      "How to run it: coach the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay, and regain when support arrives.",
+      "Rules / scoring: score for connected passes; recovery team scores by forcing wide, delaying five seconds, or regaining together.",
+      "Coaching cues: react on loss, press, cover, recover inside for compact recovery, talk, protect the middle, and regain together.",
+      "What to watch for: dropping without pressure, wide recovery gaps, or a central split pass.",
+      "Safety / space adjustment: keep gates wide, release one counter at a time, and enlarge the grid if paths cross.",
+      `Progression: shorten recovery time or add a second counter runner.${u10Rule}`,
+      "Regression: use a coach-called turnover, widen the lane, or freeze once to show the compact shape.",
+    ].join(" ")
+  );
+}
+
 function refineActivityName(name, promptSignals, phase) {
   const text = getPromptSignalText(promptSignals);
 
-  if (isDefensiveTransitionText(text)) {
+  if (isCompactRecoveryText(text)) {
     if (phase === "main") return "Compact Recovery Transition Game";
     if (phase === "progression") return "Recover And Protect Central Spaces";
   }
@@ -1171,7 +1246,7 @@ function buildFinalGameName({ promptSignals, ageBand }) {
 
   if (archetype?.key === "duck-duck-goose-defending-gates") return "Defending Gates Tournament";
   if (archetype?.key === "duck-duck-goose-escape") return "Escape Gates Mini Tournament";
-  if (isDefensiveTransitionText(promptText)) return "Compact Recovery Final Game";
+  if (isCompactRecoveryText(promptText)) return "Compact Recovery Final Game";
   if (isPressingText(promptText)) return "Press And Counter Final Game";
   if (isBuildOutUnderPressureText(promptText)) return "Build-Out Pressure Final Game";
   if (promptText.includes("overload")) return "Overload Gate Battle Final Game";
@@ -1192,12 +1267,24 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
   const objective = compactText(promptSignals?.specificFocus || promptSignals?.primaryObjective, "the session theme");
   const gameName = buildFinalGameName({ promptSignals, ageBand });
   const text = getPromptSignalText(promptSignals);
-  const isEscapeGatesTournament = detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape";
+  const archetype = detectSoccerActivityArchetype(promptSignals);
+  const isEscapeGatesTournament = archetype?.key === "duck-duck-goose-escape";
+  const isCompactRecoveryFinalGame = !archetype && isCompactRecoveryText(text);
+
+  if (isCompactRecoveryFinalGame) {
+    return capDescription(
+      [
+        "Format: directional small-sided transition game with fast restarts.",
+        "Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly.",
+        "Focus: react in the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay the counter, and regain when support arrives.",
+      ].join(" ")
+    );
+  }
 
   const scoringTargetText = hasGoalEquipment(promptSignals?.equipment)
     ? getScoringTargets(promptSignals?.equipment)
     : "cone gates";
-  const finalGameConstraint = isDefensiveTransitionText(text)
+  const finalGameConstraint = isCompactRecoveryText(text)
     ? "when possession is lost, the nearest player presses and the rest recover inside before the counter can split them"
     : isPressingText(text)
       ? "the pressing bonus only counts when the team presses together on a clear trigger before countering"
@@ -1208,7 +1295,7 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
         : text.includes("overload")
           ? "the attacking team must find a wide player or support run before the bonus point counts"
           : "the bonus only counts when the team uses the session focus before scoring";
-  const focusText = isDefensiveTransitionText(text)
+  const focusText = isCompactRecoveryText(text)
     ? "compact recovery, central protection, fast reaction after loss, and game flow"
     : isPressingText(text)
       ? "pressing triggers, connected pressure-cover, quick counters, and game flow"
@@ -1267,6 +1354,7 @@ function normalizeFullSessionShape({ session, promptSignals }) {
   const minutes = getFullSessionDurationBlocks(session.durationMin);
   const activities = Array.isArray(session.activities) ? session.activities : [];
   const archetype = detectSoccerActivityArchetype(promptSignals);
+  const isCompactRecovery = !archetype && isCompactRecoveryText(getPromptSignalText(promptSignals));
   const first = pickMainActivity(
     activities,
     0,
@@ -1299,11 +1387,15 @@ function normalizeFullSessionShape({ session, promptSignals }) {
           ? "3v3 Pressure and Cover Gates"
           : archetype?.key === "duck-duck-goose-escape"
             ? "Reaction Chase Escape Gates"
+          : isCompactRecovery
+            ? "Compact Recovery Transition Game"
           : archetype?.name || refineActivityName(second.name, promptSignals, "main"),
       minutes: minutes[1],
       description:
         archetype?.key === "duck-duck-goose-defending-gates"
           ? buildDefendingGatesMainDescription({ promptSignals, phase: "main" })
+          : isCompactRecovery
+            ? buildCompactRecoveryDescription({ phase: "main", promptSignals })
           : buildCoachReadyDescription({
               phase: "main",
               baseDescription: second.description,
@@ -1320,11 +1412,15 @@ function normalizeFullSessionShape({ session, promptSignals }) {
           ? "Recover, Delay, Win It Back"
           : archetype?.key === "duck-duck-goose-escape"
             ? "Escape, Support, Score Progression"
+          : isCompactRecovery
+            ? "Recover And Protect Central Spaces"
           : refineActivityName(third.name, promptSignals, "progression"),
       minutes: minutes[2],
       description:
         archetype?.key === "duck-duck-goose-defending-gates"
           ? buildDefendingGatesMainDescription({ promptSignals, phase: "progression" })
+          : isCompactRecovery
+            ? buildCompactRecoveryDescription({ phase: "progression", promptSignals })
           : buildCoachReadyDescription({
               phase: "progression",
               baseDescription: third.description,
@@ -1363,15 +1459,19 @@ function normalizeFullSessionShape({ session, promptSignals }) {
           ? "Chase, Delay, Escape"
           : archetype?.key === "duck-duck-goose-escape"
             ? "Trigger Touch Activation"
+          : isCompactRecovery
+            ? "Ball-And-Reaction Activation"
           : getPromptSignalText(promptSignals).includes("overload")
             ? "Overload Gates Activation"
             : first.name,
         minutes: minutes[0],
-        description: buildCoachReadyDescription({
-          phase: archetype?.key === "duck-duck-goose-defending-gates" ? "main" : "arrival",
-          baseDescription: first.description,
-          promptSignals,
-        }),
+        description: isCompactRecovery
+          ? buildCompactRecoveryDescription({ phase: "arrival", promptSignals })
+          : buildCoachReadyDescription({
+              phase: archetype?.key === "duck-duck-goose-defending-gates" ? "main" : "arrival",
+              baseDescription: first.description,
+              promptSignals,
+            }),
       },
       ...mainActivities,
       {
@@ -1693,6 +1793,7 @@ function generateSessionFromTheme({
   resolvedPlayerCount,
 }) {
   const promptSignals = extractPromptSignals(theme, {
+    ageBand,
     sessionMode,
     coachNotes,
     playerCount: resolvedPlayerCount,

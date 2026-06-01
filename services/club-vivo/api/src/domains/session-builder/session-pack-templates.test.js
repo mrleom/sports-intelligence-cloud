@@ -632,7 +632,7 @@ test("generatePack routes guided Scan before receiving focus to first-touch rece
   assert.match(text, /receive side-on|first touch away from pressure|target pass|defender/i);
 });
 
-test("generatePack routes guided Recover quickly focus to recovery-run language", () => {
+test("generatePack routes guided Recover quickly focus to compact-recovery language", () => {
   const pack = generatePack({
     sport: "soccer",
     sportPackId: "fut-soccer",
@@ -647,10 +647,99 @@ test("generatePack routes guided Recover quickly focus to recovery-run language"
   const [, activity2, activity3] = pack.sessions[0].activities;
   const text = pack.sessions[0].activities.map((activity) => `${activity.name} ${activity.description}`).join(" ");
 
-  assert.equal(activity2.name, "Recovery Run Delay Gates");
-  assert.equal(activity3.name, "Recover Goal-Side Counter Game");
-  assert.match(text, /recovery start line|recovering defender|counter gate/i);
-  assert.match(text, /recovering goal-side|delay|forcing wide|winning the ball/i);
+  assert.equal(activity2.name, "Compact Recovery Transition Game");
+  assert.equal(activity3.name, "Recover And Protect Central Spaces");
+  assert.match(text, /first three seconds after loss|press the ball|recover inside/i);
+  assert.match(text, /protect the middle|delay the counter|regain when support arrives/i);
+});
+
+test("generatePack routes supported guided focuses into Defensive Transition Compact Recovery", () => {
+  const guidedCases = [
+    ["Transition to defend", "Protect central space"],
+    ["Transition to defend", "Recovery runs"],
+    ["Defending", "Delay and recover"],
+    ["Team shape", "Compact defending"],
+    ["Physical / reaction / speed", "Recover quickly"],
+  ];
+  const requiredSectionLabels = [
+    "Setup",
+    "How to start",
+    "How to run it",
+    "Rules / scoring",
+    "Coaching cues",
+    "What to watch for",
+    "Safety / space adjustment",
+    "Progression",
+    "Regression",
+  ];
+
+  for (const [primaryObjective, specificFocus] of guidedCases) {
+    const pack = generatePack({
+      sport: "soccer",
+      sportPackId: "fut-soccer",
+      ageBand: "u14",
+      durationMin: 60,
+      theme: `Primary session objective: ${primaryObjective} | Specific focus: ${specificFocus}`,
+      sessionMode: "full_session",
+      sessionsCount: 1,
+      equipment: ["balls", "cones", "pinnies"],
+    });
+
+    const [activity1, activity2, activity3, activity4] = pack.sessions[0].activities;
+    const learningActivities = [activity1, activity2, activity3];
+    const learningText = learningActivities.map((activity) => activity.description).join(" ");
+
+    assert.deepEqual(
+      pack.sessions[0].activities.map((activity) => activity.name),
+      [
+        "Ball-And-Reaction Activation",
+        "Compact Recovery Transition Game",
+        "Recover And Protect Central Spaces",
+        "Compact Recovery Final Game",
+      ]
+    );
+    assert.deepEqual(pack.sessions[0].activities.map((activity) => activity.minutes), [12, 18, 18, 12]);
+
+    for (const activity of learningActivities) {
+      for (const label of requiredSectionLabels) {
+        assert.match(activity.description, new RegExp(`${label}:`, "i"));
+      }
+    }
+
+    assert.match(learningText, /first three seconds after loss|first three seconds: press the ball/i);
+    assert.match(learningText, /press the ball/i);
+    assert.match(learningText, /recover inside/i);
+    assert.match(learningText, /communicate|talk early/i);
+    assert.match(learningText, /protect the middle/i);
+    assert.match(learningText, /delay the counter|delay/i);
+    assert.match(learningText, /regain when support arrives|regaining together/i);
+    assert.notEqual(activity2.description, activity3.description);
+    assert.match(activity3.description, /counter runner|central danger gates/i);
+    assert.equal(
+      activity4.description,
+      "Format: directional small-sided transition game with fast restarts. Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly. Focus: react in the first three seconds after loss: press the ball, recover inside, communicate, protect the middle, delay the counter, and regain when support arrives."
+    );
+    assert.doesNotMatch(activity4.description, /Rules \/ scoring:|Scoring:|Constraint:|Win condition:|Winner rule:/i);
+  }
+});
+
+test("generatePack simplifies Defensive Transition Compact Recovery for U10", () => {
+  const buildPack = (ageBand) => generatePack({
+    sport: "soccer",
+    sportPackId: "fut-soccer",
+    ageBand,
+    durationMin: 60,
+    theme: "Primary session objective: Transition to defend | Specific focus: Protect central space",
+    sessionMode: "full_session",
+    sessionsCount: 1,
+    equipment: ["balls", "cones", "pinnies"],
+  });
+
+  const u10Activity3 = buildPack("u10").sessions[0].activities[2];
+  const u14Activity3 = buildPack("u14").sessions[0].activities[2];
+
+  assert.match(u10Activity3.description, /For U10, use one counter runner and coach three words: press, inside, delay/i);
+  assert.doesNotMatch(u14Activity3.description, /For U10|coach three words/i);
 });
 
 test("generatePack avoids Pugg naming for finishing with generic equipment", () => {
