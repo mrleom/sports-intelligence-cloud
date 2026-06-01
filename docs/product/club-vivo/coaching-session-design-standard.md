@@ -222,6 +222,10 @@ show a different pressure angle, recovery/counter shape, or second decision.
 For compact defensive-transition sessions, Activity 2 should show the loss trigger, first pressure,
 cover, and inside recovery. Activity 3 should add a counter runner or central danger gate. Activity
 4 should use a simple directional final-game grid with compact-recovery scoring detail below it.
+Use the standard clear grey activity-area style for these diagrams. Reserve red for opponents and
+counter threats. Reserve orange for target gates or a central danger/protection zone, and add a local
+mini-legend item whenever that orange zone is visible. The activation visual should be a simple
+passing-to-turnover picture rather than a reused chase/escape picture.
 
 Avoid unexplained grey curved reset arrows. Keep arrows and arrowheads thin, avoid overlap with
 players, gates, and the ball, and use captions and mini legends for detail so the SVG stays clean. Mini

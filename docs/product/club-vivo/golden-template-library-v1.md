@@ -203,7 +203,7 @@ Each implemented golden template should have fixtures that prove:
 | Template | Current status | Primary purpose |
 | --- | --- | --- |
 | Reaction Chase Escape Gates | Reference implementation evidence | Translate a playful reaction-chase idea into scanning, first touch, escape, support, and competition. |
-| Defensive Transition Compact Recovery | Reference implementation evidence | React after loss, press the ball, recover inside, and protect central space. |
+| Defensive Transition Compact Recovery | Partial deterministic coverage | React after loss, press the ball, recover inside, and protect central space. |
 | Press And Counter | Partial deterministic coverage | Recognize a pressing trigger, press together, regain, and counter quickly. |
 | Build-Out Through Pressure | Partial deterministic coverage | Create support angles, play away from pressure, and break the first pressing line. |
 | 1v1 Delay And Recover | Partial deterministic coverage | Defend side-on, delay, recover goal-side, and counter after the regain. |
@@ -241,8 +241,8 @@ Each implemented golden template should have fixtures that prove:
 | Diagram pattern | Activity 2 shows the loss trigger, nearest-player pressure, cover, and inside recovery. Activity 3 adds a counter runner or central danger gate. Activity 4 uses a directional final-game grid with compact-recovery scoring. |
 | Expected activity structure | Make the first three seconds after loss visible: press the ball, recover inside, communicate, protect the middle, delay, and regain when support arrives. |
 | Spanish terminology notes | Prefer `transición defensiva`, `presionar tras perder el balón`, `recuperación compacta`, `proteger el espacio central`, and `temporizar el contraataque`. |
-| Implementation status | **Reference implementation evidence.** Current code has a bounded compact-recovery classifier for supported guided focuses, a dedicated four-activity 60-minute story, full coach-ready sections for Activities 1 through 3, a compact Activity 4 source description, a U10 simplification, distinct Activity 2 and Activity 3 diagram kinds, a directional final-game visual, guided backend fixtures, and pipeline-level renderer checks. |
-| Next implementation test needed | Add a saved-session rendering smoke after deployment and review one U10 and one U16 live output with coaches before broadening the route. |
+| Implementation status | **Partial deterministic coverage.** Current code has a bounded compact-recovery classifier for supported guided focuses, a dedicated four-activity 60-minute story, full coach-ready sections for Activities 1 through 3, a compact Activity 4 source description, a U10 simplification, distinct activation, Activity 2, and Activity 3 diagram kinds, a directional final-game visual, guided backend fixtures, and pipeline-level renderer checks. It remains a golden-template candidate until a deployed live visual smoke is reviewed. |
+| Next implementation test needed | Run a saved-session rendering smoke after deployment and review one U10 and one U16 live output with coaches before broadening the route or promoting the status. |
 
 ### 6.3 Press And Counter
 
