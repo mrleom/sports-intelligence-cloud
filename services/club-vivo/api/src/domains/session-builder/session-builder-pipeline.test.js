@@ -1101,18 +1101,26 @@ test("diagram mini legends stay local and line styles are distinct", () => {
 
 test("reaction chase progression and final card stay coach-readable", () => {
   const diagramPlaceholder = readRepoFile("apps", "club-vivo", "components", "coach", "DiagramPlaceholder.tsx");
+  const activityOutput = readRepoFile("apps", "club-vivo", "components", "coach", "ActivityOutput.tsx");
 
   assert.match(diagramPlaceholder, /nearby coach/);
   assert.match(diagramPlaceholder, /support and a second defender/);
   assert.match(diagramPlaceholder, /attacks any open scoring gate/);
   assert.doesNotMatch(diagramPlaceholder, blockedReactionCaptionPattern);
   assert.match(diagramPlaceholder, /FinalGameGridVisual/);
-  assert.match(diagramPlaceholder, /\["Bonus \+ winner rule", `Bonus: \$\{bonusText\} Winner rule: \$\{winnerRuleText\}`\]/);
+  assert.match(activityOutput, /"Format",\s*"Teams",\s*"Focus",/);
+  assert.doesNotMatch(activityOutput, /team context\|format\|mode/);
+  assert.match(diagramPlaceholder, /\["Rules \/ scoring", rulesScoringText\]/);
+  assert.match(diagramPlaceholder, /\["Bonus \+ winner rule", `\$\{bonusText\} \$\{winnerRuleText\}`\]/);
   assert.doesNotMatch(diagramPlaceholder, /\["Format", extractFinalGameLine/);
   assert.doesNotMatch(diagramPlaceholder, /\["Goals", "Four cone gates or Pugg goals\."\]/);
   assert.doesNotMatch(diagramPlaceholder, /\["Game length", extractFinalGameLine/);
-  assert.match(diagramPlaceholder, /5-minute games or first team to two goals/);
-  assert.match(diagramPlaceholder, /goal counts double/i);
+  assert.doesNotMatch(diagramPlaceholder, /\["Constraint"/);
+  assert.doesNotMatch(diagramPlaceholder, /\["Win condition"/);
+  assert.doesNotMatch(diagramPlaceholder, /\["Winner rule"/);
+  assert.match(diagramPlaceholder, /Score by escaping pressure and playing or dribbling through any open gate/);
+  assert.match(diagramPlaceholder, /Bonus point if the team uses support before scoring/);
+  assert.match(diagramPlaceholder, /First team to three goals wins, or most goals after five minutes/);
 });
 
 test("quick drill-mode requests create one main activity", async () => {

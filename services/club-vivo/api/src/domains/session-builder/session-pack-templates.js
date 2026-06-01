@@ -1192,6 +1192,7 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
   const objective = compactText(promptSignals?.specificFocus || promptSignals?.primaryObjective, "the session theme");
   const gameName = buildFinalGameName({ promptSignals, ageBand });
   const text = getPromptSignalText(promptSignals);
+  const isEscapeGatesTournament = detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape";
 
   const scoringTargetText = hasGoalEquipment(promptSignals?.equipment)
     ? getScoringTargets(promptSignals?.equipment)
@@ -1202,7 +1203,7 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
       ? "the pressing bonus only counts when the team presses together on a clear trigger before countering"
       : isBuildOutUnderPressureText(text)
         ? "the build-out bonus only counts when the team creates two support angles before breaking the first pressing line"
-        : detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+        : isEscapeGatesTournament
           ? "the attack must start from a trigger call, first touch away from pressure, and quick escape decision"
         : text.includes("overload")
           ? "the attacking team must find a wide player or support run before the bonus point counts"
@@ -1213,25 +1214,27 @@ function buildFinalGameDescription({ promptSignals, ageBand }) {
       ? "pressing triggers, connected pressure-cover, quick counters, and game flow"
       : isBuildOutUnderPressureText(text)
         ? "support angles, calm first pass, playing away from pressure, and game flow"
-        : detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-          ? "reaction, scanning, first touch away from pressure, support after escape, quick chances, and game flow"
+        : isEscapeGatesTournament
+          ? "keep it competitive, fun, and flowing"
           : text.includes("overload")
             ? "fast restarts, brave overload decisions, competitive energy, and game flow"
             : "fast restarts, clear decisions, competitive energy, and game flow";
 
   return capDescription(
     [
-      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? `Format: ${gameName}: use the same 36 x 28 meter area (39 x 31 yards) with the four cone gates or Pugg goals as goals.`
+      isEscapeGatesTournament
+        ? "Format: small-sided gate battle with fast restarts."
         : `Format: ${gameName} on a 36 x 28 meter field (39 x 31 yards) with clear touchlines, ${scoringTargetText}, and quick restart balls.`,
-      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Teams: play 4v4 or 5v5 with balanced blue and red teams."
+      isEscapeGatesTournament
+        ? "Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly."
         : "Teams: keep teams balanced; winner stays on or reset for a quick rematch.",
-      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
-        ? "Scoring: score by dribbling or passing through any gate."
+      isEscapeGatesTournament
+        ? ""
         : `Scoring: keep a visible score through ${scoringTargetText}; add one bonus point when the team uses ${objective} before scoring.`,
-      `Constraint: ${finalGameConstraint}.`,
-      detectSoccerActivityArchetype(promptSignals)?.key === "duck-duck-goose-escape"
+      isEscapeGatesTournament
+        ? ""
+        : `Constraint: ${finalGameConstraint}.`,
+      isEscapeGatesTournament
         ? ""
         : "Win condition: first team to three goals.",
       `Focus: ${focusText}.`,

@@ -17,6 +17,9 @@ type ActivitySection = {
 };
 
 const SECTION_LABELS = [
+  "Format",
+  "Teams",
+  "Focus",
   "Setup",
   "Start",
   "How to start",
@@ -104,7 +107,7 @@ function removeControlFragments(value: string) {
 
 function sanitizeCoachFacingText(value: string) {
   return removeControlFragments(value)
-    .replace(/\b(?:team|env|environment context|team context|format|mode|notes)\s*:\s*[^.;|]+[.;]?/gi, " ")
+    .replace(/\b(?:team|env|environment context|team context|mode|notes)\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\bPrimary session objective\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\bCoach brainstorming and extra details for today\s*:\s*[^.;|]+[.;]?/gi, " ")
     .replace(/\b(?:originalTeamAgeBand|apiAgeBand)\s*:\s*[^.;|]+[.;]?/gi, " ")

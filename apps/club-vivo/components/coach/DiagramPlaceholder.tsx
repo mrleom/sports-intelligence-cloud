@@ -1208,14 +1208,18 @@ function FinalGameFormatCard({ activity }: { activity?: DiagramActivity }) {
   const description = activity?.description?.trim() ||
     "Format: small-sided gate battle with fast restarts. Teams: balanced blue and red teams. Scoring: bonus for finding a wide player or support run before scoring. Constraint: the overload must create the chance. Win condition: first to three, then winner stays on or quick rematch. Focus: compete and let the game flow.";
   const isEscapeGatesTournament = /escape gates mini tournament/i.test(activity?.name || "");
+  const rulesScoringText = isEscapeGatesTournament
+    ? "Score by escaping pressure and playing or dribbling through any open gate."
+    : extractFinalGameLine(description, "Scoring") || "Score through any open gate.";
   const bonusText = isEscapeGatesTournament
-    ? "A goal counts double within five seconds of escaping pressure or after using a support player."
-    : extractFinalGameLine(description, "Scoring") || "Add one bonus point when the session focus creates the chance.";
+    ? "Bonus point if the team uses support before scoring."
+    : "Add one bonus point when the session focus creates the chance.";
   const winnerRuleText = isEscapeGatesTournament
-    ? "Play 5-minute games or first team to two goals; winner stays on or teams reset for a quick rematch."
+    ? "First team to three goals wins, or most goals after five minutes."
     : extractFinalGameLine(description, "Win condition") || "First team to three goals; winner stays on or reset for a quick rematch.";
   const rows = [
-    ["Bonus + winner rule", `Bonus: ${bonusText} Winner rule: ${winnerRuleText}`]
+    ["Rules / scoring", rulesScoringText],
+    ["Bonus + winner rule", `${bonusText} ${winnerRuleText}`]
   ];
 
   return (
