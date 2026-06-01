@@ -111,10 +111,10 @@ Activity 3: 18-minute main activity 2. Same importance as Activity 2. Should be 
 variation, or different game condition.
 
 Activity 4: 12-minute final game, mini tournament, or competitive close that applies the theme.
-This block should not need a full tactical diagram; the coach needs the game format, teams,
-scoring, and final constraint. Keep those details in the main activity description. Under the
-visual, show one compact Bonus + Winner Rule card only; do not repeat format, teams, goals, or game
-length in a second stack of cards.
+This block should not need a full tactical diagram. Keep the left-side activity description compact:
+Format, Teams, and Focus only. Under the visual, show Rules / Scoring and one combined Bonus + Winner
+Rule card. Do not repeat format or add separate Goals, Game Length, Constraint, Win Condition, or
+Winner Rule cards.
 
 For a 90-minute session, use a longer four-block shape: 20-minute activation, two 25-minute main
 activities, and a 20-minute competitive close.

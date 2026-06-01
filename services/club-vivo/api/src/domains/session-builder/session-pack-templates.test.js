@@ -1124,14 +1124,12 @@ test("generatePack turns attacking create-chances duck-duck-goose note into coac
   assert.match(activity3.description, /Regression: remove the second defender/i);
   assert.doesNotMatch(activity3.description, /counter gate/i);
   assert.match(activity4.name, /escape gates mini tournament/i);
-  assert.match(activity4.description, /4v4 or 5v5/i);
-  assert.match(activity4.description, /Format:/i);
-  assert.match(activity4.description, /Teams:/i);
-  assert.match(activity4.description, /Scoring:/i);
-  assert.match(activity4.description, /Constraint:/i);
-  assert.match(activity4.description, /Focus:/i);
+  assert.equal(
+    activity4.description,
+    "Format: small-sided gate battle with fast restarts. Teams: play 3v3, 4v4, or 5v5 depending on numbers. Winner stays on or teams rotate quickly. Focus: keep it competitive, fun, and flowing."
+  );
   assert.equal((activity4.description.match(/Format:/gi) || []).length, 1);
-  assert.doesNotMatch(activity4.description, /bonus|goal counts double|Win condition:|Winner rule:/i);
+  assert.doesNotMatch(activity4.description, /Rules \/ scoring:|Scoring:|Constraint:|bonus|Win condition:|Winner rule:/i);
   assert.doesNotMatch(allText, /duck, duck, goose|duck duck goose/i);
   assert.doesNotMatch(allText, /team:|originalTeamAgeBand|apiAgeBand|programType|coachingStyle|raw pipe/i);
   assert.doesNotMatch(allText, new RegExp(`${confusingRolePattern.source}|counter gate`, "i"));
