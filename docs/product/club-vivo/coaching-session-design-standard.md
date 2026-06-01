@@ -114,7 +114,8 @@ Activity 4: 12-minute final game, mini tournament, or competitive close that app
 This block should not need a full tactical diagram. Keep the left-side activity description compact:
 Format, Teams, and Focus only. Under the visual, show Rules / Scoring and one combined Bonus + Winner
 Rule card. Do not repeat format or add separate Goals, Game Length, Constraint, Win Condition, or
-Winner Rule cards.
+Winner Rule cards. The frontend should apply the same left-side allowlist when rendering older saved
+or temporarily stale generated-session payloads.
 
 For a 90-minute session, use a longer four-block shape: 20-minute activation, two 25-minute main
 activities, and a 20-minute competitive close.
