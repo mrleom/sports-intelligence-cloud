@@ -1,5 +1,15 @@
 # Sports Intelligence Cloud (SIC) Vision
 
+## Status / Reading Note
+
+This is a vision and context document.
+
+Current Chapter 2 public positioning starts with Club Vivo as the product and Sports Intelligence Cloud as the AWS SaaS platform foundation behind it. If older wording in this document conflicts with current Chapter 2 source-of-truth docs, prefer `README.md`, `docs/README.md`, current Club Vivo product docs, and current architecture docs.
+
+Vision language should not be used to claim unshipped future behavior as shipped runtime. This includes Training Brief, DiagramSequence, RAG/vector search, autonomous agents, Bedrock production generation, image analysis, and Match-to-Match Prescription.
+
+---
+
 Sports Intelligence Cloud (SIC) is a multi-tenant, cloud-native sports platform that begins with practical tools for coaches and evolves into a broader operating system for sports organizations.
 
 SIC is designed to help coaches, clubs, academies, and sports programs run better workflows, retain institutional knowledge, and build toward more intelligent decision-making over time.
