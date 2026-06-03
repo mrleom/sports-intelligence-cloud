@@ -71,6 +71,10 @@ Core rules:
 
 The detailed contract lives in [docs/architecture/tenant-claim-contract.md](docs/architecture/tenant-claim-contract.md).
 
+## Architecture Visual
+
+![Club Vivo on SIC SaaS Platform](docs/architecture/chapter-2/club-vivo-saas-architecture.png)
+
 ## Architecture Visual Links
 
 - [Club Vivo SaaS architecture draw.io](docs/architecture/chapter-2/club-vivo-saas-architecture.drawio)
