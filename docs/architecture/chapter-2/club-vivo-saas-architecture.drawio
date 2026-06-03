@@ -16,8 +16,8 @@
         <mxCell id="lane-foundation" value="AWS foundation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6f7fb;strokeColor=#b9c0cf;fontStyle=1;fontSize=16;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;connectable=0;" vertex="1" parent="1">
           <mxGeometry x="40" y="670" width="1520" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="lane-guardrail" value="Scope guardrail" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#d9b85f;fontStyle=1;fontSize=16;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;connectable=0;" vertex="1" parent="1">
-          <mxGeometry x="40" y="890" width="1520" height="70" as="geometry" />
+        <mxCell id="lane-guardrail" value="Scope guardrail" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8df;strokeColor=#dfc777;fontStyle=1;fontSize=12;align=left;verticalAlign=top;spacingLeft=14;spacingTop=6;connectable=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="900" width="1520" height="54" as="geometry" />
         </mxCell>
         <mxCell id="title" value="Club Vivo on SIC SaaS Platform" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=26;fontStyle=1;fontColor=#17324d;" vertex="1" parent="1">
           <mxGeometry x="60" y="34" width="620" height="34" as="geometry" />
@@ -34,11 +34,11 @@
         <mxCell id="workspace" value="Coach Workspace" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=14;fontStyle=1;fontColor=#133b2a;" vertex="1" parent="1">
           <mxGeometry x="500" y="170" width="180" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="builder" value="Session Builder&lt;br&gt;main wedge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d7f0e7;strokeColor=#2f855a;fontSize=14;fontStyle=1;fontColor=#123d2c;" vertex="1" parent="1">
-          <mxGeometry x="740" y="145" width="190" height="80" as="geometry" />
+        <mxCell id="builder" value="Session Builder&lt;br&gt;main wedge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bcebd8;strokeColor=#1f7a4d;strokeWidth=3;fontSize=16;fontStyle=1;fontColor=#123d2c;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="138" width="220" height="96" as="geometry" />
         </mxCell>
-        <mxCell id="quick" value="Quick Soccer Game&lt;br&gt;fast lane" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d7f0e7;strokeColor=#2f855a;fontSize=14;fontStyle=1;fontColor=#123d2c;" vertex="1" parent="1">
-          <mxGeometry x="740" y="245" width="190" height="80" as="geometry" />
+        <mxCell id="quick" value="Quick Soccer Game&lt;br&gt;fast lane" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eefaf5;strokeColor=#74b99a;fontSize=13;fontStyle=1;fontColor=#1f5a43;" vertex="1" parent="1">
+          <mxGeometry x="755" y="255" width="190" height="64" as="geometry" />
         </mxCell>
         <mxCell id="support" value="Teams / Sessions / Feedback / Export" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=13;fontStyle=1;fontColor=#133b2a;" vertex="1" parent="1">
           <mxGeometry x="980" y="170" width="230" height="80" as="geometry" />
@@ -46,121 +46,121 @@
         <mxCell id="context" value="Equipment + methodology context&lt;br&gt;when source-verified" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fbf6;strokeColor=#8cc9b0;dashed=1;fontSize=13;fontColor=#2d5d4a;" vertex="1" parent="1">
           <mxGeometry x="1240" y="170" width="250" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="cognito" value="Cognito authentication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="cognito" value="Cognito authentication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="80" y="445" width="180" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="apigw" value="API Gateway HTTP API&lt;br&gt;JWT authorizer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="apigw" value="API Gateway HTTP API&lt;br&gt;JWT authorizer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="300" y="445" width="210" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="wrapper" value="Lambda platform wrapper&lt;br&gt;logging / errors / tenant context" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcecff;strokeColor=#2b6cb0;fontSize=13;fontStyle=1;fontColor=#17324d;" vertex="1" parent="1">
+        <mxCell id="wrapper" value="Lambda platform wrapper&lt;br&gt;logging / errors / tenant context" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcecff;strokeColor=#2b6cb0;fontSize=13;fontStyle=1;fontColor=#17324d;align=left;spacingLeft=46;" vertex="1" parent="1">
           <mxGeometry x="550" y="430" width="240" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="tenant" value="Tenant-safe by construction&lt;br&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;verified auth + entitlements&lt;br&gt;no client-supplied tenant_id&lt;br&gt;fail closed on missing context&lt;br&gt;tenant-scoped DynamoDB + S3&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#c8a13f;fontSize=14;fontStyle=1;fontColor=#5a4200;" vertex="1" parent="1">
-          <mxGeometry x="830" y="390" width="300" height="115" as="geometry" />
+        <mxCell id="tenant" value="Tenant-safe by construction&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;verified auth + entitlements&lt;br&gt;no client-supplied tenant_id&lt;br&gt;fail closed on missing context&lt;br&gt;tenant-scoped DynamoDB + S3&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#c8a13f;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#5a4200;" vertex="1" parent="1">
+          <mxGeometry x="850" y="380" width="280" height="94" as="geometry" />
         </mxCell>
-        <mxCell id="routes" value="Purpose-based API&lt;br&gt;route families" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="routes" value="Purpose-based API&lt;br&gt;route families" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="830" y="535" width="300" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="sessionpack" value="Session Pack Generation API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="sessionpack" value="Session Pack Generation API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="1210" y="390" width="260" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="sessions" value="Saved Sessions API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="sessions" value="Saved Sessions API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="1210" y="480" width="260" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="teams" value="Team Management API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;" vertex="1" parent="1">
+        <mxCell id="teams" value="Team Management API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="1210" y="570" width="260" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="entitlements" value="DynamoDB&lt;br&gt;Tenant Entitlements Table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;" vertex="1" parent="1">
+        <mxCell id="entitlements" value="DynamoDB&lt;br&gt;Tenant Entitlements Table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="100" y="725" width="230" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="domain" value="DynamoDB&lt;br&gt;SIC Domain Table&lt;br&gt;tenant-scoped keys" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;" vertex="1" parent="1">
+        <mxCell id="domain" value="DynamoDB&lt;br&gt;SIC Domain Table&lt;br&gt;tenant-scoped keys" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="380" y="725" width="230" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="s3" value="S3&lt;br&gt;Session PDF storage&lt;br&gt;tenant-scoped paths" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;" vertex="1" parent="1">
+        <mxCell id="s3" value="S3&lt;br&gt;Session PDF storage&lt;br&gt;tenant-scoped paths" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="660" y="725" width="230" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="cloudwatch" value="CloudWatch&lt;br&gt;logs / metrics / alarms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;" vertex="1" parent="1">
+        <mxCell id="cloudwatch" value="CloudWatch&lt;br&gt;logs / metrics / alarms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" vertex="1" parent="1">
           <mxGeometry x="940" y="725" width="230" height="80" as="geometry" />
         </mxCell>
         <mxCell id="source" value="Source: apps, services,&lt;br&gt;auth triggers, infra/cdk" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3ecff;strokeColor=#a98ad7;fontSize=13;fontStyle=1;fontColor=#3f2b63;" vertex="1" parent="1">
           <mxGeometry x="1220" y="725" width="270" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="guardrail" value="Not shown as shipped: image analysis, Training Brief, DiagramSequence, RAG, autonomous agents, Bedrock production generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d9b85f;fontSize=13;fontStyle=1;fontColor=#5a4200;" vertex="1" parent="1">
-          <mxGeometry x="80" y="910" width="1380" height="34" as="geometry" />
+        <mxCell id="guardrail" value="Not shown as shipped: image analysis, Training Brief, DiagramSequence, RAG, autonomous agents, Bedrock production generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dfc777;fontSize=11;fontStyle=0;fontColor=#6b5200;" vertex="1" parent="1">
+          <mxGeometry x="80" y="922" width="1380" height="24" as="geometry" />
         </mxCell>
-        <mxCell id="e-coach-web" value="uses" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="coach" target="web">
+        <mxCell id="e-coach-web" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="coach" target="web">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-web-workspace" value="opens" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="web" target="workspace">
+        <mxCell id="e-web-workspace" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="web" target="workspace">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-workspace-builder" value="deliberate planning" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="builder">
+        <mxCell id="e-workspace-builder" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="builder">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-workspace-quick" value="fast activity lane" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="quick">
+        <mxCell id="e-workspace-quick" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="quick">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-workspace-support" value="reuse loop" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="support">
+        <mxCell id="e-workspace-support" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="workspace" target="support">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-support-context" value="conditional context" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8cc9b0;dashed=1;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="support" target="context">
+        <mxCell id="e-support-context" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8cc9b0;dashed=1;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="support" target="context">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-web-cognito" value="sign in" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="web" target="cognito">
+        <mxCell id="e-web-cognito" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="web" target="cognito">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-web-apigw" value="API calls" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="web" target="apigw">
+        <mxCell id="e-web-apigw" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="web" target="apigw">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-cognito-apigw" value="JWT validation context" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="cognito" target="apigw">
+        <mxCell id="e-cognito-apigw" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="cognito" target="apigw">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-apigw-wrapper" value="invokes route Lambda" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="apigw" target="wrapper">
+        <mxCell id="e-apigw-wrapper" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="apigw" target="wrapper">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-wrapper-tenant" value="resolve tenant context" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" edge="1" parent="1" source="wrapper" target="tenant">
+        <mxCell id="e-wrapper-tenant" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" edge="1" parent="1" source="wrapper" target="tenant">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-tenant-entitlements" value="load authoritative tenant scope" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" edge="1" parent="1" source="tenant" target="entitlements">
+        <mxCell id="e-tenant-entitlements" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" edge="1" parent="1" source="tenant" target="entitlements">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-wrapper-routes" value="dispatch by purpose" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="wrapper" target="routes">
+        <mxCell id="e-wrapper-routes" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="wrapper" target="routes">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-routes-sessionpack" value="generate pack" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="sessionpack">
+        <mxCell id="e-routes-sessionpack" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="sessionpack">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-routes-sessions" value="save / read / feedback / export" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="sessions">
+        <mxCell id="e-routes-sessions" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="sessions">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-routes-teams" value="team context" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="teams">
+        <mxCell id="e-routes-teams" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" edge="1" parent="1" source="routes" target="teams">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-builder-pack" value="shared generation path" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f855a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="builder" target="sessionpack">
+        <mxCell id="e-builder-pack" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f855a;fontSize=11;fontColor=#2d5d4a;strokeWidth=2;" edge="1" parent="1" source="builder" target="sessionpack">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-quick-pack" value="shared generation path" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f855a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="quick" target="sessionpack">
+        <mxCell id="e-quick-pack" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#74b99a;fontSize=11;fontColor=#2d5d4a;" edge="1" parent="1" source="quick" target="sessionpack">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-sessionpack-domain" value="tenant-scoped records" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessionpack" target="domain">
+        <mxCell id="e-sessionpack-domain" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessionpack" target="domain">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-sessions-domain" value="saved sessions and feedback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessions" target="domain">
+        <mxCell id="e-sessions-domain" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessions" target="domain">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-teams-domain" value="team records" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="teams" target="domain">
+        <mxCell id="e-teams-domain" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="teams" target="domain">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-sessions-s3" value="PDF export" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessions" target="s3">
+        <mxCell id="e-sessions-s3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="sessions" target="s3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-wrapper-cloudwatch" value="operational signals" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="wrapper" target="cloudwatch">
+        <mxCell id="e-wrapper-cloudwatch" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" edge="1" parent="1" source="wrapper" target="cloudwatch">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-source-web" value="source ownership" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#a98ad7;dashed=1;fontSize=11;fontColor=#3f2b63;" edge="1" parent="1" source="source" target="web">
+        <mxCell id="e-source-web" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#a98ad7;dashed=1;fontSize=11;fontColor=#3f2b63;" edge="1" parent="1" source="source" target="web">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e-source-wrapper" value="source ownership" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#a98ad7;dashed=1;fontSize=11;fontColor=#3f2b63;" edge="1" parent="1" source="source" target="wrapper">
+        <mxCell id="e-source-wrapper" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#a98ad7;dashed=1;fontSize=11;fontColor=#3f2b63;" edge="1" parent="1" source="source" target="wrapper">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
