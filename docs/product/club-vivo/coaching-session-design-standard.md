@@ -244,9 +244,9 @@ literally. For example, duck duck goose, cat and mouse, or police and robbers sh
 soccer-first activities using reaction, scanning, first touch, chase/escape, gates, safe spacing,
 short competitive rounds, and clear scoring.
 
-## 7. Quick Activity Standard
+## 7. Quick Soccer Game Standard
 
-Quick Activity should usually produce one strong activity that a coach can run fast. Drill/activity
+Quick Soccer Game should usually produce one strong activity that a coach can run fast. Drill/activity
 duration should run from 15 to 25 minutes, and the activity should exactly match the selected
 minutes.
 
@@ -262,7 +262,7 @@ It should include:
 - regression
 - safety/space adjustment
 
-If a coach asks for multiple ideas in Quick Activity, the system should either:
+If a coach asks for multiple ideas in Quick Soccer Game, the system should either:
 
 - combine the ideas into one strong activity when possible, or
 - later route/offer Session Builder for a multi-activity plan.
@@ -307,7 +307,7 @@ The brain should detect:
 
 Then it should decide:
 
-- Quick Activity: combine into one strong activity if possible.
+- Quick Soccer Game: combine into one strong activity if possible.
 - Full Session: distribute across warm-up, main activities, and final game.
 - Drill Mode: create one focused drill that includes the requested theme.
 

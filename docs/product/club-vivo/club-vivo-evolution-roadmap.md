@@ -28,7 +28,7 @@ The current foundation is:
 - Full Session and Drill / Activity modes inside Custom Build
 - Full Session support for 45-120 minutes
 - Drill / Activity support for 15-25 minutes
-- Quick Activity as the separate fast activity lane
+- Quick Soccer Game as the separate fast creative lane
 - tenant-safe authenticated access
 - validated session outputs
 - save and export paths

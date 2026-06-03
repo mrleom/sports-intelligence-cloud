@@ -84,7 +84,7 @@ export function withSessionOriginHint(
 export function getSessionOriginLabel(origin: SessionOriginHint) {
   switch (origin) {
     case "quick_session":
-      return "Quick Activity";
+      return "Quick Soccer Game";
     case "quick_drill":
       return "Drill";
     case "full_session":

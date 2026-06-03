@@ -31,7 +31,7 @@ That means this document must stay aligned to the current repo reality:
 - Custom Build includes Full Session and Drill / Activity modes
 - Full Session supports 45-120 minutes
 - Drill / Activity supports 15-25 minutes
-- Quick Activity remains the separate fast activity lane
+- Quick Soccer Game remains the separate fast creative lane
 - Match-to-Match Prescription is parked for later; any existing deterministic draft preview behavior is prior product-shape context, not the near-term creation path
 - coach profile is not yet a durable product surface
 - equipment profile is not yet a durable product surface
@@ -188,7 +188,7 @@ Frozen direction:
 - Custom Build includes **Full Session** and **Drill / Activity** modes.
 - Full Session supports 45-120 minutes.
 - Drill / Activity supports 15-25 minutes.
-- **Quick Activity** remains the separate fast activity lane.
+- **Quick Soccer Game** remains the separate fast creative lane.
 - The active near-term future bridge is **Training Brief** intake into Session Builder objectives, structured diagram intent / DiagramSequence, coach review, and feedback.
 
 Week 21 boundary:

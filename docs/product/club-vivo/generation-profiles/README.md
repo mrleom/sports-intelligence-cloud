@@ -8,7 +8,7 @@ Generation profiles describe how the product should shape generated sessions for
 
 - Soccer and future sport-specific generation behavior.
 - Product rules for terminology, constraints, session output, and diagram expectations.
-- Notes that help the shared Session Builder and Quick Session behavior stay coherent.
+- Notes that help the shared Session Builder and Quick Soccer Game behavior stay coherent. Current source may still use Quick Session names for routes, helpers, and saved origin hints.
 
 ## What Should Not Go Here
 
@@ -22,4 +22,3 @@ Generation profiles describe how the product should shape generated sessions for
 
 - `soccer.md`
 - `fut-soccer.md`
-

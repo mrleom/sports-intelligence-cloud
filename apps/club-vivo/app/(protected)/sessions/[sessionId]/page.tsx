@@ -385,7 +385,7 @@ export default async function SessionDetailPage({
         session
       })
     : null;
-  const displayQuickSessionTitle = quickSessionTitle || derivedQuickSessionTitle || "Quick Activity";
+  const displayQuickSessionTitle = quickSessionTitle || derivedQuickSessionTitle || "Quick Soccer Game";
   const quickSessionFocusSummary = isQuickSession
     ? buildQuickSessionFocusSummary(session)
     : null;
@@ -412,7 +412,7 @@ export default async function SessionDetailPage({
       ? builderModeLabel
       : `${session.sport} / ${session.ageBand}`;
   const sourceLabel = isQuickSession
-    ? "Quick Activity"
+    ? "Quick Soccer Game"
     : isBuilderSession
       ? `Session Builder - ${builderModeLabel}`
       : "Saved Session";
@@ -423,7 +423,7 @@ export default async function SessionDetailPage({
   const feedbackActivityOptions = buildFeedbackActivityOptions(session.activities);
   const activityCountLabel = formatActivityCount(session.activities.length);
   const headerDescription = isQuickSession
-    ? `Coach-ready saved output from Quick Activity with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`
+    ? `Coach-ready saved output from Quick Soccer Game with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`
     : isBuilderSession
       ? undefined
       : `Saved session output with ${activityCountLabel} planned across ${formatMinuteLabel(session.durationMin)}.`;
@@ -500,7 +500,7 @@ export default async function SessionDetailPage({
 
     if (!nextTitle) {
       return {
-        error: "Add a short quick-activity title before saving.",
+        error: "Add a short Quick Soccer Game title before saving.",
         savedTitle: displayQuickSessionTitle
       };
     }
@@ -798,7 +798,7 @@ export default async function SessionDetailPage({
             <div className={`grid gap-4 ${isQuickSession ? "sm:grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
               <article className="rounded-2xl border border-slate-200 bg-white/70 p-4">
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {isQuickSession ? "Quick activity title" : "Created by"}
+                  {isQuickSession ? "Quick Soccer Game title" : "Created by"}
                 </h2>
 
                 {isQuickSession ? (
