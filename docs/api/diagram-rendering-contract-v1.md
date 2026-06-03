@@ -1,7 +1,9 @@
 # Diagram Rendering Contract v1
 
 ## Status
-Draft v1
+Draft v1.
+
+Architecture direction only. This contract is not a shipped public API, not a new backend service, and not a new tenancy path. Chapter 2 public product docs should not present DiagramSequence, autonomous diagram generation, or related future rendering workflows as shipped Club Vivo runtime behavior.
 
 ## Purpose
 
