@@ -1,13 +1,25 @@
 # Progress Evidence
 
-`docs/progress` is the clean GitHub-facing home for SIC progress summaries.
+`docs/progress` contains build history, closeouts, and learning evidence for Sports Intelligence Cloud and Club Vivo.
 
-Detailed week-by-week progress history was removed from GitHub `main` after the concise summary layer was created. The full detailed history remains preserved in:
+This folder is documentation only. It is not runtime code, deployment evidence by itself, or the source of truth for current shipped behavior.
 
-- branch: `archive/pre-showcase-cleanup`
-- tag: `pre-showcase-cleanup-2026-04-25`
+## Chapter 2 Reading Model
 
-This folder is documentation only. It is not runtime code and does not define deployed behavior by itself.
+Club Vivo is now the current product and public GitHub face. Sports Intelligence Cloud remains the AWS SaaS platform foundation behind it.
+
+Chapter 1 and New SIC progress docs are preserved as history and learning evidence. They should not override current Chapter 2 source-of-truth docs.
+
+Current source-of-truth starts with:
+
+- `README.md`
+- `docs/README.md`
+- `docs/product/club-vivo/chapter-2-product-constitution.md`
+- `docs/product/club-vivo/quick-soccer-game.md`
+- `docs/architecture/chapter-2/`
+- `docs/architecture/platform-constitution.md`
+- `docs/architecture/architecture-principles.md`
+- `docs/architecture/tenant-claim-contract.md`
 
 ## Start Here
 
@@ -15,37 +27,45 @@ This folder is documentation only. It is not runtime code and does not define de
   - Short week-by-week summary for GitHub readers.
 - `architect-process-summary.md`
   - Short architecture/process story distilled from the archived detailed process log.
+- `chapter-2-public-face-closeout.md`
+  - Closeout summary for the Chapter 2 public-face cleanup work.
 - `new-sic/`
-  - New SIC starting point cleanup plans, audits, and closeout summaries.
+  - Earlier Chapter 1 / New SIC cleanup plans, audits, readiness evidence, and closeout summaries.
+
+## Historical Archive Status
+
+Detailed week-by-week progress history was removed from GitHub `main` after the concise summary layer was created. The prior detailed-history checkpoint is preserved by tag:
+
+- tag: `pre-showcase-cleanup-2026-04-25`
+
+The older `archive/pre-showcase-cleanup` branch is not currently present on `origin`, so this README does not rely on it as an active remote archive pointer.
+
+Chapter 1 SIC history is also preserved through:
+
+- branch: `archive/chapter-1-sic`
+- tag: `chapter-1-sic-closeout`
 
 ## Current Structure
 
 ```text
 docs/progress/
-├── README.md
-├── architect-process-summary.md
-├── weekly-progress-notes.md
-└── new-sic/
+|-- README.md
+|-- architect-process-summary.md
+|-- chapter-2-public-face-closeout.md
+|-- weekly-progress-notes.md
+`-- new-sic/
 ```
 
-## Archive Status
+## Cleanup Boundary
 
-The removed detailed history included:
+Do not move, rename, or delete progress folders yet.
 
-- detailed week folders
-- old day notes
-- old closeout files
-- old class-session notes
-- old walkthrough and demo scripts
-- old progress templates and Q/A notes
-- the former detailed architect process log
-- the former week-based roadmap file
-
-Those files should be restored from the archive branch/tag only if a future review decides that some detailed historical material belongs in `main` again.
+Future cleanup should classify older progress docs before any archive move. Preserve them as evidence unless a dedicated cleanup decision says otherwise.
 
 ## Rules
 
-- Keep `main` focused on concise progress summaries.
-- Do not reintroduce detailed historical week folders without an explicit cleanup decision.
+- Keep progress summaries factual, concise, and linked to current docs where possible.
+- Do not claim old progress docs are current product truth.
 - Do not claim future or parked ideas are shipped runtime.
-- Keep new progress summaries factual, concise, and linked to current docs where possible.
+- Do not present Training Brief, DiagramSequence, RAG/vector search, autonomous agents, Bedrock production generation, or image analysis as shipped Chapter 2 runtime.
+- Keep tenant isolation language intact.
