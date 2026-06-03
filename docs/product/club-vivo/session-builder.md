@@ -53,7 +53,7 @@ Current runtime shape:
 - Custom Build includes **Full Session** and **Drill / Activity** modes.
 - Full Session supports 45-120 minutes.
 - Drill / Activity supports 15-25 minutes.
-- **Quick Activity** no longer lives as a separate Home feature; the active short-form path is Session Builder **Drill / Activity** mode with the coaching note / activity idea field.
+- **Quick Soccer Game** is the Chapter 2 fast creative lane that uses current Quick Session source names and the shared generation path. Session Builder **Drill / Activity** remains the deeper short-form builder mode with the coaching note / activity idea field.
 - Session Builder is currently deterministic/template-based unless runtime code proves a narrower generated behavior exists.
 - **Training Brief Draft** backend foundations may remain for future reuse, but the frontend lane is parked.
 - **Image-analysis** backend foundations may remain for future reuse, but image-assisted intake is parked as a frontend lane.
@@ -304,7 +304,7 @@ This is future direction only. RAG, FAISS/vector search, and tenant knowledge re
 
 **Critical rule:** Tenant scoping is never derived from request body/query/headers.
 
-**Duration ownership rule:** `durationMin` remains request-owned. Quick Session duration comes from the coach prompt, and Session Builder duration comes from the current builder request. Team may carry durable context such as `programType` and `playerCount`, but not duration.
+**Duration ownership rule:** `durationMin` remains request-owned. Quick Soccer Game duration comes from the current quick-source prompt path, and Session Builder duration comes from the current builder request. Team may carry durable context such as `programType` and `playerCount`, but not duration.
 
 ---
 
@@ -384,7 +384,7 @@ Week 21 keeps that foundation intact while moving the product direction from nar
 - team-aware generation context
 - methodology-aware defaults
 - Custom Build with Full Session and Drill / Activity modes
-- Quick Activity folded into Drill / Activity mode and coaching notes / activity idea
+- Quick Soccer Game as the fast creative lane, while Drill / Activity remains the deeper short-form Session Builder mode
 - Training Brief Draft parked as a frontend lane while backend foundations remain reusable
 - image-assisted intake parked as a frontend lane while backend foundations remain reusable
 - structured diagram intent / DiagramSequence as the proposed diagram path

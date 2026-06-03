@@ -55,11 +55,11 @@ function QuickReviewCandidateCard({
       <div className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-            Quick activity
+            Quick Soccer Game
           </p>
           <h2 className="mt-2 text-lg font-semibold text-slate-900">{quickSessionTitle}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            {promptSummary || "No quick-activity prompt summary saved."}
+            {promptSummary || "No Quick Soccer Game prompt summary saved."}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
@@ -123,9 +123,9 @@ export function QuickSessionReview({
   if (!quickCandidate) {
     return (
       <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center">
-        <h2 className="text-base font-semibold text-slate-900">No quick activity available</h2>
+        <h2 className="text-base font-semibold text-slate-900">No Quick Soccer Game available</h2>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Create another quick activity or move into Session Builder for the detailed setup flow.
+          Create another Quick Soccer Game or move into Session Builder for the detailed setup flow.
         </p>
       </div>
     );

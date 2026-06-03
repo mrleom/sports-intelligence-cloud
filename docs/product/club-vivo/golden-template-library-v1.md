@@ -113,7 +113,7 @@ For a standard 60-minute full session, Wave 1 templates should use:
 | Activity 4 | Competitive close, final game, or mini tournament | 12 |
 
 Other full-session durations should follow the allocations in the
-[Coaching Session Design Standard](coaching-session-design-standard.md). Quick Activity and Drill /
+[Coaching Session Design Standard](coaching-session-design-standard.md). Quick Soccer Game and Drill /
 Activity modes should produce one strong activity from 15 to 25 minutes.
 
 ### 3.4 Shared Activity 4 Pattern

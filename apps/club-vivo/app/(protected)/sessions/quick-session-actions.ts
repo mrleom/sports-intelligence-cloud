@@ -94,7 +94,7 @@ function getQuickSessionErrorMessage(error: unknown) {
           ? (detailObject.error as Record<string, unknown>)
           : undefined;
 
-      console.error("Quick activity generation failed", {
+      console.error("Quick Soccer Game generation failed", {
         status: error.status,
         message: error.message,
         code: detailObject?.code,
@@ -105,14 +105,14 @@ function getQuickSessionErrorMessage(error: unknown) {
       });
     }
 
-    return detailMessage || apiMessage || `Quick activity generation failed (${error.status}).`;
+    return detailMessage || apiMessage || `Quick Soccer Game generation failed (${error.status}).`;
   }
 
   if (error instanceof Error && error.message) {
     return error.message;
   }
 
-  return "Quick activity generation failed. Try a more specific prompt or switch to Session Builder.";
+  return "Quick Soccer Game generation failed. Try a more specific prompt or switch to Session Builder.";
 }
 
 export async function createQuickSessionAction(
@@ -126,7 +126,7 @@ export async function createQuickSessionAction(
 
   if (!prompt) {
     return {
-      error: "Add a quick prompt before creating an activity."
+      error: "Add a Quick Soccer Game prompt before creating a game."
     };
   }
 

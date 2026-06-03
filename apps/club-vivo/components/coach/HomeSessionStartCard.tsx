@@ -23,7 +23,7 @@ function CreateActivityButton() {
       className="inline-flex rounded-full bg-teal-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
       disabled={pending}
     >
-      {pending ? "Creating..." : "Create activity"}
+      {pending ? "Creating..." : "Create game"}
     </button>
   );
 }
@@ -43,16 +43,16 @@ export function HomeSessionStartCard({
     <section className="club-vivo-shell rounded-[2rem] border p-6 backdrop-blur sm:p-8">
       <form action={formAction} className="grid gap-6">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Quick activity</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Quick Soccer Game</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            Add one practical coaching note or activity idea for a focused 20-minute game-like
-            activity by default. Use Session Builder when you want the full Custom Build setup for a
+            Add one practical coaching note or game idea for a focused 20-minute soccer activity
+            by default. Use Session Builder when you want the full Custom Build setup for a
             longer plan.
           </p>
         </div>
 
         <label className="grid gap-2 text-sm text-slate-700">
-          <span className="font-medium">Coaching note / activity idea (required)</span>
+          <span className="font-medium">Coaching note / game idea (required)</span>
           <textarea
             name="prompt"
             value={notes}
@@ -64,7 +64,7 @@ export function HomeSessionStartCard({
           />
           {showPromptHelper ? (
             <span className="text-xs leading-5 text-slate-500">
-              Describe the quick activity you want, or add practical context like players, field
+              Describe the Quick Soccer Game you want, or add practical context like players, field
               limits, equipment, player needs, constraints, or a creative game idea.
             </span>
           ) : null}

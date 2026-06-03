@@ -35,7 +35,7 @@ They can create sessions, Quick Activities, teams, and equipment. They can revie
 
 Coaches use the SIC Coach Workspace for their own planning.
 
-They can create teams, use Quick Activity and Session Builder, view their own saved sessions, manage their own equipment defaults, and read the methodology/source summary being used for generation.
+They can create teams, use Quick Soccer Game and Session Builder, view their own saved sessions, manage their own equipment defaults, and read the methodology/source summary being used for generation.
 
 ## Workspace Structure
 
@@ -50,7 +50,7 @@ They can create teams, use Quick Activity and Session Builder, view their own sa
 ### Free Individual Coach Workspace
 
 - Home
-- Quick Activity
+- Quick Soccer Game
 - Session Builder
 - Teams
 - Equipment
@@ -64,7 +64,7 @@ The Methodology page should show the SIC brain summary and any personal source c
 - Club overview
 - Coach Workspace
 - Session Builder
-- Quick Activity
+- Quick Soccer Game
 - Teams
 - Equipment
 - Saved Sessions
@@ -110,7 +110,7 @@ Public role/start choices are product intent only. They can help explain whether
 - Coaches and admins
 - Home
 - Session Builder
-- Quick Activity
+- Quick Soccer Game
 - Teams
 - Equipment
 - Saved Sessions

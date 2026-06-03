@@ -49,7 +49,7 @@ SIC is the platform. Club Vivo is the current product and app surface. KSC is pi
 - `components/coach/`
   - Shared coach workspace UI.
 - `lib/`
-  - Auth helpers, API clients, Session Builder helpers, Quick Session helpers, and browser-local planning hints.
+  - Auth helpers, API clients, Session Builder helpers, Quick Soccer Game display helpers, current Quick Session source helpers, and browser-local planning hints.
 - `lib/types/`
   - Frontend TypeScript types for generated session packs and drill diagrams.
 
@@ -72,7 +72,7 @@ cmd /c npx tsc --noEmit
 
 ## Change Rules
 
-- Keep Quick Session and Session Builder as shared-app lanes unless product/architecture approval changes that.
+- Keep Quick Soccer Game and Session Builder as shared-app lanes. Current source may still use Quick Session names for routes, helpers, and saved origin hints until a separate rename decision.
 - Do not make KSC-specific behavior the generic app model.
 - Do not add client-supplied tenant identity paths.
 - Keep backend API behavior in `services/club-vivo/api`.

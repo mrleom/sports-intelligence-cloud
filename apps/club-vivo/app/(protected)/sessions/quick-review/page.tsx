@@ -35,8 +35,8 @@ export default async function QuickReviewPage() {
   return (
     <div className="grid gap-6">
       <CoachPageHeader
-        title="Quick activity review"
-        description="Review the generated quick activity here, save it, or revise the prompt and run it again."
+        title="Quick Soccer Game review"
+        description="Review the generated Quick Soccer Game here, save it, or revise the prompt and run it again."
       />
 
       <QuickSessionReview

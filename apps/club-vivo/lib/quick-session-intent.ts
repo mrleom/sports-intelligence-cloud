@@ -277,7 +277,7 @@ export function buildQuickSessionObjective(prompt: string) {
     .map((part) => part.trim())
     .find(Boolean);
 
-  return clampPromptPart(firstClause || normalized || "quick activity", QUICK_SESSION_OBJECTIVE_MAX_LENGTH);
+  return clampPromptPart(firstClause || normalized || "quick soccer game", QUICK_SESSION_OBJECTIVE_MAX_LENGTH);
 }
 
 export function buildQuickSessionNotes(prompt: string) {
@@ -311,7 +311,7 @@ export function buildQuickSessionTheme(prompt: string, activityFormatOverride = 
     .filter(Boolean)
     .join(" | ");
 
-  return clampPromptPart(compactTheme || "quick activity", QUICK_SESSION_THEME_MAX_LENGTH);
+  return clampPromptPart(compactTheme || "quick soccer game", QUICK_SESSION_THEME_MAX_LENGTH);
 }
 
 export function buildQuickSessionTitle({
@@ -325,7 +325,7 @@ export function buildQuickSessionTitle({
   const objective = normalizedPrompt ? buildQuickSessionObjective(normalizedPrompt) : undefined;
 
   if (!session) {
-    return objective || "Quick Activity";
+    return objective || "Quick Soccer Game";
   }
 
   return buildBuilderSessionLabel({
@@ -361,7 +361,7 @@ export function buildQuickSessionFocusSummary(session: QuickSessionLike & { equi
     : [];
   const activityCount = Array.isArray(session.activities) ? session.activities.length : 0;
 
-  const focusText = focusTags.length ? focusTags.join(", ") : "the quick-activity objective";
+  const focusText = focusTags.length ? focusTags.join(", ") : "the Quick Soccer Game objective";
   const equipmentText = equipment.length ? ` using ${equipment.join(", ")}` : "";
   const activityText = activityCount > 0 ? ` across ${activityCount} activities` : "";
 
@@ -378,7 +378,7 @@ export function buildQuickSessionIntent(prompt: string) {
   const planType = detectQuickSessionPlanType(prompt);
   // Custom 2- or 3-activity requests are intentionally kept as quick_activity for now.
   // The shared response shape supports any activities array, but the deterministic
-  // generator only has stable product rules for one quick activity and four-part sessions.
+  // generator only has stable product rules for one Quick Soccer Game activity and four-part sessions.
   const sessionMode: "drill" | "full_session" | "quick_activity" =
     requestedActivityCount === 4
       ? "full_session"

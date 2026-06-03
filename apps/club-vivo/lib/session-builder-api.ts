@@ -651,7 +651,8 @@ function shapeLegacyPackForRequestedMode(
   }
 
   const durationMin = input.durationMin;
-  const fallbackName = input.sessionMode === "quick_activity" ? "Quick activity" : "Main activity";
+  const fallbackName =
+    input.sessionMode === "quick_activity" ? "Quick Soccer Game" : "Main activity";
 
   return {
     ...pack,
@@ -997,7 +998,7 @@ export async function generateSessionPack(input: GenerateSessionPackInput) {
       if (usedCompatibilityRetry) {
         // Temporary compatibility bridge until deployed /session-packs accepts
         // sessionMode behavior: legacy drill-style responses can return the old
-        // activity structure, but Quick Activity and Session Builder Drill now
+        // activity structure, but Quick Soccer Game and Session Builder Drill now
         // expect one activity while Full Session expects four.
         pack = shapeLegacyPackForRequestedMode(pack, intendedInput);
       }

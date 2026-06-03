@@ -26,9 +26,9 @@ When the requested build mode supports multiple activities, both should be place
 The generator should decide a sensible run order instead of collapsing the prompt into one generic
 activity.
 
-## Quick Activity Standard
+## Quick Soccer Game Standard
 
-Quick Activity should usually produce one strong activity from 15 to 25 minutes. The activity
+Quick Soccer Game should usually produce one strong activity from 15 to 25 minutes. The activity
 duration should exactly match the selected minutes so the coach gets one usable block, not several
 thin mini-activities.
 
@@ -37,7 +37,7 @@ If the prompt asks for multiple activities, the app should either:
 - produce a small multi-activity mini session, or
 - ask/route the user to Session Builder later
 
-This needs future design. Until then, Quick Activity should avoid pretending a multi-activity
+This needs future design. Until then, Quick Soccer Game should avoid pretending a multi-activity
 request was only one idea.
 
 ## Full Session Structure Standard
