@@ -1,0 +1,91 @@
+{
+  "folders": [
+    {
+      "name": "Repo Root",
+      "path": "."
+    },
+    {
+      "name": "Club Vivo App",
+      "path": "apps/club-vivo"
+    },
+    {
+      "name": "Club Vivo API",
+      "path": "services/club-vivo/api"
+    },
+    {
+      "name": "Auth Services",
+      "path": "services/auth"
+    },
+    {
+      "name": "CDK Infra",
+      "path": "infra/cdk"
+    },
+    {
+      "name": "Product Docs",
+      "path": "docs/product/club-vivo"
+    },
+    {
+      "name": "Chapter 2 Architecture",
+      "path": "docs/architecture/chapter-2"
+    },
+    {
+      "name": "API Contracts",
+      "path": "docs/api"
+    },
+    {
+      "name": "Proposals",
+      "path": "docs/proposals"
+    },
+    {
+      "name": "Runbooks",
+      "path": "docs/runbooks"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "apps": true,
+      "services": true,
+      "infra": true,
+      "docs": true,
+      "datasets": true,
+      "postman": true,
+      "scripts": true,
+      "club-vivo-dev.log": true,
+      "club-vivo-dev.err.log": true,
+      "**/*.log": true,
+      "**/docs/progress": true,
+      "**/docs/history": true,
+      "**/docs/product/club-vivo/future": true,
+      "**/docs/architecture/coach-lite": true,
+      "**/docs/architecture/diagrams": true,
+      "**/docs/research": true,
+      "**/docs/exports": true,
+      "**/.venv": true,
+      "**/.workspace": true,
+      "**/.tmp-methodology-smoke": true,
+      "**/cdk.out": true,
+      "**/node_modules": true,
+      "**/.next": true
+    },
+    "search.exclude": {
+      "club-vivo-dev.log": true,
+      "club-vivo-dev.err.log": true,
+      "**/*.log": true,
+      "**/.venv": true,
+      "**/.workspace": true,
+      "**/.tmp-methodology-smoke": true,
+      "**/cdk.out": true,
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/docs/progress": true,
+      "**/docs/history": true,
+      "**/docs/research": true,
+      "**/docs/exports": true
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+      "package.json": "package-lock.json, pnpm-lock.yaml, yarn.lock",
+      "tsconfig.json": "tsconfig.tsbuildinfo"
+    }
+  }
+}
