@@ -4,6 +4,27 @@ This folder contains Architecture Decision Records for Sports Intelligence Cloud
 
 ADRs capture important architecture decisions, the context behind them, and the constraints future work should respect.
 
+## Status / Reading Model
+
+ADRs are architecture decision records and decision history. Preserve them and do not casually rewrite them.
+
+Some ADRs may reflect earlier Chapter 1 or SIC-first language. Club Vivo is now the current product and public GitHub face, powered by Sports Intelligence Cloud as the AWS SaaS platform foundation.
+
+Read ADRs together with current source files and current Chapter 2 source-of-truth docs, especially:
+
+- `README.md`
+- `docs/README.md`
+- `docs/product/club-vivo/chapter-2-product-constitution.md`
+- `docs/product/club-vivo/quick-soccer-game.md`
+- `docs/architecture/platform-constitution.md`
+- `docs/architecture/architecture-principles.md`
+- `docs/architecture/tenant-claim-contract.md`
+- `docs/architecture/chapter-2/`
+
+If an ADR conflicts with current source or higher-order platform rules, use current source and source-of-truth docs until a new ADR supersedes or amends the older decision.
+
+Do not move, rename, or delete ADRs yet.
+
 ## What Belongs Here
 
 - Decisions that affect platform architecture.
@@ -51,4 +72,4 @@ Add an ADR, or get an explicit architecture decision, for changes such as:
 - Do not rewrite ADR history casually.
 - If an older decision changes, prefer a new ADR that supersedes or amends it.
 - Keep ADRs linked from current architecture docs when they define active boundaries.
-
+- Do not present Training Brief, DiagramSequence, RAG/vector search, autonomous agents, Bedrock production generation, image analysis, or Match-to-Match Prescription as shipped Chapter 2 runtime unless current source and current source-of-truth docs prove it.
