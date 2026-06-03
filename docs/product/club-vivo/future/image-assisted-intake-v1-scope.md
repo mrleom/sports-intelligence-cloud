@@ -1,5 +1,11 @@
 # Image-Assisted Intake v1 Scope
 
+## Status
+
+Parked future / historical Week 18 scope note.
+
+Image-assisted intake and image analysis are out of the Chapter 2 Club Vivo product story. This document is not a current public product flow, not shipped Chapter 2 runtime behavior, and not a new backend service or tenancy path.
+
 ## Purpose
 
 This note defines the Week 18 Day 3 product scope for image-assisted intake v1 inside SIC Session Builder.
@@ -8,9 +14,9 @@ It explains what Week 18 adds, what it does not add, and which boundaries keep t
 
 ## What Week 18 Adds
 
-Week 18 adds one practical image-assisted intake layer inside the existing Session Builder workflow.
+Week 18 scoped one practical image-assisted intake layer inside the existing Session Builder workflow.
 
-In product terms, that means coaches can now use one uploaded image in two narrow ways:
+In product terms, that meant coaches could use one uploaded image in two narrow ways:
 
 - `environment_profile`
   - turn one environment image into a draft structured profile of the current training space
@@ -29,7 +35,7 @@ to:
 
 ## What Week 18 Does Not Add
 
-Week 18 does not add:
+The Week 18 scope did not add:
 
 - a separate AI app
 - a separate image-analysis product
@@ -43,7 +49,7 @@ Week 18 does not add:
 - video intake
 - full-session generation directly from raw setup-image output
 
-This remains one thin Session Builder enhancement, not a product fork.
+This was framed as one thin Session Builder enhancement, not a product fork.
 
 ## Why Image-Assisted Intake Exists
 

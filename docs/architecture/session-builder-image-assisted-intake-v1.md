@@ -1,10 +1,16 @@
 # Session Builder Image-Assisted Intake v1
 
+## Status
+
+Historical Week 18 architecture note and parked Chapter 2 reference.
+
+Image-assisted intake and image analysis are out of the Chapter 2 Club Vivo product story. This document does not define a current public product flow, does not add a new backend service or tenancy path, and should not be cited as shipped Chapter 2 runtime behavior.
+
 ## Purpose
 
 This note documents the Week 18 Day 3 architecture for image-assisted intake inside SIC Session Builder.
 
-It explains the current v1 runtime shape for:
+It explains the historical Week 18 v1 runtime shape that was documented for:
 
 - `environment_profile`
 - `setup_to_drill`
@@ -15,7 +21,7 @@ This is a shared Session Builder enhancement, not a separate AI product, not a s
 
 Image-assisted intake sits inside the existing SIC Session Builder wedge.
 
-It stays inside the current coach workflow:
+It was documented as staying inside the then-current coach workflow:
 
 - frontend entry: `/sessions/new`
 - backend entry: `POST /session-packs`
@@ -27,11 +33,11 @@ The feature exists to improve intake quality before shared session generation. I
 - a separate tenant boundary
 - a separate persistence model for generated sessions
 
-This keeps Week 18 aligned with the current SIC product wedge described in the platform constitution and vision: practical coach workflow value first, delivered as a thin vertical slice.
+This kept the Week 18 note aligned with the SIC product wedge described in the platform constitution and vision at the time: practical coach workflow value first, delivered as a thin vertical slice.
 
 ## Shared Runtime Flow
 
-The current v1 runtime flow is:
+The documented Week 18 v1 runtime flow was:
 
 1. Coach chooses one analysis mode:
    - `environment_profile`
