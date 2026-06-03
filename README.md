@@ -1,122 +1,122 @@
-﻿# Sports Intelligence Cloud
+# Club Vivo
 
-Sports Intelligence Cloud (SIC) is a multi-tenant, serverless sports platform on AWS.
+A soccer coaching SaaS product for nonprofit and grassroots sports organizations.
 
-Club Vivo is the current coach-facing web app and product surface inside SIC. It helps coaches plan, generate, save, review, and export training sessions from real-world constraints while keeping team and methodology context tenant-safe.
+Powered by Sports Intelligence Cloud, a tenant-safe AWS serverless platform foundation.
 
-KSC is pilot context for early testing and walkthrough readiness. KSC is not the product identity, and the app direction remains one shared Club Vivo coach workspace for clubs, academies, and organizations.
+## What Club Vivo Is
 
-## Current Product
+Club Vivo is the coach-facing product in this repository. It helps coaches and coach-admins create, save, review, and export soccer training sessions from real coaching constraints: team context, age group, space, duration, equipment, and practice objective.
 
-The active product surface is the Club Vivo coach workspace in `apps/club-vivo`.
+Sports Intelligence Cloud (SIC) is the platform foundation behind Club Vivo. SIC provides the AWS SaaS architecture, tenant isolation model, auth/entitlement flow, infrastructure discipline, and operational guardrails that let Club Vivo grow without weakening data boundaries.
 
-Current workspace areas include:
+## Why It Matters
 
-- Home
-- Quick Session
-- Session Builder
-- Teams
-- Equipment/Essentials
-- Methodology
-- Sessions library
-- Saved-session detail
-- Saved-session feedback
-- PDF export action
+Many nonprofit and grassroots sports organizations rely on volunteer or part-time coaches who need practical support fast. Club Vivo is built around that reality: help a coach produce something usable for the next practice without starting from a blank page or managing a heavy planning tool.
 
-Quick Session is a fast shared-app lane into the same generation and save flow. It is not a separate backend product.
+The product direction is deliberately narrow in Chapter 2. Club Vivo should be useful, easy to explain, and grounded in the current source before expanding into larger platform ideas.
 
-Near-term Club Vivo direction is a bounded agentic coaching workflow around the existing Session Builder path:
+## Current Product Wedge: Session Builder
 
-Session Builder -> Training Brief -> structured diagram intent / DiagramSequence -> Coach Feedback -> future intelligence loop.
+Session Builder is the main Club Vivo product wedge right now.
 
-Today, Session Builder is the active runtime wedge. Training Brief and DiagramSequence remain proposed contract/architecture surfaces unless runtime code proves otherwise.
+It is the deliberate planning path for creating coach-ready soccer sessions, shorter activities, saved sessions, feedback, and exportable session packs. It uses the shared Club Vivo app and the SIC platform foundation rather than a separate product, backend, auth path, or tenancy model.
 
-## Architecture At A Glance
+Source grounding:
 
 - `apps/club-vivo`
-  - Active Next.js Club Vivo coach workspace.
-- `services/club-vivo/api`
-  - API Gateway/Lambda backend implementation for Club Vivo.
-- `services/auth`
-  - Cognito trigger Lambdas for entitlement provisioning and token claim enrichment.
-- `infra/cdk`
-  - AWS CDK source for API, auth, DynamoDB, S3, CloudWatch, IAM, and limited Bedrock permissions where currently wired.
-- `docs/api`
-  - API and cross-layer contracts.
-- `docs/architecture`
-  - Platform architecture, current system maps, repo inventory, source-of-truth docs, and cleanup planning.
-- `docs/product/club-vivo`
-  - Current Club Vivo product docs, pilot notes, generation profiles, and future/parked product planning.
+- `services/club-vivo/api/session-packs/handler.js`
+- `services/club-vivo/api/src/domains/session-builder/`
+- `services/club-vivo/api/sessions/handler.js`
 
-The backend uses API Gateway, Lambda, DynamoDB, Cognito, S3, CloudWatch, and limited Bedrock usage for image-analysis requests where currently wired.
+## Fast Lane: Quick Soccer Game
 
-## Key Architecture Docs
+Quick Soccer Game is the Chapter 2 product story for the fast creative lane that grows out of the current Quick Session source.
 
-- [Current System Map](docs/architecture/sic-current-system-map.md)
-- [Repo Inventory](docs/architecture/sic-repo-inventory.md)
-- [GitHub Showcase Cleanup Plan](docs/architecture/github-showcase-cleanup-plan.md)
-- [Source-of-Truth Manifest](docs/architecture/foundations/source-of-truth-manifest.md)
-- [Current System Diagram Blueprint](docs/architecture/diagrams/sic-current-system-blueprint.md)
+It is meant for moments when a coach needs one simple soccer activity quickly: a warm-up game, a playful activity, or a short game that fits today's players, space, time, and equipment. It stays inside the shared Club Vivo workflow and reuses the Session Builder generation and save foundations.
 
-## Local Validation
+Quick Soccer Game does not introduce a separate backend product, Lambda, data model, auth path, tenancy path, or public API contract.
 
-Frontend typecheck:
+## AWS SaaS Architecture
 
-```powershell
-cd apps/club-vivo
-npx tsc --noEmit
-```
+Club Vivo runs on the SIC serverless SaaS foundation:
 
-Backend tests:
+- Cognito for authentication.
+- API Gateway HTTP API with JWT authorization.
+- Lambda route handlers and a platform wrapper for logging, errors, and tenant context.
+- DynamoDB for tenant entitlements and tenant-scoped domain data.
+- S3 for tenant-scoped session PDF storage.
+- CloudWatch for logs, metrics, and alarms.
+- CDK for infrastructure as code.
 
-```powershell
-npm test --prefix services/club-vivo/api
-```
+The active source areas are:
 
-CDK build:
+- `apps/club-vivo` for the Next.js web app.
+- `services/club-vivo/api` for Club Vivo API source.
+- `services/auth` for Cognito trigger Lambdas.
+- `infra/cdk` for AWS infrastructure source.
 
-```powershell
-cd infra/cdk
-npm run build
-```
+## Tenant-Safe By Construction
 
-## How To Read This Repo
+Tenant safety is part of the product promise, not just an implementation detail.
 
-- `apps/club-vivo`
-  - Active Club Vivo web app and coach workspace.
-- `services/club-vivo/api`
-  - Active backend API for Club Vivo.
-- `services/auth`
-  - Cognito auth lifecycle Lambdas.
-- `infra/cdk`
-  - AWS CDK infrastructure.
-- `docs/product/club-vivo`
-  - Active product source-of-truth docs.
-- `docs/api`
-  - API contracts.
-- `docs/architecture`
-  - Platform architecture, tenancy, repo maps, and system maps.
-- `docs/runbooks`
-  - Operational guidance.
-- `docs/progress`
-  - Build history and closeout notes.
+Core rules:
 
-For a detailed source map, see [Club Vivo Source Map](docs/architecture/club-vivo-source-map.md).
-
-## Boundaries
-
-- Tenant identity is server-derived from authenticated claims and authoritative entitlements.
+- Tenant identity is derived from verified auth and authoritative entitlements.
 - Client input must not provide `tenant_id`, `tenantId`, or `x-tenant-id`.
-- Club Vivo remains one shared coach-facing app.
-- Quick Session is not a separate backend product.
-- KSC is pilot context, not the product identity.
-- Match-to-Match Prescription is parked for later and outside the near-term agentic path.
-- Methodology upload/source-mode, broad RAG/vector infrastructure, autonomous agents, Bedrock production generation, a separate admin app, a broader image-assisted intake restart, and deeper PDF document design are not claimed as active shipped runtime behavior here.
+- Missing or invalid tenant context fails closed.
+- DynamoDB access is tenant-scoped by key construction.
+- S3 session export paths are tenant-scoped.
+- Tiering changes capabilities, not isolation.
 
-## Public Repo Safety
+The detailed contract lives in [docs/architecture/tenant-claim-contract.md](docs/architecture/tenant-claim-contract.md).
 
-This repository is sanitized for public sharing.
+## Architecture Visual Links
 
-- No secrets or credentials are stored in the repo.
-- No real customer data is included.
-- Documentation examples use placeholders where needed.
+- [Club Vivo SaaS architecture draw.io](docs/architecture/chapter-2/club-vivo-saas-architecture.drawio)
+- [Club Vivo SaaS architecture diagram draw.io](docs/architecture/chapter-2/club-vivo-saas-architecture-diagram.drawio)
+- [Club Vivo SaaS architecture Mermaid](docs/architecture/chapter-2/club-vivo-saas-architecture-mermaid.md)
+
+## Repository Map
+
+- `apps/club-vivo` - active Club Vivo web app and Coach Workspace.
+- `services/club-vivo/api` - active Club Vivo backend API source.
+- `services/auth` - Cognito auth lifecycle Lambda source.
+- `infra/cdk` - AWS CDK infrastructure source.
+- `docs/product/club-vivo` - active Club Vivo product docs.
+- `docs/architecture` - SIC platform architecture, tenant rules, source maps, and Chapter 2 architecture package.
+- `docs/api` - API and cross-layer contracts.
+- `docs/proposals` - proposal and presentation docs currently on main.
+- `docs/research` - research outlines and supporting analysis.
+- `docs/history` - preserved Chapter 1 history.
+- `docs/progress` - build history and progress evidence.
+- `docs/runbooks` - operational guidance.
+
+## Current Status
+
+Chapter 2 makes Club Vivo the public product face of the repository, powered by Sports Intelligence Cloud.
+
+The current repo is best read as a product-shaped architecture and pilot-ready direction, not a guarantee that every commercial SaaS feature is fully shipped. Session Builder is the active wedge. Quick Soccer Game is the fast creative lane in the Chapter 2 story while current source may still use Quick Session names in routes or helpers.
+
+## What Is Not Claimed
+
+The Chapter 2 product story does not claim these as shipped Club Vivo runtime behavior:
+
+- Image analysis
+- Training Brief as a shipped public product flow
+- DiagramSequence as shipped runtime behavior
+- RAG, FAISS, vector search, or broad retrieval infrastructure
+- Autonomous agents
+- Bedrock production generation
+- Match-to-Match Prescription as an active creation path
+- A separate admin app
+
+Equipment Essentials and Methodology should remain source-present support, builder context, or near-term workspace areas unless source inspection confirms standalone shipped behavior.
+
+## Chapter 1 Archive Note
+
+Chapter 1 is preserved as SIC history and learning evidence.
+
+- `archive/chapter-1-sic` preserves the pre-Chapter 2 repository snapshot from commit `f5eeaf4`.
+- `chapter-1-sic-closeout` marks the end of Chapter 1 at commit `f5eeaf4`.
+- Historical docs should not override current Chapter 2 source-of-truth docs.
