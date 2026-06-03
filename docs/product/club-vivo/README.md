@@ -1,225 +1,150 @@
-# Club Vivo Product Overview
+# Club Vivo Product Docs
 
-## Naming Note
+## 1. Status / Reading Model
 
-SIC is the platform. Club Vivo is the current coach-facing product and app surface. SIC Coach Lite was the earlier/original wedge name and has now been reorganized under the current Club Vivo product name.
+This folder is the product documentation home for Club Vivo Chapter 2.
 
-## Status
-Draft v1
+Club Vivo is the current product and public GitHub face. Sports Intelligence Cloud is the AWS SaaS platform foundation behind Club Vivo.
 
-## Related Product Direction
+Read this folder with the current Chapter 2 source-of-truth docs first:
 
-- `soccer-development-taxonomy-v1.md`
-  - Source-of-truth taxonomy for age bands, objectives, specific focuses, golden-template planning,
-    future routing, and Spanish/i18n terminology.
-- `golden-template-library-v1.md`
-  - Docs-first golden-template library plan for reviewed soccer session patterns, quality gates,
-    Wave 1 implementation evidence, and future deterministic routing.
-- `training-prescription-layer.md`
-  - Proposed Club Vivo Training Prescription Layer product direction. Not shipped runtime behavior.
+- [Chapter 2 Product Constitution](chapter-2-product-constitution.md)
+- [Quick Soccer Game](quick-soccer-game.md)
+- [Root README](../../../README.md)
+- [Docs README](../../README.md)
 
-## Product Summary
+Older docs, pilot-specific docs, roadmap docs, and future docs remain useful, but they should not override the current Chapter 2 product constitution, current architecture docs, or current source.
 
-Club Vivo is the current club-facing product inside Sports Intelligence Cloud.
+## 2. Current Product Truth
 
-It helps coaches turn real-world training constraints into usable training sessions that are fast to run, visually clear, and easy to export. The first release is built specifically for soccer.
+- Club Vivo is the product.
+- Sports Intelligence Cloud is the platform foundation.
+- Session Builder is the main product wedge.
+- Quick Soccer Game is the fast creative lane.
+- Chapter 1 is preserved as history and learning evidence.
+- Cleanup work is classification-first. It does not delete, move, rename, or change runtime behavior.
 
-Club Vivo is not just a chatbot. It is a coaching workflow product that combines:
-- structured coach intake
-- session generation
-- session validation
-- drill diagram generation
-- exportable session packs
+## 3. Start-Here Docs
 
-The goal is to save coaches time while helping clubs maintain methodology consistency.
+Start with:
 
----
+- [Chapter 2 Product Constitution](chapter-2-product-constitution.md)
+  - Current product positioning and product governance for Chapter 2.
+- [Quick Soccer Game](quick-soccer-game.md)
+  - Current product story for the fast creative lane.
+- [Session Builder](session-builder.md)
+  - Product direction for the main planning wedge. Read against the Chapter 2 constitution.
+- [Coach Workspace](coach-workspace.md)
+  - Workspace direction and product surface context. Treat standalone workspace-area claims as source-verification candidates.
 
-## Problem
+## 4. Active Product Docs
 
-Many coaches, especially grassroots and low-resource coaches, do not need more theory. They need help building a session they can actually run today.
+These docs describe current or source-present product direction. Use them with the Chapter 2 constitution as the governing lens:
 
-Their real constraints are things like:
-- number of players
-- number of balls
-- number of cones
-- goals or mini goals available
-- field size
-- indoor or outdoor space
-- session duration
-- technical or tactical focus
+- [chapter-2-product-constitution.md](chapter-2-product-constitution.md)
+- [quick-soccer-game.md](quick-soccer-game.md)
+- [session-builder.md](session-builder.md)
+- [coach-workspace.md](coach-workspace.md)
+- [role-and-workspace-model.md](role-and-workspace-model.md)
+- [methodology.md](methodology.md)
+- [user-flows.md](user-flows.md)
 
-Most tools either:
-- return generic text
-- assume ideal conditions
-- require too much manual work
-- do not reflect club methodology
-- do not provide clear visual setup
+If any of these docs conflict with the current Chapter 2 constitution, prefer the constitution until the doc is updated or source inspection proves otherwise.
 
-Club Vivo is designed to solve that.
+## 5. Session Builder Docs
 
----
+Session Builder is the main product wedge.
 
-## Who It Serves
+Use these docs for Session Builder behavior, quality, and design direction:
 
-### Primary users
-- grassroots soccer coaches
-- assistant coaches
-- solo coaches
-- small clubs and academies
-- nonprofit sports programs
+- [session-builder.md](session-builder.md)
+- [coaching-session-design-standard.md](coaching-session-design-standard.md)
+- [session-generation-quality-standards.md](session-generation-quality-standards.md)
+- [golden-template-library-v1.md](golden-template-library-v1.md)
+- [soccer-development-taxonomy-v1.md](soccer-development-taxonomy-v1.md)
 
-### Secondary users
-- technical directors
-- club directors
-- coach educators
-- program coordinators
+These docs should support the current Session Builder story: a coach-facing planning path that turns real soccer constraints into coach-ready sessions, shorter activities, saved sessions, feedback, and exportable output while staying on the SIC platform foundation.
 
----
+## 6. Quick Soccer Game Docs
 
-## Core Product Promise
+Quick Soccer Game is the Chapter 2 name for the fast creative lane.
 
-Tell Club Vivo what you have today, and it will generate a session you can run now.
+- [quick-soccer-game.md](quick-soccer-game.md)
 
-That includes:
-- the structure of the session
-- the activity order
-- clear instructions
-- coaching points
-- progressions and regressions
-- visual drill diagrams
-- printable export
+Use "Quick Soccer Game" for product language. Use "Quick Session" only when referring to current source files, routes, helpers, saved origin hints, or historical notes.
 
----
+Quick Soccer Game does not introduce a separate backend product, Lambda, data model, auth path, tenancy path, route family, or public API contract.
 
-## Why Soccer First
+## 7. Generation Profiles / Quality Standards
 
-Club Vivo's current execution path is soccer-only.
+Generation and quality docs should keep outputs coach-ready, soccer-specific, age-aware, equipment-aware, and safe to run.
 
-That choice keeps the first release focused and credible. Soccer offers:
-- strong founder-context fit
-- repeatable drill patterns
-- common youth coaching workflows
-- natural club methodology use cases
-- a focused base for future multi-sport or futsal ideas, which remain parked outside the active scope
+- [generation-profiles/](generation-profiles/)
+  - Product guidance for sport, format, methodology style, or coaching context.
+- [coaching-session-design-standard.md](coaching-session-design-standard.md)
+- [session-generation-quality-standards.md](session-generation-quality-standards.md)
+- [golden-template-library-v1.md](golden-template-library-v1.md)
+- [soccer-development-taxonomy-v1.md](soccer-development-taxonomy-v1.md)
 
-Future multi-sport or futsal expansion may be revisited later, but it is not active Club Vivo scope.
+Do not claim a generation profile is implemented unless current source and current architecture docs support it.
 
----
+## 8. Pilot / Context Docs
 
-## Product Positioning
+Pilot and context docs preserve evidence and examples. They should inform product learning without becoming the generic product model by default.
 
-### User-facing product name
-Club Vivo
+- [pilots/](pilots/)
+  - Pilot-specific setup, readiness notes, and club-specific examples.
+- [pilots/ksc/](pilots/ksc/)
+  - KSC-specific program and methodology context.
+- [club-vivo-evolution-roadmap.md](club-vivo-evolution-roadmap.md)
+  - Product evolution context. Read as direction unless current source proves shipped behavior.
+- [football-intelligence-learning-layer.md](football-intelligence-learning-layer.md)
+  - Learning/intelligence context. Do not read as shipped runtime.
 
-### Internal feature wedge
-Session Builder
+Pilot-specific assumptions should not override the Chapter 2 product constitution.
 
-### Platform relationship
-Club Vivo is the current product layer that turns SIC from a platform foundation into a coach-facing workflow.
+## 9. Parked Future Docs
 
-It sits on top of:
-- authenticated tenant-safe access
-- entitlements-backed tenant context
-- session generation APIs
-- exports
-- observability
-- Club Vivo product direction
+Future and parked docs are useful context, not shipped Chapter 2 runtime behavior.
 
-For Club Vivo v1, the backend path should stay aligned to the existing Session Builder modules and the existing `POST /session-packs` endpoint family. The contract should evolve in place rather than creating a parallel generation pipeline.
+- [future/](future/)
+- [training-prescription-layer.md](training-prescription-layer.md)
 
----
+Examples of parked or future areas in this folder include:
 
-## Key Product Principles
+- image-assisted intake
+- methodology source-mode planning
+- broader roadmap phases
+- 7Q board-game learning surface
+- Training Prescription direction
 
-### 1. Product value first
-The first release must be useful for real coaches, not just technically interesting.
+These docs should stay clearly separated from shipped product claims unless a later source-of-truth update promotes them.
 
-### 2. Visual clarity matters
-The output must not be text only. It should include clear diagrams for setup, cones, players, balls, and movement.
+## 10. What Not To Overclaim
 
-### 3. Low-cost delivery
-The first version should remain realistic for a solo builder and affordable for low-resource clubs.
+Do not claim these as shipped Chapter 2 Club Vivo runtime behavior:
 
-### 4. Methodology-aware over time
-Each club should be able to shape the product with its own terminology, session preferences, and methodology.
+- Training Brief
+- DiagramSequence
+- RAG/vector search
+- autonomous agents
+- Bedrock production generation
+- image analysis
+- Match-to-Match Prescription
+- data lake
+- analytics pipeline
+- ETL
+- production export automation
+- a finished commercial SaaS launch
+- a separate admin app
+- a separate Quick Soccer Game backend product
 
-### 5. Tenant-safe by design
-All club data, session history, and methodology context must stay tenant-scoped by construction.
+Equipment Essentials and Methodology may appear as builder context, source-present support, or near-term workspace areas, but do not present them as fully shipped standalone product areas unless source inspection confirms that behavior.
 
----
+## 11. Cleanup Boundary
 
-## V1 Capabilities
+Do not delete, move, or rename product docs during classification cleanup.
 
-Club Vivo v1 should support:
+Do not use product-story cleanup to change app code, backend code, infra/CDK, auth, tenancy, IAM, entitlements, DynamoDB keys, routes, Lambdas, or public API contracts.
 
-- soccer-only intake
-- structured coach input
-- generation of a validated session pack
-- one or more drill diagrams per session
-- a single-string `instructions` field per activity
-- save session
-- export session
-- basic session edits such as:
-  - make it easier
-  - make it harder
-  - change focus
-  - adapt to smaller space
-  - adapt to fewer balls
-
----
-
-## V1 Non-Goals
-
-The first version is not trying to do all of the following:
-
-- support every sport
-- replace full coaching education
-- offer advanced performance science recommendations
-- include live video breakdown
-- include drag-and-drop diagram editing
-- provide full club operating system workflows
-- introduce heavy AI/ML infrastructure too early
-
----
-
-## Product Value for Clubs
-
-Club Vivo helps clubs by:
-- improving coach consistency
-- reducing session planning time
-- supporting less experienced coaches
-- making methodology more reusable
-- creating printable session assets
-- laying the groundwork for club-wide coaching intelligence later
-
----
-
-## Product Value for Coaches
-
-Club Vivo helps coaches by:
-- turning constraints into usable training sessions
-- giving structure when time is limited
-- making setup easier through visual diagrams
-- reducing planning stress
-- giving a better starting point for adaptation
-
----
-
-## Success Signals
-
-Early success should be measured by:
-- first session generated
-- repeat session generation
-- sessions saved
-- sessions exported
-- coach feedback after running a session
-- club pilot adoption
-
----
-
-## Summary
-
-Club Vivo is the first practical coaching product in SIC.
-
-It starts with soccer, focuses on clear session output and visual setup, and gives clubs a realistic way to support coaches without requiring expensive tools or heavy infrastructure.
+If a product doc conflicts with current source or higher-order Chapter 2 docs, label and cross-link it before rewriting or moving it. Historical, pilot, and future docs should remain preserved until a dedicated cleanup decision says otherwise.
