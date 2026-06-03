@@ -1,10 +1,27 @@
 # SIC Architecture Diagrams
 
-This folder is for official editable architecture diagram sources and exported images for Sports Intelligence Cloud / Club Vivo.
+## Status
+
+Supporting / older diagram context.
+
+The current Chapter 2 Club Vivo SaaS architecture visual lives in `docs/architecture/chapter-2/`:
+
+- `docs/architecture/chapter-2/club-vivo-saas-architecture-mermaid.md`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture.drawio`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture-diagram.drawio`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture.png`
+
+Older diagram docs in this folder may still be useful as supporting design context, but they should not override the current Chapter 2 architecture package.
+
+Do not treat older diagram docs as shipped runtime behavior unless current source files and current Chapter 2 source-of-truth docs confirm it.
+
+Do not move, rename, or delete this folder yet.
 
 ## Purpose
 
-Use this folder for durable architecture diagram assets that should live with the repo.
+Use this folder for supporting diagram guidance and older diagram planning docs that should remain available during cleanup classification.
+
+Future durable architecture diagram assets may still live here after a dedicated classification decision, but the current Club Vivo SaaS presentation visual is maintained in `docs/architecture/chapter-2/`.
 
 Recommended contents include:
 
@@ -16,16 +33,24 @@ This folder is not a place to introduce new architecture by drawing it first. Di
 
 ## Relationship To The System Map
 
-`docs/architecture/sic-current-system-map.md` is the current text source of truth for the system map.
+For Chapter 2, start with the current Club Vivo and SIC architecture docs:
 
-Diagrams in this folder should be traceable to:
+- `docs/architecture/chapter-2/club-vivo-saas-architecture-mermaid.md`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture.drawio`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture-diagram.drawio`
+- `docs/architecture/chapter-2/club-vivo-saas-architecture.png`
+- `docs/architecture/platform-constitution.md`
+- `docs/architecture/architecture-principles.md`
+- `docs/architecture/tenant-claim-contract.md`
+
+Older diagrams in this folder may also be traceable to older supporting docs such as:
 
 - `docs/architecture/sic-current-system-map.md`
 - `docs/architecture/sic-repo-inventory.md`
 - current source files
 - approved source-of-truth docs or ADRs
 
-Diagrams should not introduce architecture that is not present in source or approved docs.
+Diagrams should not introduce architecture that is not present in source or approved docs. When older diagram guidance conflicts with the Chapter 2 architecture package, prefer the Chapter 2 package.
 
 ## Recommended Tools
 
@@ -58,9 +83,9 @@ Examples:
 
 When an exported image exists, it should be regenerated from the matching editable source.
 
-## Diagram Set To Create Next
+## Older Diagram Ideas To Review Later
 
-First official diagrams to create:
+The older plan listed these diagrams to create. Treat them as review candidates, not current committed work:
 
 - Current system overview
 - Frontend route map
@@ -108,4 +133,3 @@ Miro boards can be used for colorful explanation and stakeholder review.
 The repo should still keep durable architecture diagram source in draw.io or markdown.
 
 Miro exports can be linked or stored later if they become useful for review, evidence, or presentation.
-
