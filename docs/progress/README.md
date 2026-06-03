@@ -34,10 +34,11 @@ Current source-of-truth starts with:
 
 ## Historical Archive Status
 
-Detailed week-by-week progress history was removed from GitHub `main` after the concise summary layer was created. The full detailed history remains preserved in:
+Detailed week-by-week progress history was removed from GitHub `main` after the concise summary layer was created. The prior detailed-history checkpoint is preserved by tag:
 
-- branch: `archive/pre-showcase-cleanup`
 - tag: `pre-showcase-cleanup-2026-04-25`
+
+The older `archive/pre-showcase-cleanup` branch is not currently present on `origin`, so this README does not rely on it as an active remote archive pointer.
 
 Chapter 1 SIC history is also preserved through:
 
