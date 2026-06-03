@@ -1,0 +1,201 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="club-vivo-saas-architecture" name="Club Vivo SaaS Architecture">
+    <mxGraphModel dx="2009" dy="985" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane-title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ffffff;connectable=0;" value="" vertex="1">
+          <mxGeometry height="70" width="1520" x="40" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="lane-product" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf7f2;strokeColor=#8cc9b0;fontStyle=1;fontSize=16;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;connectable=0;" value="Club Vivo product" vertex="1">
+          <mxGeometry height="210" width="1520" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="lane-platform" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf2ff;strokeColor=#8fb3df;fontStyle=1;fontSize=16;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;connectable=0;" value="Protected request path" vertex="1">
+          <mxGeometry height="300" width="1520" x="40" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="lane-foundation" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6f7fb;strokeColor=#b9c0cf;fontStyle=1;fontSize=16;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;connectable=0;" value="AWS foundation" vertex="1">
+          <mxGeometry height="175" width="1520" x="40" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="lane-guardrail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8df;strokeColor=#dfc777;fontStyle=1;fontSize=12;align=left;verticalAlign=top;spacingLeft=14;spacingTop=6;connectable=0;" value="Scope guardrail" vertex="1">
+          <mxGeometry height="44" width="1520" x="40" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=26;fontStyle=1;fontColor=#17324d;" value="Club Vivo on SIC SaaS Platform" vertex="1">
+          <mxGeometry height="34" width="620" x="60" y="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#4a5f73;" value="Tenant-safe AWS serverless foundation for soccer coaching workflows" vertex="1">
+          <mxGeometry height="24" width="780" x="60" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="coach" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=14;fontStyle=1;fontColor=#133b2a;" value="Coach / coach-admin" vertex="1">
+          <mxGeometry height="70" width="150" x="80" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="web" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=14;fontStyle=1;fontColor=#133b2a;" value="Club Vivo web app" vertex="1">
+          <mxGeometry height="80" width="170" x="270" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="workspace" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=14;fontStyle=1;fontColor=#133b2a;" value="Coach Workspace" vertex="1">
+          <mxGeometry height="80" width="180" x="470" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="builder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bcebd8;strokeColor=#1f7a4d;strokeWidth=3;fontSize=16;fontStyle=1;fontColor=#123d2c;shadow=1;" value="Session Builder&lt;br&gt;main wedge" vertex="1">
+          <mxGeometry height="96" width="230" x="700" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="quick" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eefaf5;strokeColor=#74b99a;fontSize=13;fontStyle=1;fontColor=#1f5a43;" value="Quick Soccer Game&lt;br&gt;fast lane" vertex="1">
+          <mxGeometry height="64" width="200" x="720" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="support" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d7a;fontSize=13;fontStyle=1;fontColor=#133b2a;" value="Teams / Sessions / Feedback / Export" vertex="1">
+          <mxGeometry height="80" width="230" x="970" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="context" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fbf6;strokeColor=#8cc9b0;dashed=1;fontSize=13;fontColor=#2d5d4a;" value="Equipment + methodology context&lt;br&gt;when source-verified" vertex="1">
+          <mxGeometry height="80" width="250" x="1230" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="cognito" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="Cognito authentication" vertex="1">
+          <mxGeometry height="70" width="190" x="90" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="apigw" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="API Gateway HTTP API&lt;br&gt;JWT authorizer" vertex="1">
+          <mxGeometry height="70" width="220" x="320" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="wrapper" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcecff;strokeColor=#2b6cb0;fontSize=13;fontStyle=1;fontColor=#17324d;align=left;spacingLeft=46;" value="Lambda platform wrapper&lt;br&gt;logging / errors / tenant context" vertex="1">
+          <mxGeometry height="96" width="250" x="570" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="tenant" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#c8a13f;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#5a4200;" value="Tenant-safe by construction&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;verified auth + entitlements&lt;br&gt;no client-supplied tenant_id&lt;br&gt;fail closed on missing context&lt;br&gt;tenant-scoped DynamoDB + S3&lt;/span&gt;" vertex="1">
+          <mxGeometry height="72" width="250" x="585" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="routes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="Purpose-based API&lt;br&gt;route families" vertex="1">
+          <mxGeometry height="75" width="260" x="870" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="sessionpack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="Session Pack Generation API" vertex="1">
+          <mxGeometry height="65" width="260" x="1210" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="sessions" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="Saved Sessions API" vertex="1">
+          <mxGeometry height="65" width="260" x="1210" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="teams" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f80bd;fontSize=13;fontStyle=1;fontColor=#183a5a;align=left;spacingLeft=44;" value="Team Management API" vertex="1">
+          <mxGeometry height="65" width="260" x="1210" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="entitlements" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" value="DynamoDB&lt;br&gt;Tenant Entitlements Table" vertex="1">
+          <mxGeometry height="76" width="250" x="585" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="domain" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" value="DynamoDB&lt;br&gt;SIC Domain Table&lt;br&gt;tenant-scoped keys" vertex="1">
+          <mxGeometry height="76" width="260" x="1210" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" value="S3&lt;br&gt;Session PDF storage&lt;br&gt;tenant-scoped paths" vertex="1">
+          <mxGeometry height="76" width="230" x="930" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudwatch" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b95a7;fontSize=13;fontStyle=1;fontColor=#303846;align=left;spacingLeft=44;" value="CloudWatch&lt;br&gt;logs / metrics / alarms" vertex="1">
+          <mxGeometry height="76" width="230" x="300" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="source" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3ecff;strokeColor=#a98ad7;fontSize=13;fontStyle=1;fontColor=#3f2b63;" value="Source: apps, services,&lt;br&gt;auth triggers, infra/cdk" vertex="1">
+          <mxGeometry height="42" width="300" x="1210" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="guardrail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dfc777;fontSize=11;fontStyle=0;fontColor=#6b5200;" value="Not shown as shipped: image analysis, Training Brief, DiagramSequence, RAG, autonomous agents, Bedrock production generation" vertex="1">
+          <mxGeometry height="22" width="1380" x="80" y="928" as="geometry" />
+        </mxCell>
+        <mxCell id="e-coach-web" edge="1" parent="1" source="coach" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" target="web" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-web-workspace" edge="1" parent="1" source="web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" target="workspace" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-workspace-builder" edge="1" parent="1" source="workspace" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" target="builder" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-workspace-quick" edge="1" parent="1" source="workspace" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" target="quick" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-workspace-support" edge="1" parent="1" source="workspace" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f9d7a;fontSize=11;fontColor=#2d5d4a;" target="support" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-support-context" edge="1" parent="1" source="support" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8cc9b0;dashed=1;fontSize=11;fontColor=#2d5d4a;" target="context" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-web-cognito" edge="1" parent="1" source="web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="cognito" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-web-apigw" edge="1" parent="1" source="web" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="apigw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-cognito-apigw" edge="1" parent="1" source="cognito" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="apigw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-apigw-wrapper" edge="1" parent="1" source="apigw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="wrapper" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-wrapper-tenant" edge="1" parent="1" source="wrapper" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" target="tenant" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-tenant-entitlements" edge="1" parent="1" source="tenant" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c8a13f;fontSize=11;fontColor=#5a4200;" target="entitlements" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-wrapper-routes" edge="1" parent="1" source="wrapper" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="routes" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-routes-sessionpack" edge="1" parent="1" source="routes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="sessionpack" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-routes-sessions" edge="1" parent="1" source="routes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="sessions" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-routes-teams" edge="1" parent="1" source="routes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#4f80bd;fontSize=11;fontColor=#183a5a;" target="teams" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-builder-pack" edge="1" parent="1" source="builder" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2f855a;fontSize=11;fontColor=#2d5d4a;strokeWidth=2;" target="sessionpack" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="815" y="340" />
+              <mxPoint x="1340" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-quick-pack" edge="1" parent="1" source="quick" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#74b99a;fontSize=11;fontColor=#2d5d4a;" target="sessionpack" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="340" />
+              <mxPoint x="1340" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-sessionpack-domain" edge="1" parent="1" source="sessionpack" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" target="domain" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1500" y="412" />
+              <mxPoint x="1500" y="700" />
+              <mxPoint x="1340" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-sessions-domain" edge="1" parent="1" source="sessions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" target="domain" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1500" y="508" />
+              <mxPoint x="1500" y="700" />
+              <mxPoint x="1340" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-teams-domain" edge="1" parent="1" source="teams" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" target="domain" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1340" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-sessions-s3" edge="1" parent="1" source="sessions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" target="s3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1175" y="508" />
+              <mxPoint x="1175" y="700" />
+              <mxPoint x="1045" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-wrapper-cloudwatch" edge="1" parent="1" source="wrapper" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b95a7;fontSize=11;fontColor=#303846;" target="cloudwatch" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="488" />
+              <mxPoint x="450" y="700" />
+              <mxPoint x="415" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
