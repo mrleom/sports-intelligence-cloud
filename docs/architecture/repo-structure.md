@@ -316,9 +316,10 @@ Do not use this folder for product scope docs. Product scope belongs under `docs
 Legacy naming that still contains useful architecture material.
 
 This folder may contain durable ideas about:
-- generation flow
 - rendering architecture
 - drill diagram specs
+
+Generation-flow guidance from this legacy area has been migrated into `docs/product/club-vivo/session-builder.md`.
 
 Tenant methodology guidance from this legacy area has been migrated into `docs/product/club-vivo/methodology.md`.
 

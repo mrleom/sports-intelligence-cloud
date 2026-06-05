@@ -308,6 +308,30 @@ This is future direction only. RAG, FAISS/vector search, and tenant knowledge re
 
 ---
 
+## 10a) Generation Flow Guardrails
+
+Session Builder generation should stay inside the existing Session Builder / Session Pack flow. It should not introduce a separate product, backend route family, auth path, tenancy path, or deployment model.
+
+The durable generation shape is:
+
+1. Coach provides a request through structured fields, free text, or both.
+2. SIC resolves authoritative tenant context from verified auth plus entitlements.
+3. Coach input is normalized into soccer-first planning constraints.
+4. Missing essentials are identified, and the product asks only for what is needed.
+5. Current deterministic/template-based generation creates a structured session pack draft unless source code proves a narrower runtime behavior.
+6. The draft is validated before delivery.
+7. The UI renders a coach-ready session pack that can move through current save, review, feedback, and export affordances where those affordances are source-present.
+
+Validation happens before the output is trusted. Checks should include total minutes, equipment feasibility, age and level fit, soccer scope, activity order, clear instructions, and whether the session remains usable if diagrams or export are unavailable.
+
+Failure should degrade safely. Prefer a simpler valid session, a clear retry path, or a refinement prompt over a polished but unreliable output.
+
+Team and methodology context must stay tenant-safe. If team context is used, it must come from validated tenant-scoped source context, not from public request body, query params, or headers. Methodology or future knowledge context must also stay inside the same tenant-safe Session Builder path.
+
+DiagramSequence, Training Brief, image analysis, RAG/vector search, autonomous agents, Bedrock production generation, Match-to-Match Prescription, data lake, ETL, and analytics pipeline behavior remain proposed, parked, or future unless current source and current contracts prove otherwise.
+
+---
+
 ## 11) API Surface (Suggested)
 
 ### Chat / Orchestration

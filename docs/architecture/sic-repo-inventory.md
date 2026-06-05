@@ -433,7 +433,7 @@ Architecture docs live under `docs/architecture/`:
   - `platform-observability.md`
   - `observability-signals.md`
 - coach/session architecture:
-  - `coach-lite/coach-lite-generation-flow.md`
+  - generation-flow guidance migrated to `docs/product/club-vivo/session-builder.md`
   - `coach-lite/diagram-rendering-architecture.md`
   - `coach-lite/drill-diagram-spec-v1.md`
   - tenant methodology guidance migrated to `docs/product/club-vivo/methodology.md`
