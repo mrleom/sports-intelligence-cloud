@@ -6,6 +6,8 @@ Documentation-only strategy for the legacy Coach Lite and SIC Coach Lite documen
 
 Product legacy status: the one-file `docs/product/sic-coach-lite/` area has been migrated into `docs/product/club-vivo/coaching-session-design-standard.md` and can remain removed unless a future audit needs historical evidence from Git.
 
+Methodology legacy status: `docs/architecture/coach-lite/tenant-methodology-knowledge.md` has been migrated into `docs/product/club-vivo/methodology.md` and can remain removed unless a future audit needs historical evidence from Git.
+
 This strategy does not move files, delete files, rename folders, change runtime code, change API contracts, or change auth, tenancy, entitlements, IAM, DynamoDB keys, routes, Lambdas, CDK wiring, build config, or Amplify assumptions.
 
 ## Legacy Areas
@@ -32,7 +34,7 @@ The folders may still contain useful evidence and design material, but their nam
 
 `docs/architecture/coach-lite/drill-diagram-spec-v1.md` appears to contain useful drill diagram field definitions, rendering constraints, and visual clarity rules that may inform current structured diagram work.
 
-`docs/architecture/coach-lite/tenant-methodology-knowledge.md` appears to contain useful tenant-scoped methodology guardrails, governance notes, and configuration boundaries.
+`docs/architecture/coach-lite/tenant-methodology-knowledge.md` contained useful tenant-scoped methodology guardrails, governance notes, fallback behavior, and configuration boundaries that have been merged into `docs/product/club-vivo/methodology.md`.
 
 None of this means the legacy docs describe shipped Club Vivo runtime behavior. They are evidence to mine carefully, not active product truth.
 
@@ -42,7 +44,7 @@ Useful product-output material has been summarized by:
 
 - `docs/product/club-vivo/coaching-session-design-standard.md`
 
-Useful methodology material should eventually move into or be summarized by:
+Useful methodology material has been summarized by:
 
 - `docs/product/club-vivo/methodology.md`
 - `docs/architecture/tenant-claim-contract.md`
@@ -72,7 +74,6 @@ Do not move, delete, or rename these files yet:
 - `docs/architecture/coach-lite/coach-lite-generation-flow.md`
 - `docs/architecture/coach-lite/diagram-rendering-architecture.md`
 - `docs/architecture/coach-lite/drill-diagram-spec-v1.md`
-- `docs/architecture/coach-lite/tenant-methodology-knowledge.md`
 
 Keep the current architecture folder name until useful material has been migrated, active references have been updated, and audit/source-map docs agree on the final disposition. Do not recreate the old product legacy folder as an active docs area.
 
@@ -102,8 +103,7 @@ Public index docs should not present `docs/product/sic-coach-lite/` or `docs/arc
 ## Recommended Next PR Sequence
 
 1. Add this strategy and label the legacy folders in public index docs.
-2. Migrate tenant methodology guardrails into `docs/product/club-vivo/methodology.md` and current tenant-source docs.
-3. Migrate generation-flow principles into `docs/product/club-vivo/session-builder.md` or a current Club Vivo architecture note.
-4. Migrate durable diagram rules into current structured diagram docs without claiming shipped DiagramSequence runtime.
-5. Update inventories and source maps after the useful material has a current owner.
-6. Only then decide whether the remaining legacy architecture folder should stay, move to history, or be removed.
+2. Migrate generation-flow principles into `docs/product/club-vivo/session-builder.md` or a current Club Vivo architecture note.
+3. Migrate durable diagram rules into current structured diagram docs without claiming shipped DiagramSequence runtime.
+4. Update inventories and source maps after the useful material has a current owner.
+5. Only then decide whether the remaining legacy architecture folder should stay, move to history, or be removed.

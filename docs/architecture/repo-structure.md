@@ -319,7 +319,8 @@ This folder may contain durable ideas about:
 - generation flow
 - rendering architecture
 - drill diagram specs
-- tenant-safe methodology knowledge
+
+Tenant methodology guidance from this legacy area has been migrated into `docs/product/club-vivo/methodology.md`.
 
 Do not add new Club Vivo architecture here unless the work is explicitly a historical migration note.
 

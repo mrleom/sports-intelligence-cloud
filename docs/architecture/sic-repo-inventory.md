@@ -436,7 +436,7 @@ Architecture docs live under `docs/architecture/`:
   - `coach-lite/coach-lite-generation-flow.md`
   - `coach-lite/diagram-rendering-architecture.md`
   - `coach-lite/drill-diagram-spec-v1.md`
-  - `coach-lite/tenant-methodology-knowledge.md`
+  - tenant methodology guidance migrated to `docs/product/club-vivo/methodology.md`
   - `session-builder-image-assisted-intake-v1.md`
   - `feedback-loop-architecture.md`
   - `team-layer-v1.md`
