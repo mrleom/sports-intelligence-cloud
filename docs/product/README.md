@@ -32,7 +32,8 @@ Active product docs live under `docs/product/club-vivo/`.
   - Broader future concepts outside the current Club Vivo execution path.
   - Current preserved concepts include Ruta Viva and Athlete Evolution AI.
 
-## Legacy Product Material
+## Migrated Legacy Product Material
 
-- `docs/product/sic-coach-lite/`
-  - Legacy/leftover material to review later before archive or delete decisions.
+Legacy Coach Lite product-output guidance has been merged into `docs/product/club-vivo/coaching-session-design-standard.md`.
+
+Current readers should start with `docs/product/club-vivo/`.

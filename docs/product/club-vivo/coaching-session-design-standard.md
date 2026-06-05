@@ -338,6 +338,18 @@ Coach-facing output should include:
 
 Avoid internal prompt fragments.
 
+## 10a. Product Output Review Guidance
+
+Legacy product-output planning guidance has been folded into this standard. The durable guidance is:
+
+- Treat saved session detail as the most reliable coach-ready output view. Home and saved-session library surfaces should preview value, while review pages should help the coach decide whether to save or adjust a candidate.
+- Keep Quick Soccer Game output lighter than full Session Builder output. It should stay fast, direct, and practical rather than becoming a second full-builder interface.
+- When data is available, separate what the coach asked for from what Club Vivo generated or assumed. Do not imply team, equipment, or methodology influence unless the current request and response path proves it.
+- Make setup, run order, equipment, coaching cues, progressions, regressions, assumptions, and adaptations easy to scan before practice.
+- Use route-specific observations as planning context only: `/sessions/new` is the detailed candidate review surface, `/sessions/quick-review` is the lightweight quick review surface, `/sessions` is a browsing surface, and `/sessions/[sessionId]` is the durable saved-session detail surface.
+- Let saved-session detail define future export/PDF hierarchy after the page output is stable. Do not claim production export automation beyond current source, and do not block text output improvements on diagram or export work.
+- Confirm route behavior, generation payloads, saved-session fields, and export behavior against current source before implementation. Product-output cleanup must not require backend API, auth, tenancy, IAM, CDK, route, Lambda, or public contract changes unless a separate architecture review approves them.
+
 ## 11. Club and Organization Value
 
 Club Vivo should give a club:
