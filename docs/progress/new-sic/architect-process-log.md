@@ -4,7 +4,7 @@
 
 This architect process log is the concise post-Week-21 record for New SIC.
 
-It summarizes the major architecture, product, runtime, deployment, and guardrail decisions captured across Closeout Summaries 1 through 10. The closeout summaries remain the detailed chronological evidence. This file is the high-level process record used to understand how the current SIC / Club Vivo baseline evolved.
+It summarizes the major architecture, product, runtime, deployment, and guardrail decisions captured across the original numbered New SIC closeouts. The numbered closeout files were removed from `main` after their durable facts were summarized here and in `README.md`; Git history preserves the full chronological evidence. This file is the high-level process record used to understand how the current SIC / Club Vivo baseline evolved.
 
 This document is not a roadmap, closeout summary, implementation checklist, or runtime claim. It is a compact architecture-process narrative.
 
@@ -12,16 +12,12 @@ This document is not a roadmap, closeout summary, implementation checklist, or r
 
 This log is based on:
 
-- `docs/progress/new-sic/closeout-summary-1.md`
-- `docs/progress/new-sic/closeout-summary-2.md`
-- `docs/progress/new-sic/closeout-summary-3.md`
-- `docs/progress/new-sic/closeout-summary-4.md`
-- `docs/progress/new-sic/closeout-summary-5.md`
-- `docs/progress/new-sic/closeout-summary-6.md`
-- `docs/progress/new-sic/closeout-summary-7.md`
-- `docs/progress/new-sic/closeout-summary-8.md`
-- `docs/progress/new-sic/closeout-summary-9.md`
-- `docs/progress/new-sic/closeout-summary-10.md`
+- the original numbered New SIC closeouts, now preserved in Git history
+- `docs/progress/new-sic/README.md`
+- `docs/progress/weekly-progress-notes.md`
+- `docs/progress/architect-process-summary.md`
+- current Club Vivo product docs
+- current SIC platform architecture docs
 
 ## Executive Architecture Timeline
 
@@ -367,6 +363,66 @@ template implementation slices. No generation behavior, runtime code, frontend c
 tests, package files, persistence, AI/RAG, Match-to-Match, infrastructure, auth, or tenancy behavior
 changed in this documentation branch.
 
+### Phase 11 - Bounded Training Brief And Session Builder Handoff
+
+The late New SIC evidence clarified that the Training Brief direction was bounded, coach-reviewed,
+and deterministic. It was not broad autonomous-agent behavior.
+
+Training Brief foundation work stayed under the existing Session Builder domain. It included:
+
+- Training Brief input validation
+- Training Brief to Session Builder handoff mapping
+- Training Brief candidate draft building
+- sanitized coach-review fields
+- clean handoff fields for existing Session Builder inputs
+
+Normal generation still used the existing validated Session Builder `/session-packs` path. Training
+Brief work did not create a public Training Brief API, did not persist Training Brief records, did
+not persist prescription records, and did not generate SessionPacks from Training Brief.
+
+The maturity ladder captured in the late closeout evidence remains future/proposed framing. It
+should not be used to claim Training Brief persistence, Bedrock production generation, RAG/vector
+search, DiagramSequence runtime rendering, or Match-to-Match Prescription as an active path.
+
+The important architecture/process lesson is:
+
+```text
+coach evidence
+-> validated Training Brief draft / candidate
+-> reviewed Session Builder handoff
+-> existing validated /session-packs generation path
+```
+
+This preserves the core platform rules: tenant safety, server-derived tenant context, validation,
+observability, cost awareness, and product value before platform expansion.
+
+### Phase 12 - Coach Workspace And Session Builder Quality Consolidation
+
+The final late closeout evidence clarified the active product surface:
+
+- Coach Workspace and Session Builder became the active product surface.
+- Session Builder became the main active creation path.
+- Training Brief, Match-to-Match, and image-assisted intake were hidden or parked from active UI.
+- Quick Activity / Quick Soccer Game shared the generation foundation and stayed lighter than full
+  Session Builder.
+- deterministic generation quality improved without introducing RAG, Bedrock, vector search, or
+  autonomous agents.
+
+The closeout also captured a durable deployment lesson:
+
+```text
+Amplify deploys the frontend only.
+Backend Session Builder generation changes require CDK/API deployment.
+```
+
+Historical evidence named `SicApiStack-Dev` and Lambda asset checks during the work. Current
+deployment truth should still be verified against current runbooks, source maps, CDK source, and
+active deployment validation before making a live-runtime claim.
+
+Validation and smoke evidence from this phase should be treated as historical quality evidence.
+It should support current product standards, but it should not be used to overclaim current live
+behavior without a fresh source or deployment check.
+
 ## Current Product Model
 
 The current SIC / Club Vivo product model is:
@@ -378,8 +434,9 @@ The current SIC / Club Vivo product model is:
 - Session Builder is the active runtime wedge.
 - Custom Build is the everyday coach-led Session Builder path.
 - Match-to-Match Prescription is a parked future high-level intelligence feature.
-- Quick Activity is the fast activity lane.
+- Quick Activity / Quick Soccer Game is the fast creative lane.
 - Training Brief backend foundation is internal-only validator, handoff mapper, and candidate builder code under Session Builder.
+- Training Brief Draft, Match-to-Match, and image-assisted intake are parked from the active UI unless current source proves otherwise.
 - Equipment page owns equipment creation and equipment essentials.
 - Saved Sessions preserve generated plans and review/export continuity.
 - Training Prescription, Training Brief, DiagramSequence, and 7Q are evolving intelligence layers unless explicitly implemented.
@@ -389,13 +446,13 @@ The current SIC / Club Vivo product model is:
 
 The current runtime truth is intentionally narrower than the future product vision.
 
-Currently shipped or represented in runtime:
+Currently shipped, source-present, or preserved as historical runtime evidence:
 
 - deterministic/template-based session generation
-- Quick Activity fast generation path
+- Quick Activity / Quick Soccer Game fast generation path
 - Custom Build guided Session Builder path
-- frontend-only deterministic Match-to-Match draft preview unless a future PR changes that
-- internal Training Brief validation, handoff mapping, and candidate draft building
+- historical frontend-only deterministic Match-to-Match draft preview evidence, now parked unless a future PR changes that
+- source-present internal Training Brief validation, handoff mapping, and candidate draft building under Session Builder
 - duration-based deterministic activity allocation
 - deterministic SVG story diagrams
 - browser-local coach workspace hints scoped by signed-in user/tenant context where applicable
@@ -427,7 +484,7 @@ Current deployment posture:
 - Amplify deploys the Club Vivo frontend.
 - API Gateway + Lambda hosts the backend generation and data APIs.
 - The `/session-packs` backend is the deterministic generation brain for Session Builder and Quick Activity.
-- Backend generation-quality changes require backend deployment.
+- Backend generation-quality changes require CDK/API deployment.
 - Frontend-only UI/copy/doc changes generally require Amplify deployment.
 - Slices touching both frontend and backend need both deployment paths.
 - Club Vivo API Lambdas are on Node.js 22 after the focused runtime update.
