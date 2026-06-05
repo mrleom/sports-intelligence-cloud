@@ -127,6 +127,31 @@ The system must never retrieve methodology from another tenant.
 
 ---
 
+## Tenant Safety and Priority Rules
+
+Methodology must stay inside the existing Club Vivo and SIC tenant-safe request path.
+
+Non-negotiable rules:
+
+- Tenant identity must come from verified auth plus authoritative entitlements.
+- Client input must not choose methodology through `tenant_id`, `tenantId`, `x-tenant-id`, or any other client-supplied tenant identifier.
+- Methodology data must be loaded only through server-side tenant context.
+- Cross-tenant methodology retrieval is never allowed.
+- Missing, incomplete, or unavailable methodology context should fall back to soccer-first defaults rather than making generation fragile.
+
+When multiple inputs influence generation, prioritize them in this order:
+
+1. verified tenant context
+2. coach's real-world constraints
+3. safety and age appropriateness
+4. session contract validity
+5. tenant methodology guidance
+6. stylistic preferences
+
+Methodology should guide the output, not dominate it. Club preferences must not produce unrealistic, unsafe, invalid, or tenant-ambiguous sessions.
+
+---
+
 ## v1 Governance Rules
 
 Club methodology support should follow these rules:
@@ -136,6 +161,8 @@ Club methodology support should follow these rules:
 - methodology context should be transparent and reviewable
 - tenant context should remain server-derived
 - no club methodology should be loaded from client-provided tenant identifiers
+- coach-facing users can benefit from methodology context, but only authorized admin or director roles should manage approved methodology settings and guidance
+- methodology changes should not weaken tenant isolation or bypass source-of-truth tenant rules
 
 ---
 
@@ -167,6 +194,7 @@ Club Methodology v1 should not try to become:
 - a document warehouse
 - a director approval workflow engine
 - a cross-club content marketplace
+- a separate app, bot deployment, auth path, tenancy path, or backend product
 
 Those may come later.
 

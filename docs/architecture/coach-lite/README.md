@@ -10,6 +10,10 @@ These docs must not override current Club Vivo Chapter 2 source-of-truth docs, a
 
 Use `docs/architecture/chapter-2/legacy-docs-strategy.md` for the migration strategy.
 
+Tenant methodology guidance from this folder has been migrated into `docs/product/club-vivo/methodology.md`.
+
+Generation-flow guidance from this folder has been migrated into `docs/product/club-vivo/session-builder.md`.
+
 Start with these current docs when explaining Chapter 2:
 
 - `docs/architecture/club-vivo-source-map.md`
