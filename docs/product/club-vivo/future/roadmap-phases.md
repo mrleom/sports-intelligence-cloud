@@ -1,8 +1,14 @@
-# SIC Coach Lite Roadmap and High Level Implementation Phases
+# Club Vivo Legacy Roadmap and High Level Implementation Phases
+
+## Status
+
+Legacy future-roadmap context from the earlier coach-product naming period.
+
+This document does not override the current Club Vivo Chapter 2 product constitution, source map, or architecture guardrails.
 
 ## Purpose
 
-This document defines the product roadmap for **SIC Coach Lite** as the first club-facing product in Sports Intelligence Cloud, and lays out the full high level implementation phases that grow SIC from a coach session builder into a broader club and sports organization platform.
+This document preserves an earlier product roadmap for the first club-facing coach product in Sports Intelligence Cloud, and lays out high level implementation phases that could grow SIC from a coach session builder into a broader club and sports organization platform.
 
 This direction stays aligned with the current SIC product wedge, architecture principles, tenant contract, and roadmap direction:
 
@@ -17,9 +23,9 @@ This direction stays aligned with the current SIC product wedge, architecture pr
 
 # 1. Product Positioning
 
-## SIC Coach Lite
+## Club Vivo
 
-**SIC Coach Lite** is the first club-facing product to present to coaches and small clubs.
+**Club Vivo** is the first club-facing product to present to coaches and small clubs.
 
 Its job is simple:
 
@@ -44,13 +50,13 @@ Then SIC should return:
 
 ---
 
-# 2. Why SIC Coach Lite Should Be First
+# 2. Why Club Vivo Should Be First
 
 SIC should begin with a narrow but highly usable wedge.
 
 That wedge is not a general AI chatbot. It is a **coach workflow product**.
 
-SIC Coach Lite should come first because it:
+Club Vivo should come first because it:
 
 - solves a real pain point immediately
 - is useful for low income and grassroots coaches
@@ -71,7 +77,7 @@ This product should be good enough for:
 
 # 3. Core Product Promise
 
-The product promise for SIC Coach Lite should be:
+The product promise for Club Vivo should be:
 
 > Tell SIC what kind of team you coach, what space and equipment you have, and what you want to improve today. SIC will build a training session you can run now.
 
@@ -103,7 +109,7 @@ And it should produce:
 
 # 4. Visual Delivery Requirement
 
-A major requirement for SIC Coach Lite is that the output should not be just words.
+A major requirement for Club Vivo is that the output should not be just words.
 
 The coach should receive a session that is visually understandable.
 
@@ -159,7 +165,7 @@ It only needs to be clear enough that a coach can set up the activity correctly.
 
 # 5. Product Architecture Direction
 
-SIC Coach Lite should remain aligned with the existing SIC architecture direction.
+Club Vivo should remain aligned with the existing SIC architecture direction.
 
 ## Core architectural shape
 
@@ -197,11 +203,11 @@ Not from separate bot deployments.
 
 ---
 
-# 6. SIC Coach Lite as the First Club Facing Product
+# 6. Club Vivo as the First Club Facing Product
 
 ## Club demo value
 
-When SIC Coach Lite is shown to a club, the value should be obvious.
+When Club Vivo is shown to a club, the value should be obvious.
 
 A director or coach should be able to see that SIC can:
 
@@ -229,7 +235,7 @@ This is how SIC evolves from a coach tool into a club platform.
 
 The recommended roadmap is:
 
-1. SIC Coach Lite
+1. Club Vivo
 2. Coach Workspace
 3. Team Layer
 4. Club Methodology Layer
@@ -264,7 +270,7 @@ This phase makes sure the product is built on a trustworthy platform and not on 
 
 ---
 
-## Phase 1 — SIC Coach Lite MVP
+## Phase 1 — Club Vivo MVP
 
 ### Goal
 Ship the first real coach product that clubs can see and use.
@@ -452,7 +458,7 @@ This phase should be built only after real product usage supports it.
 
 # 9. Recommended Release Sequence
 
-## Release 1 — SIC Coach Lite
+## Release 1 — Club Vivo
 
 The first product shown to clubs should include:
 
@@ -504,7 +510,7 @@ The first product shown to clubs should include:
 
 ## Recommendation
 
-Build **SIC Coach Lite now**, but build it in a way that leaves clean seams for the richer future phases.
+Build **Club Vivo now**, but build it in a way that leaves clean seams for the richer future phases.
 
 That means:
 
@@ -547,7 +553,7 @@ That will allow SIC to support:
 
 # 12. Summary
 
-SIC Coach Lite should be the first club facing product.
+Club Vivo should be the first club facing product.
 
 It should prove that SIC can turn a coach's constraints into a structured, visual, usable training session.
 

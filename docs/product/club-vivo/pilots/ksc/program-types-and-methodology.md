@@ -1,15 +1,15 @@
-# SIC Coach Lite — KSC Program Types and Methodology v1
+# Club Vivo KSC Program Types and Methodology v1
 
 ## Status
 Draft v1
 
 ## Purpose
 
-This document defines the Week 21 product direction for KSC program types and methodology behavior in SIC Coach Lite.
+This document defines the Week 21 product direction for KSC program types and methodology behavior in Club Vivo.
 
 KSC is the current pilot/example tenant for this topic, not product-wide shared platform truth.
 
-It uses `../../../../progress/weekly-progress-notes.md` and `../../../../architecture/sic-current-system-map.md` for the current GitHub-facing Week 21 and New SIC context. Detailed Week 21 notes remain historical evidence under `docs/progress/`.
+It uses `../../../../progress/weekly-progress-notes.md` and `../../../../architecture/sic-current-system-map.md` as historical Week 21 platform context. Detailed Week 21 notes remain historical evidence under `docs/progress/`.
 
 This is a product-direction document only.
 It does not claim that all described objects or defaults already exist in the current runtime.
@@ -43,7 +43,7 @@ The most important differences to freeze in Week 21 are:
 - OST coaches may work with more variable and mixed-age practical conditions
 - different program contexts may imply different methodology defaults
 
-If SIC does not treat those differences explicitly, the coach experience stays too generic.
+If Club Vivo does not treat those differences explicitly, the coach experience stays too generic.
 
 ---
 
@@ -232,6 +232,6 @@ The following are out of scope for this Week 21 product freeze:
 
 ## Summary
 
-KSC program type and methodology should become explicit team-level product concepts inside one shared SIC coach app.
+KSC program type and methodology should become explicit team-level product concepts inside one shared Club Vivo coach app.
 
-Week 21 freezes the rule that `travel` and `ost` can now live as optional durable Team context, that optional `playerCount` can now live on Team as well, that `durationMin` still remains request-owned, and that future methodology defaulting should stay inside one shared multi-tenant product rather than splitting SIC into parallel products.
+Week 21 freezes the rule that `travel` and `ost` can now live as optional durable Team context, that optional `playerCount` can now live on Team as well, that `durationMin` still remains request-owned, and that future methodology defaulting should stay inside one shared multi-tenant product rather than splitting the product into parallel products.

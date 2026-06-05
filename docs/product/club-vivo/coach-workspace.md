@@ -1,13 +1,13 @@
-# SIC Coach Lite — Coach Workspace v1
+# Club Vivo Coach Workspace v1
 
 ## Status
 Draft v1
 
 ## Purpose
 
-This document defines the Week 21 product direction for **Coach Workspace v1** inside SIC Coach Lite.
+This document defines the Week 21 product direction for **Coach Workspace v1** inside Club Vivo.
 
-It uses `../../progress/weekly-progress-notes.md` and `../../architecture/sic-current-system-map.md` for the current GitHub-facing Week 21 and New SIC context. Detailed Week 21 notes remain historical evidence under `docs/progress/`.
+It uses `../../progress/weekly-progress-notes.md` and `../../architecture/sic-current-system-map.md` as historical Week 21 platform context. Detailed Week 21 notes remain historical evidence under `docs/progress/`.
 
 This is a product-direction document only.
 It does not claim that all described surfaces already exist in the current runtime.

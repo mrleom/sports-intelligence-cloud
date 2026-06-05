@@ -1,13 +1,13 @@
-# SIC Coach Lite — Soccer Scope v1
+# Club Vivo Soccer Scope v1
 
 ## Status
 Draft v1
 
 ## Purpose
 
-This document defines the sport scope for SIC Coach Lite v1.
+This document defines the sport scope for Club Vivo v1.
 
-SIC as a platform may support multiple sports over time, but the first release of Coach Lite is intentionally focused on soccer.
+SIC as a platform may support multiple sports over time, but the first Club Vivo product direction is intentionally focused on soccer.
 
 This document defines what is in scope, what is out of scope, and how soccer support should be interpreted in the first version.
 
@@ -15,7 +15,7 @@ This document defines what is in scope, what is out of scope, and how soccer sup
 
 ## Scope Decision
 
-Coach Lite v1 is soccer-first.
+Club Vivo is soccer-first.
 
 That means:
 - the product experience is designed for soccer
@@ -70,7 +70,7 @@ A focused first sport is more valuable than a weak multi-sport launch.
 
 ## In-Scope Session Categories
 
-Coach Lite v1 should support:
+Club Vivo should support:
 
 - warm up
 - passing and receiving
@@ -198,7 +198,7 @@ A soccer session should only be considered valid if:
 
 The right message is:
 
-SIC Coach Lite is built specifically for soccer in its first release.
+Club Vivo is built specifically for soccer in its first release.
 
 Avoid saying:
 - all sports supported
@@ -214,4 +214,4 @@ The early product should feel focused and trustworthy.
 
 Soccer scope v1 is intentionally narrow.
 
-It gives SIC Coach Lite a clear launch identity, improves output quality, and creates a stronger path for future expansion into futsal and eventually additional sports.
+It gives Club Vivo a clear launch identity, improves output quality, and creates a stronger path for future expansion into futsal and eventually additional sports.
