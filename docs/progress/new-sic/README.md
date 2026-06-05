@@ -35,7 +35,7 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | File Or Folder | Evidence Value |
 | --- | --- |
 | `architect-process-log.md` | Detailed phase timeline, product model, runtime truth notes, deployment posture, and process principles. |
-| `closeout-summary-10.md` through `closeout-summary-12.md` | Late checkpoint evidence for Training Brief foundation, bounded Session Builder workflow framing, Coach Workspace simplification, Session Builder quality, validation, and backend deployment lessons. |
+| Late numbered closeout facts | The original late closeout files have been consolidated into this README and `architect-process-log.md`; Git history preserves the full files. |
 | `backend-export-lake-audit.md` | Important source-present export/lake/ETL caution; useful for avoiding overclaims about data lake, ETL, analytics, and domain export runtime. |
 | `club-vivo-runtime-readiness-checklist.md` | Runtime readiness criteria, active-route checks, smoke-test expectations, and stop conditions. |
 | `club-vivo-runtime-readiness-evidence.md` | Local build and route evidence from the New SIC readiness checkpoint. |
@@ -53,9 +53,6 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 Do not remove these from `main` until their durable facts are summarized in current product, architecture, progress, history, or runbook docs:
 
 - `architect-process-log.md`
-- `closeout-summary-10.md`
-- `closeout-summary-11.md`
-- `closeout-summary-12.md`
 - `backend-export-lake-audit.md`
 - `club-vivo-runtime-readiness-checklist.md`
 - `club-vivo-runtime-readiness-evidence.md`
@@ -68,7 +65,7 @@ The most important facts to preserve are runtime boundaries, deployment/readines
 
 ## Removed Numbered Closeouts
 
-The early numbered New SIC closeouts were removed from `main` after review. Their role is now covered by this README, `docs/progress/weekly-progress-notes.md`, `docs/progress/architect-process-summary.md`, current Chapter 2 source-of-truth docs, merged PR history, and Git history.
+The numbered New SIC closeouts were removed from `main` after review. Their role is now covered by this README, `architect-process-log.md`, `docs/progress/weekly-progress-notes.md`, `docs/progress/architect-process-summary.md`, current Chapter 2 source-of-truth docs, merged PR history, and Git history.
 
 High-level facts preserved from the removed early closeouts:
 
@@ -81,6 +78,24 @@ High-level facts preserved from the removed early closeouts:
 - Early diagram and generated-output work stayed deterministic and did not introduce RAG, vector search, Bedrock production generation, or autonomous agents.
 - Match-to-Match appeared as a frontend deterministic draft direction and remains parked unless a future scoped product decision revives it.
 - Backend deploy lessons from early Session Builder work are historical evidence; current deployment truth should come from current runbooks, source maps, and active deployment validation.
+
+High-level facts preserved from the removed late closeouts:
+
+- Training Brief backend foundation existed as internal-only work under the existing Session Builder domain.
+- The Training Brief foundation included validation, handoff mapping, and candidate draft building.
+- It did not create a public Training Brief API, did not persist Training Brief or prescription records, and did not generate SessionPacks from Training Brief.
+- Training Brief stayed inside the existing Club Vivo / Session Builder path and preserved validation and tenant-safety boundaries.
+- The bounded agentic direction was framed as coach-reviewed and deterministic, not broad autonomous agents.
+- Training Brief Draft / preview behavior was a bridge into existing Session Builder fields. Normal generation still used the existing validated Session Builder `/session-packs` path.
+- Training Brief persistence, Bedrock production generation, RAG/vector search, DiagramSequence runtime rendering, and Match-to-Match active-path claims were explicitly out of scope.
+- The maturity ladder is future/proposed framing, not shipped runtime.
+- Coach Workspace and Session Builder became the active product surface.
+- Training Brief, Match-to-Match, and image-assisted intake were hidden or parked from active UI.
+- Session Builder became the main active creation path.
+- Quick Activity / Quick Soccer Game shared the generation foundation and stayed lighter than full Session Builder.
+- Deterministic generation quality improved without introducing RAG, Bedrock, vector search, or autonomous agents.
+- Amplify deploys the frontend only; backend generation changes require CDK/API deployment.
+- Validation and smoke evidence from the closeouts should be read as historical evidence, not a current live-runtime claim.
 
 ## Future Remove-From-Main Candidates
 
@@ -101,7 +116,6 @@ Do not move, rename, delete, or rewrite these until a dedicated cleanup PR summa
 - `backend-export-lake-audit.md`
 - `session-builder-core/`
 - `match-to-match/`
-- late numbered closeouts with runtime, validation, Session Builder, Training Brief, or product-quality evidence
 
 Do not use this folder to change or reinterpret runtime code, infrastructure, API contracts, runbooks, auth, tenancy, IAM, entitlements, DynamoDB keys, routes, Lambdas, CDK wiring, build config, or Amplify assumptions.
 

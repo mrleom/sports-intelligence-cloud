@@ -60,9 +60,7 @@ These files contain enough unique evidence that they should not be removed from 
 | File Or Cluster | Preserve Before Removal |
 | --- | --- |
 | `docs/progress/new-sic/architect-process-log.md` | Detailed phase timeline, current runtime truth, architecture/deployment posture, and process principles. |
-| `docs/progress/new-sic/closeout-summary-10.md` | Training Brief backend foundation evidence and clear non-shipped boundary. |
-| `docs/progress/new-sic/closeout-summary-11.md` | Bounded agentic direction and maturity ladder as future/proposed framing, not shipped runtime. |
-| `docs/progress/new-sic/closeout-summary-12.md` | Coach Workspace and Session Builder quality decisions, validation evidence, and active product-surface framing. |
+| Late New SIC closeout evidence | Consolidated into `docs/progress/new-sic/README.md` and `docs/progress/new-sic/architect-process-log.md`; original numbered closeouts are preserved in Git history. |
 | `docs/progress/new-sic/backend-export-lake-audit.md` | Source-present export/lake evidence and unwired-route caution; summarize before any removal so data lake/ETL are not overclaimed or erased incorrectly. |
 | `docs/progress/new-sic/club-vivo-runtime-readiness-checklist.md` | Runtime readiness criteria and validation expectations. |
 | `docs/progress/new-sic/club-vivo-runtime-readiness-evidence.md` | Local build and route evidence. |
@@ -108,9 +106,6 @@ Do not remove or rewrite these until a later PR explicitly summarizes their uniq
 - `docs/progress/new-sic/hosting-and-domain-launch-plan.md`
 - `docs/progress/new-sic/session-builder-core/`
 - `docs/progress/new-sic/match-to-match/`
-- `docs/progress/new-sic/closeout-summary-10.md`
-- `docs/progress/new-sic/closeout-summary-11.md`
-- `docs/progress/new-sic/closeout-summary-12.md`
 - `docs/history/`
 - `docs/api/`
 - `docs/runbooks/`
@@ -171,9 +166,11 @@ Medium-risk second PR:
 
 1. Review `docs/progress/new-sic/closeout-summary-1.md` through `closeout-summary-12.md`.
 2. Confirm that `docs/progress/weekly-progress-notes.md` and `docs/progress/architect-process-summary.md` preserve the durable platform/product/process story.
-3. Summarize any missing runtime truth, validation evidence, or product-quality lessons from closeouts 10-12 before removal.
+3. Summarize any missing runtime truth, validation evidence, or product-quality lessons from late closeouts before removal.
 4. Remove the numbered closeout summaries from `main` only after the summary layer is complete.
 5. Leave readiness/deployment, export/lake, Session Builder quality, and Match-to-Match prototype folders in place for later targeted PRs.
+
+Status: completed for the numbered closeout summaries. Durable late evidence now lives in `docs/progress/new-sic/README.md` and `docs/progress/new-sic/architect-process-log.md`.
 
 Validation for that PR should include:
 
