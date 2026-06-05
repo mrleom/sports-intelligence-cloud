@@ -48,7 +48,6 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | `session-builder-core/` | Session Builder completion, output quality, fixture, template, and diagram-language evidence. |
 | `match-to-match/` | Parked Match-to-Match prototype learning and future-product guardrails. |
 | `progress-history-audit.md` | Earlier progress-history cleanup decision record. |
-| `coach-lite-preview-audit.md` | Legacy Coach Lite preview audit evidence. |
 | `new-sic-starting-point-plan.md` | Older transition plan for the New SIC baseline. |
 
 ## Readiness And Deployment Evidence Hierarchy
@@ -99,6 +98,14 @@ High-level facts preserved from the removed early closeouts:
 - Match-to-Match appeared as a frontend deterministic draft direction and remains parked unless a future scoped product decision revives it.
 - Backend deploy lessons from early Session Builder work are historical evidence; current deployment truth should come from current runbooks, source maps, and active deployment validation.
 
+High-level facts preserved from the removed Coach Lite preview audit:
+
+- The isolated Coach Lite preview route was legacy and removed from the active Club Vivo app tree.
+- Coach Lite preview was not the current Club Vivo product surface.
+- Useful legacy product and architecture material was migrated into current Club Vivo product and architecture docs.
+- The legacy Coach Lite architecture folder has been migrated and no longer contains tracked source-of-truth files.
+- Current product truth is Club Vivo, with Session Builder, Quick Soccer Game, and Coach Workspace as active product-facing surfaces.
+
 High-level facts preserved from the removed late closeouts:
 
 - Training Brief backend foundation existed as internal-only work under the existing Session Builder domain.
@@ -123,7 +130,6 @@ These may be reasonable future remove-from-main candidates after link checks and
 
 - `progress-history-audit.md`
 - `new-sic-starting-point-plan.md`
-- `coach-lite-preview-audit.md`
 
 Removal from `main` would not erase the work. Git history, tags, archive branches, `docs/history/`, and the concise progress summaries preserve the evidence trail.
 
