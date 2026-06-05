@@ -48,21 +48,25 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | `session-builder-core/` | Session Builder completion, output quality, fixture, template, and diagram-language evidence. |
 | `match-to-match/` | Parked Match-to-Match prototype learning and future-product guardrails. |
 | `progress-history-audit.md` | Earlier progress-history cleanup decision record. |
-| `docs-readiness-duplication-audit.md` | Older duplication/readiness overlap audit; likely future remove-from-main candidate after its findings are preserved. |
 | `coach-lite-preview-audit.md` | Legacy Coach Lite preview audit evidence. |
 | `new-sic-starting-point-plan.md` | Older transition plan for the New SIC baseline. |
 
 ## Readiness And Deployment Evidence Hierarchy
 
-The readiness/deployment cluster is classified as historical evidence. No files in this cluster have been deleted in this pass.
+The core readiness/deployment evidence files are classified as historical evidence. These checklist, planning, and evidence files remain in place after this pass.
 
 - `hosting-and-domain-launch-plan.md` is planning and narrative evidence for launch sequencing, hosted URLs, domains, environment variables, and budget/validation considerations.
 - `deployment-readiness-checklist.md` is broad hosted deployment readiness evidence.
 - `club-vivo-runtime-readiness-checklist.md` is narrower Club Vivo web/runtime readiness evidence.
 - `club-vivo-runtime-readiness-evidence.md` is historical validation evidence, not an active checklist.
-- `docs-readiness-duplication-audit.md` is an older overlap audit and likely future remove-from-main candidate after any useful findings are preserved.
 
 Use `docs/runbooks/how-to-ship.md` for current release hygiene and `docs/runbooks/smoke-tests.md` for current smoke test guidance. Treat this folder as evidence to compare against current source, current runbooks, source-of-truth docs, and fresh validation before making any public live-runtime claim.
+
+Preserved overlap findings:
+
+- The tracked readiness/deployment overlap is concentrated in `docs/progress/new-sic/`.
+- The main overlapping topics are Amplify hosting, environment variables, Cognito callback/logout settings, route smoke tests, and API connectivity smoke tests.
+- Ignored `.workspace` readiness notes can inform future work, but they should not be tracked directly. Distill only safe, durable conclusions into tracked docs when needed.
 
 ## Summarize Before Removal
 
@@ -119,7 +123,6 @@ These may be reasonable future remove-from-main candidates after link checks and
 
 - `progress-history-audit.md`
 - `new-sic-starting-point-plan.md`
-- `docs-readiness-duplication-audit.md`
 - `coach-lite-preview-audit.md`
 
 Removal from `main` would not erase the work. Git history, tags, archive branches, `docs/history/`, and the concise progress summaries preserve the evidence trail.
