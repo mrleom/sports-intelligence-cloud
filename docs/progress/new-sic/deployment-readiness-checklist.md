@@ -6,7 +6,7 @@
 - Broad deployment readiness: this document.
 - Narrow Club Vivo runtime readiness: [club-vivo-runtime-readiness-checklist.md](club-vivo-runtime-readiness-checklist.md).
 - Local runtime readiness evidence: [club-vivo-runtime-readiness-evidence.md](club-vivo-runtime-readiness-evidence.md).
-- Docs overlap/audit guidance: [docs-readiness-duplication-audit.md](docs-readiness-duplication-audit.md).
+- Readiness/deployment evidence hierarchy: [README.md](README.md) and [progress-history-cleanup-strategy.md](../../architecture/chapter-2/progress-history-cleanup-strategy.md).
 
 ## Account Access Rule
 

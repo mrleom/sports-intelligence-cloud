@@ -13,7 +13,7 @@ Local runtime readiness verification started from a clean `main` baseline after:
 - Broad deployment readiness: [deployment-readiness-checklist.md](deployment-readiness-checklist.md).
 - Narrow Club Vivo runtime readiness: [club-vivo-runtime-readiness-checklist.md](club-vivo-runtime-readiness-checklist.md).
 - Local runtime readiness evidence: this document.
-- Docs overlap/audit guidance: [docs-readiness-duplication-audit.md](docs-readiness-duplication-audit.md).
+- Readiness/deployment evidence hierarchy: [README.md](README.md) and [progress-history-cleanup-strategy.md](../../architecture/chapter-2/progress-history-cleanup-strategy.md).
 
 ## Branch
 

@@ -66,6 +66,7 @@ These files contain enough unique evidence that they should not be removed from 
 | `docs/progress/new-sic/club-vivo-runtime-readiness-evidence.md` | Local build and route evidence. |
 | `docs/progress/new-sic/deployment-readiness-checklist.md` | Deployment readiness checklist; compare with runbooks before removing from `main`. |
 | `docs/progress/new-sic/hosting-and-domain-launch-plan.md` | Hosting, domain, env-var, Cognito, backend, budget, and launch-sequence evidence. |
+| New SIC readiness/deployment cluster | Classified in `docs/progress/new-sic/README.md`; the core checklist, planning, and validation evidence files remain in place. Current release hygiene belongs to `docs/runbooks/how-to-ship.md`, and current smoke guidance belongs to `docs/runbooks/smoke-tests.md`. |
 | `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, diagram language, completion audit, and validation guardrails. |
 | `docs/progress/new-sic/match-to-match/*.md` | Prototype learning and parked-product guardrails; summarize into future/parking docs before removal. |
 
@@ -87,7 +88,7 @@ These are reasonable future remove-from-main candidates after link checks and su
 | `docs/progress/new-sic/closeout-summary-1.md` through `closeout-summary-9.md` | Detailed New SIC closeouts create an archive feel; most durable narrative should already be captured by `weekly-progress-notes.md` and `architect-process-summary.md`. |
 | `docs/progress/new-sic/progress-history-audit.md` | Superseded by current progress/history cleanup strategy once decisions are implemented. |
 | `docs/progress/new-sic/new-sic-starting-point-plan.md` | Older transition plan; durable baseline is captured by current Chapter 2 docs and summaries. |
-| `docs/progress/new-sic/docs-readiness-duplication-audit.md` | Older duplication audit overlaps `showroom-prune-audit.md` and this strategy. Preserve unique stale-doc findings first if still relevant. |
+| `docs/progress/new-sic/docs-readiness-duplication-audit.md` | Removed from `main` after its durable readiness/deployment overlap findings were preserved in `docs/progress/new-sic/README.md` and this strategy. |
 | `docs/progress/new-sic/coach-lite-preview-audit.md` | Legacy preview audit; useful migration evidence should already be reflected in legacy-doc strategy and current source maps. |
 | `docs/progress/chapter-2-public-face-closeout.md` | Removed from `main` after durable public-face cleanup facts were summarized in current docs and this strategy. |
 | `docs/progress/chapter-2-repo-cleanup-closeout.md` | Removed from `main` after durable repo-cleanup facts were summarized in current docs and this strategy. |
@@ -122,6 +123,7 @@ Top noisy clusters:
    - `closeout-summary-1.md` through `closeout-summary-12.md` are useful evidence but too many for a clean public showroom.
 3. Readiness and deployment notes
    - `deployment-readiness-checklist.md`, `club-vivo-runtime-readiness-checklist.md`, `club-vivo-runtime-readiness-evidence.md`, and `hosting-and-domain-launch-plan.md` overlap with each other and with runbook responsibilities.
+   - Status: classified in `docs/progress/new-sic/README.md` as historical evidence; the older overlap audit has been removed from `main` after preserving its durable findings.
 4. Session Builder quality evidence
    - `completion-audit.md`, `output-quality-fixtures.md`, `output-quality-evaluation.md`, `output-quality-recheck.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs.
 5. Old cleanup/audit docs

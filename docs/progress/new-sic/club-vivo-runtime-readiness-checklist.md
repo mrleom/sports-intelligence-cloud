@@ -12,7 +12,7 @@ Scope is limited to documentation and verification of the active `apps/club-vivo
 - Broad deployment readiness: [deployment-readiness-checklist.md](deployment-readiness-checklist.md).
 - Narrow Club Vivo runtime readiness: this document.
 - Local runtime readiness evidence: [club-vivo-runtime-readiness-evidence.md](club-vivo-runtime-readiness-evidence.md).
-- Docs overlap/audit guidance: [docs-readiness-duplication-audit.md](docs-readiness-duplication-audit.md).
+- Readiness/deployment evidence hierarchy: [README.md](README.md) and [progress-history-cleanup-strategy.md](../../architecture/chapter-2/progress-history-cleanup-strategy.md).
 
 ## 2. Current Branch and Baseline
 
