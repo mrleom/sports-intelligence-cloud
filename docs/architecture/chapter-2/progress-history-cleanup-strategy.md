@@ -24,8 +24,9 @@ The current progress/history shape is:
   - Concise historical home for Chapter 1 preservation.
   - Currently contains `README.md` and `chapter-1-sic-closeout.md`.
 - `docs/progress/`
-  - Current progress evidence index plus concise summaries and Chapter 2 closeouts.
-  - Contains `README.md`, `weekly-progress-notes.md`, `architect-process-summary.md`, and three Chapter 2 cleanup closeouts.
+  - Current progress evidence index plus concise summaries.
+  - Contains `README.md`, `weekly-progress-notes.md`, and `architect-process-summary.md`.
+  - Chapter 2 cleanup closeouts have been removed from `main` after their durable facts were summarized in current README/docs maps, this strategy, and related Chapter 2 cleanup audits.
 - `docs/progress/new-sic/`
   - Earlier New SIC phase evidence.
   - Contains many closeout summaries, readiness docs, audits, launch/deployment planning, and a detailed architect process log.
@@ -50,9 +51,7 @@ Keep these on `main` unless a later explicit cleanup decision replaces them with
 | `docs/progress/architect-process-summary.md` | Short architecture/process story distilled from detailed logs. |
 | `docs/history/README.md` | Historical reading model. |
 | `docs/history/chapter-1-sic-closeout.md` | Canonical Chapter 1 closeout and shipped-vs-proposed boundary. |
-| `docs/progress/chapter-2-cleanup-workspace-closeout.md` | Keep temporarily as the most complete Chapter 2 cleanup closeout until a shorter final showroom cleanup closeout exists. |
-
-If a future `docs/progress/chapter-2-showroom-cleanup-closeout.md` or equivalent final closeout is created, it can become the single Chapter 2 cleanup evidence doc and replace the three current Chapter 2 closeouts on `main`.
+If a future `docs/progress/chapter-2-showroom-cleanup-closeout.md` or equivalent final closeout is created, it should be short and should point to current source-of-truth docs rather than recreating the removed closeout trail.
 
 ## 5. Summarize Before Remove
 
@@ -60,9 +59,6 @@ These files contain enough unique evidence that they should not be removed from 
 
 | File Or Cluster | Preserve Before Removal |
 | --- | --- |
-| `docs/progress/chapter-2-cleanup-workspace-closeout.md` | Current cleanup decisions, showroom-prune sequence, guardrails, and final cleanup requirements. |
-| `docs/progress/chapter-2-public-face-closeout.md` | Public-face cleanup result, current repo state expectation, and explicit non-claims. |
-| `docs/progress/chapter-2-repo-cleanup-closeout.md` | Cleanup classification work, PR/commit evidence, remaining cleanup candidates, and runtime guardrails. |
 | `docs/progress/new-sic/architect-process-log.md` | Detailed phase timeline, current runtime truth, architecture/deployment posture, and process principles. |
 | `docs/progress/new-sic/closeout-summary-10.md` | Training Brief backend foundation evidence and clear non-shipped boundary. |
 | `docs/progress/new-sic/closeout-summary-11.md` | Bounded agentic direction and maturity ladder as future/proposed framing, not shipped runtime. |
@@ -77,6 +73,7 @@ These files contain enough unique evidence that they should not be removed from 
 
 Potential target owners for summarized material:
 
+- Chapter 2 cleanup facts from the removed closeouts are now covered by `README.md`, `docs/README.md`, `docs/progress/README.md`, `docs/architecture/chapter-2/showroom-prune-audit.md`, `docs/architecture/chapter-2/repo-cleanup-inventory.md`, and this strategy. The preserved facts are: keep the same repo and Amplify assumptions, make `main` the Club Vivo showroom powered by SIC, preserve Chapter 1/New SIC as history, use showroom-prune cleanup instead of broad restructuring, and keep runtime/auth/tenancy/API/CDK guardrails untouched.
 - Runtime and deployment evidence should remain in current runbooks or current architecture/source-map docs before the progress evidence is removed.
 - Session Builder quality findings should be summarized in current Club Vivo product docs such as `docs/product/club-vivo/session-builder.md`, `docs/product/club-vivo/session-generation-quality-standards.md`, `docs/product/club-vivo/coaching-session-design-standard.md`, or `docs/product/club-vivo/golden-template-library-v1.md`.
 - Diagram vocabulary or readability evidence should remain in current diagram architecture docs.
@@ -94,8 +91,9 @@ These are reasonable future remove-from-main candidates after link checks and su
 | `docs/progress/new-sic/new-sic-starting-point-plan.md` | Older transition plan; durable baseline is captured by current Chapter 2 docs and summaries. |
 | `docs/progress/new-sic/docs-readiness-duplication-audit.md` | Older duplication audit overlaps `showroom-prune-audit.md` and this strategy. Preserve unique stale-doc findings first if still relevant. |
 | `docs/progress/new-sic/coach-lite-preview-audit.md` | Legacy preview audit; useful migration evidence should already be reflected in legacy-doc strategy and current source maps. |
-| `docs/progress/chapter-2-public-face-closeout.md` | Can be removed after a single Chapter 2 showroom cleanup closeout summarizes it. |
-| `docs/progress/chapter-2-repo-cleanup-closeout.md` | Can be removed after a single Chapter 2 showroom cleanup closeout summarizes it. |
+| `docs/progress/chapter-2-public-face-closeout.md` | Removed from `main` after durable public-face cleanup facts were summarized in current docs and this strategy. |
+| `docs/progress/chapter-2-repo-cleanup-closeout.md` | Removed from `main` after durable repo-cleanup facts were summarized in current docs and this strategy. |
+| `docs/progress/chapter-2-cleanup-workspace-closeout.md` | Removed from `main` after durable workspace/showroom-prune facts were summarized in current docs and this strategy. |
 
 Removal means removal from `main`, not deletion from history. Git history, tags, branches, and retained history docs preserve the evidence trail.
 
@@ -138,21 +136,25 @@ Top noisy clusters:
 
 ## 9. Recommended First Progress Cleanup PR
 
-Low-risk first PR:
+Status: completed as a low-risk progress cleanup pass.
 
-1. Create or update one concise final Chapter 2 cleanup closeout, preferably under `docs/progress/`.
-2. Summarize the durable decisions from:
+The pass removed these Chapter 2 cleanup closeouts from `main`:
+
    - `docs/progress/chapter-2-public-face-closeout.md`
    - `docs/progress/chapter-2-repo-cleanup-closeout.md`
    - `docs/progress/chapter-2-cleanup-workspace-closeout.md`
-3. Preserve:
+
+No replacement closeout was added because the durable facts are already covered by current README/docs maps, `docs/architecture/chapter-2/showroom-prune-audit.md`, `docs/architecture/chapter-2/repo-cleanup-inventory.md`, this strategy, and Git history.
+
+The preserved facts are:
+
    - public-face cleanup outcome
    - showroom-prune sequence
    - current source-of-truth reading model
    - explicit shipped-vs-proposed non-claims
    - runtime/code untouched guardrails
-4. Update `docs/progress/README.md` only if needed to point to the single current Chapter 2 cleanup closeout.
-5. Remove the superseded Chapter 2 cleanup closeouts from `main` only after reference scans prove no active README or source-of-truth docs depend on them.
+
+`docs/progress/README.md` now points readers to the concise progress layer rather than the deleted closeouts.
 
 Validation for that PR should include:
 
