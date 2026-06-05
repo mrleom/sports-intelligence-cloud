@@ -10,6 +10,8 @@ Club Vivo is a soccer coaching SaaS product for nonprofit sports organizations, 
 
 It helps coaches turn real-world constraints into practical training sessions and quick soccer games they can actually run. Sports Intelligence Cloud is the AWS SaaS platform foundation behind the product, providing authenticated access, tenant-safe data boundaries, serverless APIs, observability, and infrastructure discipline.
 
+Short version: Club Vivo helps nonprofit soccer programs give every coach a faster, safer, and more consistent way to plan practices with the players, space, equipment, and time they actually have.
+
 Chapter 2 is pilot-ready direction, not a claim that Club Vivo is a finished commercial SaaS. The focus is to prove the product wedge with a small group of coaches, learn from their use, and keep the architecture honest as the product matures.
 
 ## Problem
@@ -73,6 +75,8 @@ Club Vivo is a good fit for a small nonprofit pilot if the organization wants to
 - protect organization and team data boundaries
 
 A practical pilot could start with a small group of coaches over a short program window. The purpose would be to test usefulness, clarity, and repeat use, not to promise a fully finished commercial product.
+
+The pilot should be small and honest rather than framed as a big rollout: a few coaches, realistic scenarios, and direct feedback on whether the tool saves planning time and produces sessions they would actually run.
 
 Pilot success signals:
 

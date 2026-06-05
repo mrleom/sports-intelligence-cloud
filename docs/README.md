@@ -52,9 +52,9 @@ Research docs can support positioning and learning evidence, but they should sta
 ## Proposals Currently On Main
 
 - [Proposals Folder](proposals/)
-- [Club Vivo Nonprofit SaaS Proposal](proposals/club-vivo-nonprofit-saas-proposal.md)
-- [Club Vivo Nonprofit SaaS One-Page](proposals/club-vivo-nonprofit-saas-one-page.md)
+- [Club Vivo External Proposal](proposals/club-vivo-external-proposal.md)
 - [Club Vivo Coach Recruiter Architecture Brief](proposals/club-vivo-coach-recruiter-architecture-brief.md)
+- [Club Vivo Architecture Walkthrough Script](proposals/club-vivo-architecture-walkthrough-script.md)
 
 Proposal docs should be honest about shipped versus proposed behavior and should not reference files from unmerged branches.
 

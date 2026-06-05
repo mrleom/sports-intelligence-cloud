@@ -12,6 +12,8 @@ Club Vivo is a soccer coaching SaaS product built on Sports Intelligence Cloud, 
 
 The product helps coaches turn real-world constraints into usable sessions and quick soccer games. The architecture shows practical cloud engineering: authenticated access, API Gateway, Lambda route families, DynamoDB tenant-scoped data, S3 exports, CloudWatch observability, IAM discipline, and CDK infrastructure as code.
 
+One-line portfolio pitch: Club Vivo is a soccer coaching SaaS product built on a tenant-safe AWS serverless foundation, with Session Builder as the main planning wedge and Quick Soccer Game as the fast activity lane.
+
 ## Product Problem
 
 Grassroots and nonprofit soccer coaches often plan under pressure:
