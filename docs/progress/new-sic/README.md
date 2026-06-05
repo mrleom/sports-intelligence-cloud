@@ -35,7 +35,7 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | File Or Folder | Evidence Value |
 | --- | --- |
 | `architect-process-log.md` | Detailed phase timeline, product model, runtime truth notes, deployment posture, and process principles. |
-| `closeout-summary-1.md` through `closeout-summary-12.md` | Historical checkpoint trail for New SIC cleanup, Club Vivo product shaping, Session Builder quality, Training Brief exploration, and later product polish. |
+| `closeout-summary-10.md` through `closeout-summary-12.md` | Late checkpoint evidence for Training Brief foundation, bounded Session Builder workflow framing, Coach Workspace simplification, Session Builder quality, validation, and backend deployment lessons. |
 | `backend-export-lake-audit.md` | Important source-present export/lake/ETL caution; useful for avoiding overclaims about data lake, ETL, analytics, and domain export runtime. |
 | `club-vivo-runtime-readiness-checklist.md` | Runtime readiness criteria, active-route checks, smoke-test expectations, and stop conditions. |
 | `club-vivo-runtime-readiness-evidence.md` | Local build and route evidence from the New SIC readiness checkpoint. |
@@ -66,11 +66,26 @@ Do not remove these from `main` until their durable facts are summarized in curr
 
 The most important facts to preserve are runtime boundaries, deployment/readiness evidence, tenant-safety decisions, validation results, Session Builder quality findings, and clear shipped-versus-proposed labels.
 
+## Removed Numbered Closeouts
+
+The early numbered New SIC closeouts were removed from `main` after review. Their role is now covered by this README, `docs/progress/weekly-progress-notes.md`, `docs/progress/architect-process-summary.md`, current Chapter 2 source-of-truth docs, merged PR history, and Git history.
+
+High-level facts preserved from the removed early closeouts:
+
+- New SIC shifted the repo from broad SIC history toward a cleaner Club Vivo product face.
+- Early cleanup protected runtime code, backend code, infrastructure, auth, tenancy, IAM, entitlements, routes, Lambdas, public API contracts, CDK wiring, and Amplify assumptions.
+- Coach Lite preview work was treated as legacy evidence, not current Club Vivo product truth.
+- Local readiness and readiness-overlap work produced separate readiness, deployment, and audit docs that remain in this folder.
+- Session Builder and Quick Activity shared the same backend generation foundation while presenting different coach-facing experiences.
+- Club Vivo workspace work clarified the product model, role/workspace framing, coach-facing navigation, and deterministic Session Builder quality.
+- Early diagram and generated-output work stayed deterministic and did not introduce RAG, vector search, Bedrock production generation, or autonomous agents.
+- Match-to-Match appeared as a frontend deterministic draft direction and remains parked unless a future scoped product decision revives it.
+- Backend deploy lessons from early Session Builder work are historical evidence; current deployment truth should come from current runbooks, source maps, and active deployment validation.
+
 ## Future Remove-From-Main Candidates
 
 These may be reasonable future remove-from-main candidates after link checks and summary review:
 
-- `closeout-summary-1.md` through `closeout-summary-9.md`
 - `progress-history-audit.md`
 - `new-sic-starting-point-plan.md`
 - `docs-readiness-duplication-audit.md`
