@@ -63,11 +63,10 @@ The repo should make Club Vivo easy to understand first, then show that SIC prov
 | `docs/product/club-vivo/future/` | Parked future | Future product ideas. Keep clearly separated from shipped behavior. |
 | `docs/product/club-vivo/pilots/` | Needs inspection | Pilot context, including KSC. Useful evidence, not the generic product identity. |
 | `docs/product/club-vivo/generation-profiles/` | Active Chapter 2 / Needs inspection | Product generation behavior docs. Keep aligned with actual source and avoid shipped-overclaim language. |
-| `docs/architecture/` | Active platform/architecture / Needs inspection | Platform docs, Chapter 2 package, source maps, older coach-lite architecture, and future architecture. |
+| `docs/architecture/` | Active platform/architecture / Needs inspection | Platform docs, Chapter 2 package, source maps, migrated legacy architecture guidance, and future architecture. |
 | `docs/architecture/chapter-2/` | Active Chapter 2 / Active platform/architecture | Chapter 2 architecture package, diagrams, Lambda inventory, and cleanup plans. |
 | `docs/architecture/foundations/` | Active platform/architecture | Source-of-truth governance docs. |
 | `docs/architecture/club-vivo/` | Parked future / Needs inspection | Contains Training Brief and DiagramSequence architecture material. Do not present as shipped runtime. |
-| `docs/architecture/coach-lite/` | Candidate for archive later / Needs inspection | Legacy naming with useful architecture material. It now has a README labeling it as legacy / earlier architecture context; review before any move, rename, or archive decision. |
 | `docs/architecture/diagrams/` | Needs inspection | Older diagram guidance. Review against Chapter 2 architecture package. |
 | `docs/api/` | Active platform/architecture / Do not touch | API and cross-layer contracts. Some proposed docs exist; public contracts should not change casually. |
 | `docs/proposals/` | Proposal/presentation | Proposal, recruiter, nonprofit, and walkthrough docs. README may need future update because more tracked proposal files now exist than the README lists. |
@@ -145,7 +144,7 @@ These are not cleanup actions yet. They are review candidates:
 - `docs/architecture/repo-structure.md` versus current README/docs maps.
 - `docs/architecture/sic-current-system-map.md` versus the Chapter 2 SaaS architecture package.
 - `docs/architecture/diagrams/sic-current-system-blueprint.md` versus Chapter 2 draw.io/Mermaid assets.
-- `docs/architecture/coach-lite/` legacy naming versus current Club Vivo product name. The folder is now labeled with a README, but still needs future review before any move, rename, or archive decision.
+- Legacy Coach Lite architecture naming versus current Club Vivo product name. Durable guidance has been migrated into current owner docs; historical references remain in audit/strategy material.
 - `docs/product/club-vivo/coach-workspace.md`, `role-and-workspace-model.md`, and `club-vivo-evolution-roadmap.md` versus the Chapter 2 constitution.
 - `docs/product/club-vivo/session-builder.md` versus newer Session Builder and Quick Soccer Game positioning.
 - `docs/proposals/README.md` versus the currently tracked proposal files.
@@ -224,6 +223,6 @@ The best next slice is a documentation classification pass, not a move/delete pa
 2. Update `docs/proposals/README.md` so it lists all tracked proposal files currently on main.
 3. Review `docs/progress/new-sic/` and classify which files are history, evidence, or candidate archive material.
 4. Review generated-looking root and infra artifacts, then decide separately whether ignore or cleanup changes are needed.
-5. After broader classification, decide whether labeled legacy areas such as `docs/architecture/coach-lite/` should stay in place, move, or archive later.
+5. After broader classification, keep migrated legacy guidance referenced through current owner docs rather than recreating removed legacy folders.
 
 This keeps the repo easier to read while preserving Chapter 1 evidence and protecting the runtime platform.

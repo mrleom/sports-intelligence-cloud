@@ -41,8 +41,6 @@ Architecture docs explain how SIC is structured, what boundaries matter, and how
   - Official architecture diagram guidance, blueprints, editable diagram sources, and exported images.
 - `foundations/`
   - Governance and source-of-truth foundation docs.
-- `coach-lite/`
-  - Legacy architecture context from earlier Coach Lite naming. It is not the current architecture source of truth.
 
 Current readers should start with:
 

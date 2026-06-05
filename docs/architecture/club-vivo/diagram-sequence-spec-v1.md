@@ -105,6 +105,9 @@ Supported equipment types:
 - `cone`
 - `gate`
 - `mannequin`
+- `mini-goal`
+- `pole`
+- `marker`
 
 Supported area types:
 
@@ -123,6 +126,10 @@ Supported area types:
 ```
 
 Mannequins are optional and should not be required for grassroots activities.
+
+Equipment and areas should not show resources the activity cannot use. If the session text says the coach has cones and balls only, the diagram should not silently add mannequins, full-size goals, or other specialized equipment.
+
+Areas should clarify the coaching point, not decorate the diagram. Use them for grids, channels, target areas, start areas, recovery zones, or scoring zones only when they make the activity easier to run.
 
 ## 9. Movement And Action Types
 
@@ -189,6 +196,8 @@ Suggested label fields:
 
 Legends may define color, shape, and arrow meaning for players, opponents, neutral players, ball movement, player movement, and pressure.
 
+Legends are optional for simple diagrams. Renderers may add or hide legends based on diagram complexity, but legends and render hints must not change the meaning of the underlying sequence data.
+
 ## 12. Visual Clarity Rules
 
 Diagrams should remain readable on small screens and in PDF export.
@@ -203,6 +212,9 @@ Rules:
 - use zones only when they clarify the coaching point
 - make the ball easy to identify
 - keep team colors visually distinct
+- group players or use multiple steps when the activity would require too many individual markers
+- keep connection counts low enough that arrows remain readable
+- prefer a second step or diagram over visual clutter
 
 ## 13. Validation Rules
 
@@ -217,10 +229,15 @@ Stable v1 validation rules:
 - area IDs must be unique.
 - actions must reference existing entities, equipment, or areas.
 - action paths must contain in-bounds coordinates.
+- action, entity, equipment, and area types must be recognized by the v1 schema.
+- player counts and equipment shown should not contradict the activity organization or available equipment.
+- render hints may influence presentation but must not change tactical or coaching meaning.
 - main activities should have at least one `setup` step or an explicit reason why no diagram is needed.
 - raw generated images must not be treated as authoritative diagram source data.
 
 If persisted, diagram source data must be tenant-scoped by construction and must follow existing SIC auth, tenancy, validation, observability, and cost-awareness principles.
+
+If no diagram is needed or a diagram cannot be rendered safely, the activity text should remain usable. The system should prefer an explicit no-diagram/fallback state over silently guessing at missing visual meaning.
 
 ## 14. Accessibility And Beginner-Coach Readability
 
@@ -246,6 +263,8 @@ The first renderer should support:
 - simple arrows for ball and player movement
 - one setup step and simple sequence steps
 - deterministic rendering from validated sequence data
+- SVG-first output, with PNG or export assets derived from the same validated source when needed
+- defensive renderer checks for missing dimensions, unsupported output formats, and impossible layout values
 
 ## 16. Future Animation Behavior
 
@@ -345,7 +364,6 @@ Read this spec with:
 - `docs/product/club-vivo/training-prescription-layer.md`
 - `docs/api/training-brief-v1-contract.md`
 - `docs/api/diagram-rendering-contract-v1.md`
-- `docs/architecture/coach-lite/drill-diagram-spec-v1.md`
 - `docs/architecture/architecture-principles.md`
 - `docs/architecture/platform-constitution.md`
 - `docs/architecture/tenant-claim-contract.md`

@@ -311,27 +311,6 @@ Use this folder for:
 
 Do not use this folder for product scope docs. Product scope belongs under `docs/product/club-vivo/`.
 
-#### `docs/architecture/coach-lite/`
-
-Legacy naming that still contains useful architecture material.
-
-This folder may contain durable ideas about:
-- drill diagram specs
-
-Generation-flow guidance from this legacy area has been migrated into `docs/product/club-vivo/session-builder.md`.
-
-Tenant methodology guidance from this legacy area has been migrated into `docs/product/club-vivo/methodology.md`.
-
-Diagram-rendering guidance from this legacy area has been migrated into `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`.
-
-Do not add new Club Vivo architecture here unless the work is explicitly a historical migration note.
-
-Before archive or delete decisions:
-1. review the useful material
-2. migrate durable decisions into current Club Vivo or platform architecture docs
-3. update references
-4. validate that no active docs depend on the old path
-
 ### `docs/product/`
 
 Product-specific tracked docs.
@@ -370,17 +349,6 @@ Use this for broader SIC future concepts outside the current Club Vivo execution
 Examples:
 - `docs/product/future/athlete-evolution-ai.md`
 - `docs/product/future/ruta-viva.md`
-
-#### `docs/product/sic-coach-lite/`
-
-Legacy or leftover product material.
-
-Do not add new active product docs here.
-
-Before archive or delete decisions:
-1. review whether the material has been migrated into `docs/product/club-vivo/`
-2. update references
-3. keep useful historical notes only if they explain past decisions
 
 ### `docs/adr/`
 
@@ -582,8 +550,7 @@ Do not treat local-only files as canonical SIC documentation.
 - putting operator artifacts beside tracked infra source
 - keeping empty placeholder folders around after migration
 - creating one-file top-level documentation categories without a strong reason
-- adding new active Club Vivo product docs under legacy `sic-coach-lite` paths
-- adding new active Club Vivo architecture docs under legacy `coach-lite` paths
+- adding new active Club Vivo docs under removed legacy product or architecture paths
 
 ---
 

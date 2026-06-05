@@ -49,7 +49,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Future workflow diagrams should come from structured diagram intent / DiagramSequence data rather than raw generated images.
 - Current diagram architecture lives in `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`.
 - Current rendering contract guidance lives in `docs/api/diagram-rendering-contract-v1.md`.
-- Legacy drill diagram spec material remains in `docs/architecture/coach-lite/drill-diagram-spec-v1.md` until migrated.
+- Legacy diagram rendering and drill-spec guidance has been migrated into current DiagramSequence docs.
 
 ## Methodology
 
@@ -86,7 +86,6 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Active Club Vivo product docs now live under `docs/product/club-vivo/`.
 - `docs/product/club-vivo/future/` contains future product planning that is still within the active Club Vivo product-doc tree.
 - `docs/product/future/` contains broader future concepts outside the current Club Vivo execution path.
-- `docs/product/sic-coach-lite/` is legacy/leftover material and should be reviewed later before any archive/delete decision.
 - `docs/vision.md` and `docs/product/README.md` provide broader product orientation.
 
 ## API Contracts
@@ -102,7 +101,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - ADRs live in `docs/adr/`.
 - `docs/architecture/diagrams/` contains rendered or source diagram notes.
 - `docs/architecture/foundations/` contains foundation/source-of-truth material.
-- `docs/architecture/coach-lite/` is legacy naming that still contains useful architecture material and should be reviewed and migrated before any archive/delete decision.
+- Legacy Coach Lite architecture guidance has been migrated into current Club Vivo product and architecture docs.
 
 ## Progress/History Docs
 
