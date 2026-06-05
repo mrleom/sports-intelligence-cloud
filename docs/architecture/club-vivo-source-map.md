@@ -47,7 +47,9 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Backend diagram validation lives in `services/club-vivo/api/src/domains/session-builder/diagram-spec-validate.js`.
 - `docs/architecture/club-vivo/diagram-sequence-spec-v1.md` is the current proposed DiagramSequence v1 spec for structured diagram and future animation data.
 - Future workflow diagrams should come from structured diagram intent / DiagramSequence data rather than raw generated images.
-- Current diagram contracts and architecture notes live in `docs/api/diagram-rendering-contract-v1.md`, `docs/architecture/coach-lite/diagram-rendering-architecture.md`, and `docs/architecture/coach-lite/drill-diagram-spec-v1.md`.
+- Current diagram architecture lives in `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`.
+- Current rendering contract guidance lives in `docs/api/diagram-rendering-contract-v1.md`.
+- Legacy drill diagram spec material remains in `docs/architecture/coach-lite/drill-diagram-spec-v1.md` until migrated.
 
 ## Methodology
 

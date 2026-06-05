@@ -14,6 +14,8 @@ Tenant methodology guidance from this folder has been migrated into `docs/produc
 
 Generation-flow guidance from this folder has been migrated into `docs/product/club-vivo/session-builder.md`.
 
+Diagram-rendering guidance from this folder has been migrated into `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`.
+
 Start with these current docs when explaining Chapter 2:
 
 - `docs/architecture/club-vivo-source-map.md`

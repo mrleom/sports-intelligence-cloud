@@ -434,7 +434,7 @@ Architecture docs live under `docs/architecture/`:
   - `observability-signals.md`
 - coach/session architecture:
   - generation-flow guidance migrated to `docs/product/club-vivo/session-builder.md`
-  - `coach-lite/diagram-rendering-architecture.md`
+  - diagram-rendering guidance migrated to `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`
   - `coach-lite/drill-diagram-spec-v1.md`
   - tenant methodology guidance migrated to `docs/product/club-vivo/methodology.md`
   - `session-builder-image-assisted-intake-v1.md`

@@ -18,6 +18,20 @@ Diagrams and movement visuals are a five-star requirement from day one.
 
 Raw image generation is not the authoritative diagram source. The authoritative source should be structured, validated sequence data that can be rendered consistently for preview, review, export, and future animation.
 
+## 3a. Rendering Principles
+
+Legacy rendering guidance has been folded into this proposed spec. Durable principles:
+
+- Rendering should be deterministic, validation-first, low-cost, and soccer-first.
+- The renderer is a translation layer, not a creative layer. It must not invent tactics, reinterpret activity logic, or treat raw generated images as authoritative.
+- Structured diagram data should be the source of truth for preview, review, export, and future animation.
+- The same structured source should drive UI preview and export rendering where possible, so coaches do not see one diagram in the app and another in a handout.
+- Renderer output must remain readable for grassroots coaches: consistent symbols, clear spacing, short labels, visible ball/action cues, and multiple steps instead of one crowded diagram.
+- If diagram source data or rendered assets are persisted, they must remain tenant-scoped by construction and follow existing SIC auth, tenancy, validation, observability, and cost-awareness rules.
+- Diagram rendering failure should not make the whole session unusable. The text activity plan should remain available, and the product should show or log a clear fallback state where appropriate.
+
+This section is architecture direction only. It does not claim DiagramSequence, animation, autonomous diagram generation, image analysis, or new rendering services are shipped runtime behavior.
+
 ## 4. Relationship To Training Brief And Session Builder
 
 This spec supports:
