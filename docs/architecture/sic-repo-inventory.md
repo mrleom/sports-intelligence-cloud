@@ -82,7 +82,7 @@ It does not propose file moves, deletions, renames, runtime changes, auth change
 - `apps/club-vivo/app/(protected)/sessions/[sessionId]/quick-session-title-editor.tsx`
   - Client title editor for saved Quick Session display hints.
 - Coach Lite preview route
-  - Removed from the active Club Vivo app tree after audit. Useful Coach Lite architecture docs remain under `docs/architecture/coach-lite/` for later review or migration.
+  - Removed from the active Club Vivo app tree after audit. Useful legacy architecture guidance has been migrated into current Club Vivo docs.
 
 ### Coach UI components
 
@@ -434,8 +434,8 @@ Architecture docs live under `docs/architecture/`:
   - `observability-signals.md`
 - coach/session architecture:
   - generation-flow guidance migrated to `docs/product/club-vivo/session-builder.md`
-  - `coach-lite/diagram-rendering-architecture.md`
-  - `coach-lite/drill-diagram-spec-v1.md`
+  - diagram-rendering guidance migrated to `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`
+  - drill diagram spec guidance migrated to `docs/architecture/club-vivo/diagram-sequence-spec-v1.md`
   - tenant methodology guidance migrated to `docs/product/club-vivo/methodology.md`
   - `session-builder-image-assisted-intake-v1.md`
   - `feedback-loop-architecture.md`
