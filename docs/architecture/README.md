@@ -27,6 +27,7 @@ Architecture docs explain how SIC is structured, what boundaries matter, and how
 - `platform-constitution.md`
 - `tenant-claim-contract.md`
 - `club-vivo-source-map.md`
+- `chapter-2/legacy-docs-strategy.md`
 - `repo-structure.md`
 - `sic-repo-inventory.md`
 - `sic-current-system-map.md`
@@ -41,7 +42,15 @@ Architecture docs explain how SIC is structured, what boundaries matter, and how
 - `foundations/`
   - Governance and source-of-truth foundation docs.
 - `coach-lite/`
-  - Legacy naming that still contains useful architecture material for generation flow, diagram rendering, drill diagram specs, and tenant methodology knowledge.
+  - Legacy architecture context from earlier Coach Lite naming. It is not the current architecture source of truth.
+
+Current readers should start with:
+
+- `platform-constitution.md`
+- `architecture-principles.md`
+- `tenant-claim-contract.md`
+- `club-vivo-source-map.md`
+- `chapter-2/legacy-docs-strategy.md`
 
 ## Change Rules
 

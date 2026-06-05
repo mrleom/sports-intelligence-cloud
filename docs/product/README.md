@@ -35,4 +35,5 @@ Active product docs live under `docs/product/club-vivo/`.
 ## Legacy Product Material
 
 - `docs/product/sic-coach-lite/`
-  - Legacy/leftover material to review later before archive or delete decisions.
+  - Legacy product-output context from earlier naming. It is not the active product-doc home and must not override current Club Vivo product docs.
+  - Current readers should start with `docs/product/club-vivo/`.
