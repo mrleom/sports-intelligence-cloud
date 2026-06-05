@@ -1,11 +1,11 @@
-# SIC Coach Lite — Club Methodology v1
+# Club Vivo Methodology v1
 
 ## Status
 Draft v1
 
 ## Purpose
 
-This document defines how SIC Coach Lite v1 should support club methodology.
+This document defines how Club Vivo should support club methodology in the Chapter 2 product direction.
 
 The goal is to allow each club to shape the coaching output without requiring a separate application or separate bot deployment.
 
@@ -36,7 +36,7 @@ They want coaches to receive sessions that reflect:
 - planning format
 - curriculum direction
 
-Club methodology support turns SIC Coach Lite from a generic tool into a club product.
+Club methodology support turns Club Vivo from a generic tool into a club product.
 
 ---
 
@@ -190,7 +190,7 @@ A coach then requests:
 - 8 balls
 - defending focus
 
-SIC Coach Lite should generate a valid soccer session that:
+Club Vivo should generate a valid soccer session that:
 - still fits the coach’s real constraints
 - uses the club’s preferred language
 - reflects the club’s coaching direction
@@ -214,7 +214,7 @@ But v1 should stay intentionally small and useful.
 
 ## Summary
 
-Club Methodology v1 gives each club a tenant-scoped coaching identity inside SIC Coach Lite.
+Club Methodology v1 gives each club a tenant-scoped coaching identity inside Club Vivo.
 
 It should remain:
 - simple

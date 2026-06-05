@@ -1,11 +1,11 @@
-# SIC Coach Lite — User Flows
+# Club Vivo User Flows
 
 ## Status
 Draft v1
 
 ## Purpose
 
-This document defines the main user flows for SIC Coach Lite v1.
+This document defines the main user flows for Club Vivo v1.
 
 The goal is to make sure the first release supports the most valuable coach and club workflows without adding unnecessary complexity.
 
@@ -14,7 +14,7 @@ The goal is to make sure the first release supports the most valuable coach and 
 ## Primary User Types
 
 ### Coach
-Uses SIC Coach Lite to generate, adjust, save, and export training sessions.
+Uses Club Vivo to generate, adjust, save, and export training sessions.
 
 ### Club director or technical lead
 Defines methodology, terminology, and club preferences for coaches inside the tenant.
@@ -40,7 +40,7 @@ Create a session from real training constraints.
 - session builder page
 
 ### Flow
-1. Coach opens SIC Coach Lite.
+1. Coach opens Club Vivo.
 2. Coach enters initial input such as:
    - U12 girls
    - 14 players
@@ -52,7 +52,7 @@ Create a session from real training constraints.
 3. System checks for missing essentials.
 4. System asks only necessary follow-up questions.
 5. Coach submits.
-6. System generates a structured SessionPack from the existing Session Builder `POST /session-packs` endpoint family as that contract evolves in place for Coach Lite v1.
+6. System generates a structured SessionPack from the existing Session Builder `POST /session-packs` endpoint family as that contract evolves in place for Club Vivo v1.
 7. System validates:
    - minutes
    - equipment fit
@@ -227,7 +227,7 @@ A club-aligned session without requiring the coach to manually restate the metho
 
 ## V1 UX Principles
 
-Coach Lite v1 should follow these user experience rules:
+Club Vivo v1 should follow these user experience rules:
 
 - ask for only the missing essentials
 - do not overwhelm the coach with too many setup questions
@@ -241,7 +241,7 @@ Coach Lite v1 should follow these user experience rules:
 
 ## Summary
 
-The first version of SIC Coach Lite should support a small number of strong flows:
+The first version of Club Vivo should support a small number of strong flows:
 - generate
 - refine
 - save

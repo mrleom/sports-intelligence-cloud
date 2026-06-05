@@ -1,4 +1,4 @@
-# SIC Coach Lite - Fut-Soccer Scope v1
+# Club Vivo Fut-Soccer Scope v1
 
 ## Status
 
@@ -6,7 +6,7 @@ Draft v1
 
 ## Purpose
 
-This document defines what Fut-Soccer means in SIC Coach Lite v1.
+This document defines what Fut-Soccer means in the Club Vivo Chapter 2 product direction.
 
 Fut-Soccer is shipped in SIC v1 as a focused coaching flavor on top of the existing soccer Session Builder flow.
 It is not a separate sport, not a separate product stack, and not a separate tenant or persistence model.
@@ -15,14 +15,14 @@ It is not a separate sport, not a separate product stack, and not a separate ten
 
 ## Scope decision
 
-Coach Lite v1 remains soccer-first.
+Club Vivo remains soccer-first.
 
 Within that soccer-first scope, Fut-Soccer is supported as:
 
 - a backend and domain sport-pack bias
 - a Club Vivo product flavor in the existing session creation flow
 
-Coach Lite v1 does not treat Fut-Soccer as:
+Club Vivo does not treat Fut-Soccer as:
 
 - a separate canonical sport identity
 - a separate app
@@ -34,7 +34,7 @@ Coach Lite v1 does not treat Fut-Soccer as:
 
 ## Target UX direction
 
-The current Week 17 selector-based flow is a bridge slice, not the final intended SIC coach UX.
+The current Week 17 selector-based flow is a bridge slice, not the final intended Club Vivo coach UX.
 
 The target direction is that coaches should ultimately experience one soccer-first assistant and one shared soccer workflow.
 
@@ -70,7 +70,7 @@ The approved Week 17 product evidence supports Fut-Soccer as:
 - a strong passing / build-up-under-pressure emphasis
 - a strong pressure-and-cover / pressing emphasis
 
-That evidence supports a focused soccer flavor inside SIC Coach Lite rather than a separate product boundary.
+That evidence supports a focused soccer flavor inside Club Vivo rather than a separate product boundary.
 
 ---
 
@@ -93,7 +93,7 @@ The first shipped Fut-Soccer-biased examples are limited to:
 
 ## What stays shared with soccer
 
-Fut-Soccer uses the same shared Coach Lite foundation as standard soccer:
+Fut-Soccer uses the same shared Club Vivo foundation as standard soccer:
 
 - the same Club Vivo app
 - the same session creation flow
@@ -140,11 +140,11 @@ The following are out of scope for the shipped Fut-Soccer v1 slice:
 
 The right message is:
 
-SIC Coach Lite is soccer-first, and Fut-Soccer is an additional coached generation flavor inside the shared soccer Session Builder path.
+Club Vivo is soccer-first, and Fut-Soccer is an additional coached generation flavor inside the shared soccer Session Builder path.
 
 For the longer-term product direction, the better expression is:
 
-SIC Coach Lite should feel like one soccer-first assistant flow, with Fut-Soccer absorbed into internal methodology and generation behavior rather than presented as a lasting product split.
+Club Vivo should feel like one soccer-first assistant flow, with Fut-Soccer absorbed into internal methodology and generation behavior rather than presented as a lasting product split.
 
 Avoid saying:
 
@@ -159,4 +159,4 @@ Avoid saying:
 
 Fut-Soccer scope v1 is intentionally narrow.
 
-It gives Coach Lite a more specific soccer coaching flow for reduced-space, minimal-equipment session generation while preserving the same shared SIC foundation and the same canonical saved-session sport identity.
+It gives Club Vivo a more specific soccer coaching flow for reduced-space, minimal-equipment session generation while preserving the same shared SIC foundation and the same canonical saved-session sport identity.
