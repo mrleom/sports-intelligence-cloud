@@ -29,9 +29,7 @@ Use these docs for platform governance, tenant isolation, source orientation, an
 
 ## Chapter 2 Architecture Package
 
-- [Club Vivo Repo Reset Plan](architecture/chapter-2/club-vivo-repo-reset-plan.md)
 - [Lambda Naming Inventory](architecture/chapter-2/lambda-naming-inventory.md)
-- [Club Vivo SaaS Diagram Prompt](architecture/chapter-2/club-vivo-saas-diagram-prompt.md)
 - [Club Vivo SaaS Architecture Mermaid](architecture/chapter-2/club-vivo-saas-architecture-mermaid.md)
 - [Club Vivo SaaS Architecture Draw.io](architecture/chapter-2/club-vivo-saas-architecture.drawio)
 - [Club Vivo SaaS Architecture Diagram Draw.io](architecture/chapter-2/club-vivo-saas-architecture-diagram.drawio)
