@@ -20,6 +20,10 @@ Current reader-facing progress summaries live in:
 
 These progress files should not override current source code, API contracts, Chapter 2 docs, or the current Club Vivo/SIC source maps.
 
+Current operational release hygiene comes from `docs/runbooks/how-to-ship.md`.
+Current smoke test guidance comes from `docs/runbooks/smoke-tests.md`.
+Current live deployment truth must be verified against current source, current runbooks, and fresh validation before making public runtime claims.
+
 ## How To Read This Folder
 
 Start with the concise summaries in `docs/progress/` and `docs/history/`, then use this folder only when you need detailed evidence.
@@ -37,16 +41,28 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | `architect-process-log.md` | Detailed phase timeline, product model, runtime truth notes, deployment posture, and process principles. |
 | Late numbered closeout facts | The original late closeout files have been consolidated into this README and `architect-process-log.md`; Git history preserves the full files. |
 | `backend-export-lake-audit.md` | Important source-present export/lake/ETL caution; useful for avoiding overclaims about data lake, ETL, analytics, and domain export runtime. |
-| `club-vivo-runtime-readiness-checklist.md` | Runtime readiness criteria, active-route checks, smoke-test expectations, and stop conditions. |
-| `club-vivo-runtime-readiness-evidence.md` | Local build and route evidence from the New SIC readiness checkpoint. |
-| `deployment-readiness-checklist.md` | Deployment readiness checklist covering hosting, env vars, Cognito, backend readiness, validation, and stop conditions. |
-| `hosting-and-domain-launch-plan.md` | Hosting/domain launch planning, Amplify/Cognito/env-var considerations, budget controls, and validation sequencing. |
+| `club-vivo-runtime-readiness-checklist.md` | Narrow Club Vivo web/runtime readiness criteria, active-route checks, smoke-test expectations, and stop conditions. |
+| `club-vivo-runtime-readiness-evidence.md` | Historical validation evidence from the New SIC readiness checkpoint; useful evidence, not an active checklist. |
+| `deployment-readiness-checklist.md` | Broad hosted deployment readiness evidence covering hosting, env vars, Cognito, backend readiness, validation, and stop conditions. |
+| `hosting-and-domain-launch-plan.md` | Planning and narrative evidence for hosted launch/domain sequencing, Amplify/Cognito/env-var considerations, budget controls, and validation order. |
 | `session-builder-core/` | Session Builder completion, output quality, fixture, template, and diagram-language evidence. |
 | `match-to-match/` | Parked Match-to-Match prototype learning and future-product guardrails. |
 | `progress-history-audit.md` | Earlier progress-history cleanup decision record. |
-| `docs-readiness-duplication-audit.md` | Older duplication/readiness audit that may still contain useful stale-doc findings. |
+| `docs-readiness-duplication-audit.md` | Older duplication/readiness overlap audit; likely future remove-from-main candidate after its findings are preserved. |
 | `coach-lite-preview-audit.md` | Legacy Coach Lite preview audit evidence. |
 | `new-sic-starting-point-plan.md` | Older transition plan for the New SIC baseline. |
+
+## Readiness And Deployment Evidence Hierarchy
+
+The readiness/deployment cluster is classified as historical evidence. No files in this cluster have been deleted in this pass.
+
+- `hosting-and-domain-launch-plan.md` is planning and narrative evidence for launch sequencing, hosted URLs, domains, environment variables, and budget/validation considerations.
+- `deployment-readiness-checklist.md` is broad hosted deployment readiness evidence.
+- `club-vivo-runtime-readiness-checklist.md` is narrower Club Vivo web/runtime readiness evidence.
+- `club-vivo-runtime-readiness-evidence.md` is historical validation evidence, not an active checklist.
+- `docs-readiness-duplication-audit.md` is an older overlap audit and likely future remove-from-main candidate after any useful findings are preserved.
+
+Use `docs/runbooks/how-to-ship.md` for current release hygiene and `docs/runbooks/smoke-tests.md` for current smoke test guidance. Treat this folder as evidence to compare against current source, current runbooks, source-of-truth docs, and fresh validation before making any public live-runtime claim.
 
 ## Summarize Before Removal
 

@@ -66,6 +66,7 @@ These files contain enough unique evidence that they should not be removed from 
 | `docs/progress/new-sic/club-vivo-runtime-readiness-evidence.md` | Local build and route evidence. |
 | `docs/progress/new-sic/deployment-readiness-checklist.md` | Deployment readiness checklist; compare with runbooks before removing from `main`. |
 | `docs/progress/new-sic/hosting-and-domain-launch-plan.md` | Hosting, domain, env-var, Cognito, backend, budget, and launch-sequence evidence. |
+| New SIC readiness/deployment cluster | Classified in `docs/progress/new-sic/README.md`; no readiness/deployment evidence files have been deleted yet. Current release hygiene belongs to `docs/runbooks/how-to-ship.md`, and current smoke guidance belongs to `docs/runbooks/smoke-tests.md`. |
 | `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, diagram language, completion audit, and validation guardrails. |
 | `docs/progress/new-sic/match-to-match/*.md` | Prototype learning and parked-product guardrails; summarize into future/parking docs before removal. |
 
@@ -122,6 +123,7 @@ Top noisy clusters:
    - `closeout-summary-1.md` through `closeout-summary-12.md` are useful evidence but too many for a clean public showroom.
 3. Readiness and deployment notes
    - `deployment-readiness-checklist.md`, `club-vivo-runtime-readiness-checklist.md`, `club-vivo-runtime-readiness-evidence.md`, and `hosting-and-domain-launch-plan.md` overlap with each other and with runbook responsibilities.
+   - Status: classified in `docs/progress/new-sic/README.md` as historical evidence; no deletion has happened yet.
 4. Session Builder quality evidence
    - `completion-audit.md`, `output-quality-fixtures.md`, `output-quality-evaluation.md`, `output-quality-recheck.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs.
 5. Old cleanup/audit docs
