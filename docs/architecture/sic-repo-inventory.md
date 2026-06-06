@@ -159,9 +159,9 @@ These handler folders exist and have tests or implementation, but they are **not
 - `services/club-vivo/api/lake-etl/etl.py`
   - Python ETL source for lake movement.
 
-Keep these folders for review, future domain work, or parked export-lake work. Do not treat them as active shipped runtime, and do not delete them yet because tests, docs, or schemas still reference the surrounding context.
+Keep these folders for review, future domain work, or parked export-lake work. Do not treat them as active shipped runtime, and do not delete them yet because tests, docs, or schemas still reference the surrounding context. Source-present code, specs, and runbooks are not the same as deployed runtime; current CDK wiring remains the deployment authority for this inventory.
 
-Keeping them unwired avoids deploying unused AWS resources. New routes, buckets, Glue/Athena/lake resources, or EventBridge paths should only be wired when they are needed and approved.
+Keeping them unwired avoids deploying unused AWS resources. New routes, buckets, Glue/Athena/lake resources, QuickSight dashboards, or EventBridge paths should only be wired when they are needed and approved. PDF export and saved-session export are separate from domain export/lake work.
 
 ## 3. Active Backend Domain Logic
 
@@ -443,7 +443,7 @@ Architecture docs live under `docs/architecture/`:
   - `attendance-system-v1.md`
   - `fut-soccer-merge-v1.md`
   - `ai-evaluation-harness.md`
-- lake/ETL:
+- lake/ETL design and historical scope:
   - `lake-layout.md`
   - `etl-v1.md`
   - `glue-catalog-v1.md`
@@ -557,7 +557,7 @@ These are candidates for later review only. Do not delete, move, or rename them 
 - Coach Lite preview route was removed from the active Club Vivo app tree after audit; useful Coach Lite architecture docs remain for later review or migration.
 - Ruta Viva and Athlete Evolution AI are preserved as future product concepts under `docs/product/future/`.
 - `services/club-vivo/api/clubs/`, `memberships/`, `exports-domain/`, `lake-ingest/`, and `lake-etl/` contain implementation/tests but are not currently CDK-wired in the current `SicApiStack` route list found during this pass. Source exists, but these folders are not part of the current deployed Club Vivo runtime.
-- Domain export and lake runbooks/docs reference resources not found in current CDK source; review whether these are historical, planned, or maintained outside the current stack.
+- Domain export and lake runbooks/docs reference resources not found in current CDK source; review whether these are historical, planned, or maintained outside the current stack before describing domain export automation, lake ingest, Glue, Athena, QuickSight, a data lake, ETL, or analytics pipelines as shipped Club Vivo runtime.
 - `apps/club-vivo/lib/coach-team-hints.ts` appears browser-local and may be legacy after backend Teams became active.
 - The former browser-local team-selection bridge was removed from the active Club Vivo web runtime after review.
 - Some progress/product docs contain future Quick Drill or upload/source-mode language; keep them clearly separated from shipped runtime docs.

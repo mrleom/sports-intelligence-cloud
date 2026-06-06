@@ -61,7 +61,7 @@ These files contain enough unique evidence that they should not be removed from 
 | --- | --- |
 | `docs/progress/new-sic/architect-process-log.md` | Detailed phase timeline, current runtime truth, architecture/deployment posture, and process principles. |
 | Late New SIC closeout evidence | Consolidated into `docs/progress/new-sic/README.md` and `docs/progress/new-sic/architect-process-log.md`; original numbered closeouts are preserved in Git history. |
-| `docs/progress/new-sic/backend-export-lake-audit.md` | Source-present export/lake evidence and unwired-route caution; summarize before any removal so data lake/ETL are not overclaimed or erased incorrectly. |
+| `docs/progress/new-sic/backend-export-lake-audit.md` | Source-present export/lake/ETL evidence and unwired-route caution; keep as the evidence anchor until a separate export/lake focused review reconciles docs, runbooks, schemas, source-present folders, tests, and current CDK wiring. |
 | `docs/progress/new-sic/club-vivo-runtime-readiness-checklist.md` | Runtime readiness criteria and validation expectations. |
 | `docs/progress/new-sic/club-vivo-runtime-readiness-evidence.md` | Local build and route evidence. |
 | `docs/progress/new-sic/deployment-readiness-checklist.md` | Deployment readiness checklist; compare with runbooks before removing from `main`. |
@@ -74,10 +74,12 @@ Potential target owners for summarized material:
 
 - Chapter 2 cleanup facts from the removed closeouts are now covered by `README.md`, `docs/README.md`, `docs/progress/README.md`, `docs/architecture/chapter-2/showroom-prune-audit.md`, `docs/architecture/chapter-2/repo-cleanup-inventory.md`, and this strategy. The preserved facts are: keep the same repo and Amplify assumptions, make `main` the Club Vivo showroom powered by SIC, preserve Chapter 1/New SIC as history, use showroom-prune cleanup instead of broad restructuring, and keep runtime/auth/tenancy/API/CDK guardrails untouched.
 - Runtime and deployment evidence should remain in current runbooks or current architecture/source-map docs before the progress evidence is removed.
+- Export/lake/ETL is a separate future cleanup track, not a safe remove-now candidate. Treat `exports-domain`, `lake-ingest`, and `lake-etl` as source-present, parked, or historical unless current CDK wiring proves active runtime.
 - Session Builder quality findings should be summarized in current Club Vivo product docs such as `docs/product/club-vivo/session-builder.md`, `docs/product/club-vivo/session-generation-quality-standards.md`, `docs/product/club-vivo/coaching-session-design-standard.md`, or `docs/product/club-vivo/golden-template-library-v1.md`.
 - Diagram vocabulary or readability evidence should remain in current diagram architecture docs.
 - Match-to-Match learning should remain parked in future/product context, not presented as shipped runtime.
 - Training Brief, agentic, Bedrock, and RAG material should remain clearly proposed, source-present, or future unless current source-of-truth docs prove otherwise.
+- Do not claim data lake, ETL, analytics pipeline, domain export automation, lake ingest, Glue, Athena, or QuickSight as shipped Club Vivo runtime unless current source and CDK validation prove it. PDF export and saved-session export are separate from domain export/lake work.
 
 ## 6. Remove From Main After Review
 
@@ -101,6 +103,7 @@ Removal means removal from `main`, not deletion from history. Git history, tags,
 Do not remove or rewrite these until a later PR explicitly summarizes their unique evidence:
 
 - `docs/progress/new-sic/backend-export-lake-audit.md`
+- export/lake docs, runbooks, schemas, and source-looking references that need a separate focused review
 - `docs/progress/new-sic/club-vivo-runtime-readiness-checklist.md`
 - `docs/progress/new-sic/club-vivo-runtime-readiness-evidence.md`
 - `docs/progress/new-sic/deployment-readiness-checklist.md`
