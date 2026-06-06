@@ -179,7 +179,7 @@ The following docs include older roadmap, progress, platform, or future wording 
 
 - `docs/progress/weekly-progress-notes.md`
 - `docs/progress/architect-process-summary.md`
-- `docs/progress/new-sic/new-sic-starting-point-plan.md`
+- The old New SIC starting-point plan has been consolidated into `docs/progress/new-sic/README.md` and `docs/progress/architect-process-summary.md`.
 - `docs/progress/new-sic/closeout-summary-1.md`
 - `docs/architecture/platform-constitution.md`
 - `docs/architecture/foundations/source-of-truth-manifest.md`
