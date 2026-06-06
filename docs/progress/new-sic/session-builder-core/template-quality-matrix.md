@@ -19,9 +19,10 @@ Files inspected:
 - `services/club-vivo/api/src/domains/session-builder/session-pack-templates.js`
 - `services/club-vivo/api/src/domains/session-builder/session-pack-templates.test.js`
 - `docs/progress/new-sic/session-builder-core/output-quality-fixtures.md`
-- `docs/progress/new-sic/session-builder-core/output-quality-evaluation.md`
-- `docs/progress/new-sic/session-builder-core/output-quality-recheck.md`
 - `docs/progress/new-sic/architect-process-log.md`
+
+Earlier detailed evaluation/recheck findings were consolidated into
+`docs/progress/new-sic/session-builder-core/README.md`.
 
 Outputs were inspected with local calls to the existing deterministic `generatePack` function. The
 inspection used a U10 age-band group, full session, 60 minutes, grass field context, and
