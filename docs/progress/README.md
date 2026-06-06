@@ -27,6 +27,8 @@ Current source-of-truth starts with:
   - Short week-by-week summary for GitHub readers.
 - `architect-process-summary.md`
   - Short architecture/process story distilled from the archived detailed process log.
+- `chapter-2-showroom-cleanup-closeout.md`
+  - Short final audit/closeout for the Chapter 2 showroom cleanup.
 - `new-sic/`
   - Earlier Chapter 1 / New SIC cleanup plans, audits, readiness evidence, and closeout summaries.
 
@@ -49,6 +51,7 @@ Chapter 1 SIC history is also preserved through:
 docs/progress/
 |-- README.md
 |-- architect-process-summary.md
+|-- chapter-2-showroom-cleanup-closeout.md
 |-- weekly-progress-notes.md
 `-- new-sic/
 ```
