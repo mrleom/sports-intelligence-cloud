@@ -1,5 +1,8 @@
 # Runbook — Lake Volume Anomaly
 
+## Status
+This runbook preserves design, historical, or future operational guidance for lake ingest volume monitoring. Current audit evidence says `lake-ingest`, `DomainExportBucket`, and `LakeBucket` are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## Purpose
 This runbook explains how to investigate and respond to unusual lake ingest volume patterns, such as sudden spikes or unexpected drops in domain export ingestion.
 

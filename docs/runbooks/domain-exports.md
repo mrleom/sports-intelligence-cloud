@@ -1,5 +1,8 @@
 # Runbook — Domain Exports (Club Vivo)
 
+## Status
+This runbook preserves design, historical, or future operational guidance for domain export work. Current audit evidence says `exports-domain` is source-present or parked unless current CDK/source wiring proves otherwise; do not treat `POST /exports/domain`, `DomainExportBucket`, domain export automation, or related alarms as shipped Club Vivo runtime without fresh validation.
+
 ## Purpose
 Operational guide for producing **tenant-partitioned domain exports** for analytics/ML.
 

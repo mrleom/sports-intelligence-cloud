@@ -1,5 +1,8 @@
 # SIC Data Lake Layout (Tenant-Safe Contract)
 
+## Status
+This document preserves design, historical, or future architecture guidance for a tenant-safe lake layout. Current audit evidence says `LakeBucket`, lake ingest, Glue/Athena, ETL, and analytics pipeline resources are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise.
+
 ## Purpose
 Define the S3 layout + rules that enforce tenant isolation by construction.
 

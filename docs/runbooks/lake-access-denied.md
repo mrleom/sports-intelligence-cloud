@@ -1,5 +1,8 @@
 # Runbook — Lake Access Denied
 
+## Status
+This runbook preserves design, historical, or future operational guidance for export/lake permissions. Current audit evidence says `lake-ingest`, `DomainExportBucket`, and `LakeBucket` are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## Purpose
 This runbook covers how to respond when the lake ingest pipeline or related components encounter `AccessDenied` while reading exports or writing to the lake.
 
