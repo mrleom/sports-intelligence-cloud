@@ -100,7 +100,7 @@ Historical docs preserve how the project actually evolved.
 - `docs/progress/README.md`
 - `docs/progress/weekly-progress-notes.md`
 - `docs/progress/architect-process-summary.md`
-- `docs/progress/new-sic/progress-history-audit.md`
+- New SIC progress evidence under `docs/progress/new-sic/`
 - archived detailed progress history preserved by the archive branch/tag listed in `docs/progress/README.md`
 - progress closeout summaries
 - walkthrough scripts

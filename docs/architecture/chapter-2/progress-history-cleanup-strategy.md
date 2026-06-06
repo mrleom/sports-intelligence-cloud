@@ -86,7 +86,7 @@ These are reasonable future remove-from-main candidates after link checks and su
 | File Or Cluster | Reason |
 | --- | --- |
 | `docs/progress/new-sic/closeout-summary-1.md` through `closeout-summary-9.md` | Detailed New SIC closeouts create an archive feel; most durable narrative should already be captured by `weekly-progress-notes.md` and `architect-process-summary.md`. |
-| `docs/progress/new-sic/progress-history-audit.md` | Superseded by current progress/history cleanup strategy once decisions are implemented. |
+| `docs/progress/new-sic/progress-history-audit.md` | Removed from `main` after its durable findings were preserved in `docs/progress/new-sic/README.md`, `docs/progress/README.md`, and this strategy. |
 | `docs/progress/new-sic/new-sic-starting-point-plan.md` | Older transition plan; durable baseline is captured by current Chapter 2 docs and summaries. |
 | `docs/progress/new-sic/docs-readiness-duplication-audit.md` | Removed from `main` after its durable readiness/deployment overlap findings were preserved in `docs/progress/new-sic/README.md` and this strategy. |
 | `docs/progress/new-sic/coach-lite-preview-audit.md` | Removed from `main` after durable legacy-preview facts were preserved in `docs/progress/new-sic/README.md`, the legacy-doc strategy, and current source maps. |
@@ -128,7 +128,7 @@ Top noisy clusters:
    - `completion-audit.md`, `output-quality-fixtures.md`, `output-quality-evaluation.md`, `output-quality-recheck.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs.
 5. Old cleanup/audit docs
    - `progress-history-audit.md`, `docs-readiness-duplication-audit.md`, and `coach-lite-preview-audit.md` overlap with newer Chapter 2 cleanup audits and legacy-doc strategies.
-   - Status: readiness duplication and Coach Lite preview audits have been removed from `main` after preserving their durable findings.
+   - Status: progress history, readiness duplication, and Coach Lite preview audits have been removed from `main` after preserving their durable findings.
 6. Match-to-Match prototype evidence
    - The folder is correctly parked, but the detailed prototype notes can distract from the current Session Builder showroom unless summarized into future context.
 

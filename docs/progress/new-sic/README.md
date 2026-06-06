@@ -34,6 +34,10 @@ Do not use old New SIC language as current product naming. Club Vivo is the prod
 
 Do not treat future, parked, prototype, or source-present work as shipped runtime.
 
+## Preserved Progress Cleanup Finding
+
+The removed progress-history audit's durable finding is preserved here and in `docs/architecture/chapter-2/progress-history-cleanup-strategy.md`: detailed progress history remains useful evidence, but GitHub readers should start with concise summaries. Removed detail remains available through Git history, and historical progress docs should not override current product, source, API, architecture, or runtime truth.
+
 ## Useful Evidence
 
 | File Or Folder | Evidence Value |
@@ -47,7 +51,6 @@ Do not treat future, parked, prototype, or source-present work as shipped runtim
 | `hosting-and-domain-launch-plan.md` | Planning and narrative evidence for hosted launch/domain sequencing, Amplify/Cognito/env-var considerations, budget controls, and validation order. |
 | `session-builder-core/` | Session Builder completion, output quality, fixture, template, and diagram-language evidence. |
 | `match-to-match/` | Parked Match-to-Match prototype learning and future-product guardrails. |
-| `progress-history-audit.md` | Earlier progress-history cleanup decision record. |
 | `new-sic-starting-point-plan.md` | Older transition plan for the New SIC baseline. |
 
 ## Readiness And Deployment Evidence Hierarchy
@@ -126,9 +129,8 @@ High-level facts preserved from the removed late closeouts:
 
 ## Future Remove-From-Main Candidates
 
-These may be reasonable future remove-from-main candidates after link checks and summary review:
+This may be a reasonable future remove-from-main candidate after link checks and summary review:
 
-- `progress-history-audit.md`
 - `new-sic-starting-point-plan.md`
 
 Removal from `main` would not erase the work. Git history, tags, archive branches, `docs/history/`, and the concise progress summaries preserve the evidence trail.
