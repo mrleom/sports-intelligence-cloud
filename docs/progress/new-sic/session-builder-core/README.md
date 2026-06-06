@@ -10,6 +10,7 @@ Current Club Vivo product truth lives in `docs/product/club-vivo/`, especially:
 - `docs/product/club-vivo/session-generation-quality-standards.md`
 - `docs/product/club-vivo/coaching-session-design-standard.md`
 - `docs/product/club-vivo/golden-template-library-v1.md`
+- `docs/product/club-vivo/soccer-development-taxonomy-v1.md`
 
 Use those current product docs before using this folder to make product, runtime, or implementation claims.
 
@@ -74,6 +75,28 @@ The removed broad completion audit's durable facts are preserved here and in the
 - Diagram work is a deterministic, structured future direction; this evidence folder does not claim full shipped DiagramSequence runtime.
 - Deployment and domain polish are downstream of core product quality, current source validation, and smoke validation.
 
+## Final Evidence Review
+
+The remaining detailed files are still useful enough to keep for now:
+
+- `output-quality-fixtures.md` remains useful as a repeatable historical fixture baseline for coach prompts, quality scoring, and future regression-review thinking.
+- `template-quality-matrix.md` remains useful as detailed template coverage evidence across objective/focus combinations, routing gaps, and next-slice planning.
+
+These files are historical progress evidence, not current runtime tests, product requirements, or source of truth. Current Club Vivo product quality truth lives in:
+
+- `docs/product/club-vivo/session-generation-quality-standards.md`
+- `docs/product/club-vivo/coaching-session-design-standard.md`
+- `docs/product/club-vivo/golden-template-library-v1.md`
+- `docs/product/club-vivo/soccer-development-taxonomy-v1.md`
+
+Do not delete either remaining file until its useful findings are either intentionally kept as historical evidence or summarized into the current product docs above.
+
+Future decision:
+
+- Option A: keep both files on `main` as compact historical evidence because the fixture baseline and matrix are still useful.
+- Option B: summarize the fixture baseline into this README and remove `output-quality-fixtures.md`.
+- Option C: keep `template-quality-matrix.md` longer because it contains detailed coverage, routing-gap, and next-slice planning evidence.
+
 ## Future Summarize-Before-Remove Candidates
 
 These detailed files may be future remove-from-main candidates only after their durable findings are summarized into current Club Vivo product or architecture docs:
@@ -87,6 +110,7 @@ Likely target docs for durable findings are:
 - `docs/product/club-vivo/session-generation-quality-standards.md`
 - `docs/product/club-vivo/coaching-session-design-standard.md`
 - `docs/product/club-vivo/golden-template-library-v1.md`
+- `docs/product/club-vivo/soccer-development-taxonomy-v1.md`
 - current diagram architecture docs, if diagram-language findings are still needed
 
 Removal from `main` would not erase the work. Git history and the current summary/product docs should preserve the evidence trail before any detailed progress file is removed.
