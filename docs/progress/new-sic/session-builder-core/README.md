@@ -27,8 +27,6 @@ This folder does not claim AI/RAG, RAG/vector search, Match-to-Match Prescriptio
 | --- | --- | --- |
 | `diagram-language-research.md` | Diagram language research | Captures soccer diagram symbol language, story-panel model, activity-specific diagram needs, and deterministic diagram guardrails. |
 | `output-quality-fixtures.md` | Output quality fixtures | Establishes representative coach prompts and a scoring rubric for repeatable Session Builder quality review. |
-| `output-quality-evaluation.md` | Output quality evaluation | Records the first fixture-based quality evaluation, including strengths, weak spots, and recommended template-improvement work. |
-| `output-quality-recheck.md` | Output quality recheck | Records the follow-up quality recheck after deterministic template improvements, including remaining diagram, save/export, and mixed-age gaps. |
 | `template-quality-matrix.md` | Template quality matrix | Maps objective/focus options to template-quality scores, routing gaps, and future deterministic template-pack candidates. |
 
 ## Useful Findings Preserved
@@ -40,6 +38,18 @@ This folder does not claim AI/RAG, RAG/vector search, Match-to-Match Prescriptio
 - Diagram quality needed a soccer-native symbol language and deterministic story model before any broader intelligent diagram direction.
 - Template quality varied by objective/focus; strong paths should be promoted deliberately rather than generalized by assumption.
 - Future implementation should be sliced narrowly and keep auth, tenancy, persistence, infrastructure, API routes, public contracts, and CDK wiring out of scope unless separately approved.
+
+## Preserved Output Quality Findings
+
+The consolidated first quality review and follow-up recheck preserve these durable findings:
+
+- Five runnable fixtures moved closer to coach-ready text after deterministic template improvements.
+- Mixed-age remained unsupported as a raw request age band; the adapted mixed-age/OST observation was useful evidence, but it did not mean mixed-age validation was solved.
+- Diagram usefulness remained the widest repeated quality gap.
+- Generated packs and draft review views still lacked structured diagram specs during that evidence pass.
+- Save/export readability needed follow-up, especially richer safety notes, success criteria, progressions, regressions, common mistakes, and diagrams in review/export-oriented views.
+- The next useful product-quality work was diagram review polish, mixed-age context handling, and stronger deterministic template coverage.
+- The evidence pass made no runtime, source, frontend, backend, test, package, persistence, infrastructure, AI/RAG, Match-to-Match, public Training Brief API, or generation-source changes.
 
 ## Preserved Completion Findings
 
@@ -59,8 +69,6 @@ These detailed files may be future remove-from-main candidates only after their 
 
 - `diagram-language-research.md`
 - `output-quality-fixtures.md`
-- `output-quality-evaluation.md`
-- `output-quality-recheck.md`
 - `template-quality-matrix.md`
 
 Likely target docs for durable findings are:
