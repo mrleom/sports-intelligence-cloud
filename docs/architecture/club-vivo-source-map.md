@@ -25,9 +25,11 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 ## Backend API
 
 - `services/club-vivo/api/` is the main Club Vivo backend API package.
-- Top-level handler folders such as `athletes/`, `clubs/`, `memberships/`, `methodology/`, `sessions/`, `session-packs/`, `teams/`, `templates/`, `exports-domain/`, and `lake-ingest/` expose Lambda-style API entry points.
+- CDK-wired handler folders in the current `infra/cdk/lib/sic-api-stack.ts` include `athletes/`, `methodology/`, `sessions/`, `session-packs/`, `teams/`, `templates/`, and `me/`.
+- Source-present handler folders such as `clubs/`, `memberships/`, `exports-domain/`, and `lake-ingest/` are not active deployed Club Vivo API routes unless current CDK wiring proves otherwise.
 - `services/club-vivo/api/src/platform/` contains shared backend platform code for HTTP handling, errors, logging, validation, tenancy, Bedrock integration, and storage.
-- `services/club-vivo/api/lake-etl/` contains the Python lake ETL job.
+- `services/club-vivo/api/lake-etl/` contains source-present Python lake ETL code. Treat it as parked or historical unless current Glue/CDK wiring proves an active deployed ETL workflow.
+- Source-present code, specs, or runbooks are not the same as deployed runtime. Domain export automation, lake ingest, Glue, Athena, QuickSight, a data lake, ETL, and analytics pipelines should not be described as shipped Club Vivo runtime without current source and CDK validation.
 
 ## Session Builder
 
@@ -35,6 +37,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 - Frontend session builder helpers live in `apps/club-vivo/lib/session-builder-api.ts`, `quick-session-*`, `session-builder-context-hints.ts`, `session-origin-hints.ts`, and `builder-session-label.ts`.
 - Backend session builder domain logic lives in `services/club-vivo/api/src/domains/session-builder/`.
 - Session persistence, feedback, and PDF export support live in `services/club-vivo/api/src/domains/sessions/`.
+- PDF export and saved-session export are part of the current sessions path; do not conflate them with domain export/lake work.
 - Template generation support lives in `services/club-vivo/api/src/domains/templates/`.
 - Current Session Builder runtime should be read as deterministic/template-based unless code proves a narrower generated behavior exists.
 - Training Brief is a proposed contract bridge into Session Builder, not proven shipped runtime behavior.
@@ -92,7 +95,7 @@ This map is not a replacement for `repo-structure.md`; it is a Club Vivo-specifi
 
 - API contracts live in `docs/api/`.
 - Export schemas live in `datasets/schemas/exports/v1/`.
-- Domain export specification lives in `docs/exports/domain-export-spec-v1.md`.
+- Domain export specification lives in `docs/exports/domain-export-spec-v1.md`; it preserves contract/design evidence and should be source-verified before being described as active export automation.
 
 ## Architecture Docs
 

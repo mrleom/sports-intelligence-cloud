@@ -48,7 +48,7 @@ New SIC began after Week 21 and the GitHub showcase cleanup checkpoint as a tran
 | --- | --- |
 | `architect-process-log.md` | Detailed phase timeline, product model, runtime truth notes, deployment posture, and process principles. |
 | Late numbered closeout facts | The original late closeout files have been consolidated into this README and `architect-process-log.md`; Git history preserves the full files. |
-| `backend-export-lake-audit.md` | Important source-present export/lake/ETL caution; useful for avoiding overclaims about data lake, ETL, analytics, and domain export runtime. |
+| `backend-export-lake-audit.md` | Evidence anchor for source-present export/lake/ETL caution; useful for avoiding overclaims about data lake, ETL, analytics pipeline, domain export automation, lake ingest, or deployed export runtime. |
 | `club-vivo-runtime-readiness-checklist.md` | Narrow Club Vivo web/runtime readiness criteria, active-route checks, smoke-test expectations, and stop conditions. |
 | `club-vivo-runtime-readiness-evidence.md` | Historical validation evidence from the New SIC readiness checkpoint; useful evidence, not an active checklist. |
 | `deployment-readiness-checklist.md` | Broad hosted deployment readiness evidence covering hosting, env vars, Cognito, backend readiness, validation, and stop conditions. |
@@ -73,6 +73,12 @@ Preserved overlap findings:
 - The main overlapping topics are Amplify hosting, environment variables, Cognito callback/logout settings, route smoke tests, and API connectivity smoke tests.
 - Ignored `.workspace` readiness notes can inform future work, but they should not be tracked directly. Distill only safe, durable conclusions into tracked docs when needed.
 
+## Export / Lake Scope Boundary
+
+`backend-export-lake-audit.md` should remain in `main` until export/lake docs, runbooks, schemas, and source references receive a separate focused review. This branch is scope clarification only; it does not delete, move, rename, or archive export/lake docs, runbooks, schemas, or source folders.
+
+Treat `exports-domain`, `lake-ingest`, and `lake-etl` as source-present, parked, or historical implementation unless current CDK/source validation proves active wiring. Export/lake specs and runbooks preserve design and operational evidence, but they do not override current CDK wiring. PDF export and saved-session export are separate from domain export/lake work.
+
 ## Summarize Before Removal
 
 Do not remove these from `main` until their durable facts are summarized in current product, architecture, progress, history, or runbook docs:
@@ -87,6 +93,8 @@ Do not remove these from `main` until their durable facts are summarized in curr
 - `match-to-match/`
 
 The most important facts to preserve are runtime boundaries, deployment/readiness evidence, tenant-safety decisions, validation results, Session Builder quality findings, and clear shipped-versus-proposed labels.
+
+Export/lake/ETL cleanup is a separate future track. Do not remove export/lake evidence or source-looking references until the focused review reconciles docs, runbooks, schemas, source-present folders, tests, and current CDK wiring.
 
 ## Removed Numbered Closeouts
 
@@ -155,3 +163,8 @@ Do not use this folder to claim any of the following as shipped Chapter 2 runtim
 - data lake
 - ETL
 - analytics pipeline
+- domain export automation
+- lake ingest
+- Glue
+- Athena
+- QuickSight
