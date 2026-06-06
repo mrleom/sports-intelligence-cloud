@@ -1,5 +1,8 @@
 # Runbook: Glue Partition / Contract Mismatch
 
+## Status
+This runbook preserves design, historical, or future operational guidance for Glue/lake partition checks. Current audit evidence says Glue/Athena/lake resources and ETL are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## 1) Trigger
 - Alarm name(s): none directly; use this runbook when Glue catalog partitions do not match the lake contract.
 - Signal(s): `glue.partition_mismatch`, `lake.catalog_consistency_failure`

@@ -1,5 +1,8 @@
 # Runbook: Glue Crawler Failure (bronze sessions)
 
+## Status
+This runbook preserves design, historical, or future operational guidance for Glue crawler behavior. Current audit evidence says Glue/Athena/lake resources are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## 1) Trigger
 - Alarm name(s): `sic-<env>-glue-crawler-failures`
 - Metric(s) / threshold(s): `AWS/Glue` `CrawlerRunsFailed` >= 1 in 5 min

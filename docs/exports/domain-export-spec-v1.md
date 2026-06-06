@@ -3,6 +3,8 @@
 **Status:** v1.0 (draft, intended stable)
 **Purpose:** Define a stable, versioned, lake-ready export contract for SIC domain entities.
 
+**Runtime scope:** This spec preserves contract/design evidence. It does not prove that domain export automation, `DomainExportBucket`, Glue, Athena, ETL, a data lake, or an analytics pipeline is shipped Club Vivo runtime; verify current CDK/source wiring before making live-runtime claims.
+
 This spec is an explicit data contract. It must remain backward compatible within major version `v1`.
 Tenant isolation is non-negotiable: tenant scope is derived only from verified auth context + entitlements,
 and storage layout must preserve tenant boundaries at the prefix/partition level.

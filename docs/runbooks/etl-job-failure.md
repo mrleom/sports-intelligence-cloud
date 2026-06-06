@@ -1,5 +1,8 @@
 # Runbook: Glue ETL Job Failure (bronze → silver sessions)
 
+## Status
+This runbook preserves design, historical, or future operational guidance for lake ETL behavior. Current audit evidence says `lake-etl`, Glue jobs, and lake resources are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## 1) Trigger
 - Alarm name(s): `sic-<env>-glue-etl-job-failures`
 - Metric(s) / threshold(s): `AWS/Glue` `JobsFailed` >= 1 in 5 min on job `sic-club-vivo-bronze-to-silver-sessions-<env>`

@@ -1,5 +1,8 @@
 # Runbook — Lake Isolation Proof
 
+## Status
+This runbook preserves design, historical, or future verification guidance for a tenant-safe data lake. Current audit evidence says `LakeBucket` and related lake resources are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these proof steps as live-runtime evidence.
+
 ## Purpose
 This runbook describes how to prove tenant isolation for the SIC S3 data lake.
 It is intended for Week 9 Day 1 verification of the lake layout and access control model.

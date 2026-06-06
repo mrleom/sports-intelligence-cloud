@@ -1,5 +1,8 @@
 # Glue Catalog v1 (SIC Lake Bronze Sessions)
 
+## Status
+This document preserves design, historical, or future architecture guidance for Glue cataloging. Current audit evidence says Glue/Athena/lake resources and analytics pipeline behavior are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise.
+
 ## Purpose
 
 Document the first Glue Catalog implementation for SIC lake bronze sessions data.

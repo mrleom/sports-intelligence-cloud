@@ -1,5 +1,8 @@
 # Runbook — Lake Ingest Failure
 
+## Status
+This runbook preserves design, historical, or future operational guidance for lake ingest work. Current audit evidence says `lake-ingest`, `DomainExportBucket`, and `LakeBucket` are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise; verify that wiring before using these steps as live operations.
+
 ## Purpose
 This runbook explains how to diagnose and recover from failures in the lake ingest pipeline that moves domain exports into the SIC data lake bronze layer.
 

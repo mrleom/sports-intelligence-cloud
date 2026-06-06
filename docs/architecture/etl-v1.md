@@ -1,5 +1,8 @@
 # ETL v1 (Bronze Sessions → Silver Sessions)
 
+## Status
+This document preserves design, historical, or future architecture guidance for lake ETL. Current audit evidence says `lake-etl`, Glue jobs, `LakeBucket`, and analytics pipeline resources are not confirmed shipped Club Vivo runtime unless current CDK/source wiring proves otherwise.
+
 ## Purpose
 
 Document the first ETL pipeline for SIC lake sessions data.
