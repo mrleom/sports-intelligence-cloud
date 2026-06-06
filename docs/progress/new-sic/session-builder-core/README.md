@@ -25,7 +25,6 @@ This folder does not claim AI/RAG, RAG/vector search, Match-to-Match Prescriptio
 
 | File | Classification | Evidence Value |
 | --- | --- | --- |
-| `diagram-language-research.md` | Diagram language research | Captures soccer diagram symbol language, story-panel model, activity-specific diagram needs, and deterministic diagram guardrails. |
 | `output-quality-fixtures.md` | Output quality fixtures | Establishes representative coach prompts and a scoring rubric for repeatable Session Builder quality review. |
 | `template-quality-matrix.md` | Template quality matrix | Maps objective/focus options to template-quality scores, routing gaps, and future deterministic template-pack candidates. |
 
@@ -51,6 +50,18 @@ The consolidated first quality review and follow-up recheck preserve these durab
 - The next useful product-quality work was diagram review polish, mixed-age context handling, and stronger deterministic template coverage.
 - The evidence pass made no runtime, source, frontend, backend, test, package, persistence, infrastructure, AI/RAG, Match-to-Match, public Training Brief API, or generation-source changes.
 
+## Preserved Diagram Language Findings
+
+The consolidated diagram-language research findings are preserved here and in the current Club Vivo diagram standards:
+
+- Diagrams should help coaches understand and run the activity quickly, like a clean coaching-board explanation.
+- Useful diagrams explain space, players, ball, equipment, action, timing, and scoring/reset.
+- Diagrams should tell the activity story rather than decorate the activity.
+- Soccer diagrams need soccer-native symbols and compact local legends that show only symbols used in that diagram.
+- Avoid crowded tactical diagrams unless the activity requires one; use captions, steps, and whitespace to keep the field readable.
+- Future diagram work should move from generic inferred diagrams toward structured activity and diagram intent.
+- These findings do not claim full DiagramSequence runtime, Match-to-Match work, AI/RAG, raw AI-generated images, backend schema changes, public API changes, persistence changes, or infrastructure changes.
+
 ## Preserved Completion Findings
 
 The removed broad completion audit's durable facts are preserved here and in the current Club Vivo product docs:
@@ -67,7 +78,6 @@ The removed broad completion audit's durable facts are preserved here and in the
 
 These detailed files may be future remove-from-main candidates only after their durable findings are summarized into current Club Vivo product or architecture docs:
 
-- `diagram-language-research.md`
 - `output-quality-fixtures.md`
 - `template-quality-matrix.md`
 

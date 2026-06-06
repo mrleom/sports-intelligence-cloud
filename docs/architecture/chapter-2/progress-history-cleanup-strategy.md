@@ -67,7 +67,7 @@ These files contain enough unique evidence that they should not be removed from 
 | `docs/progress/new-sic/deployment-readiness-checklist.md` | Deployment readiness checklist; compare with runbooks before removing from `main`. |
 | `docs/progress/new-sic/hosting-and-domain-launch-plan.md` | Hosting, domain, env-var, Cognito, backend, budget, and launch-sequence evidence. |
 | New SIC readiness/deployment cluster | Classified in `docs/progress/new-sic/README.md`; the core checklist, planning, and validation evidence files remain in place. Current release hygiene belongs to `docs/runbooks/how-to-ship.md`, and current smoke guidance belongs to `docs/runbooks/smoke-tests.md`. |
-| `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, diagram language, consolidated output-quality recheck findings, completion/runtime-boundary findings, and validation guardrails. |
+| `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, consolidated diagram-language findings, consolidated output-quality recheck findings, completion/runtime-boundary findings, and validation guardrails. |
 | `docs/progress/new-sic/match-to-match/*.md` | Prototype learning and parked-product guardrails; summarize into future/parking docs before removal. |
 
 Potential target owners for summarized material:
@@ -94,6 +94,7 @@ These are reasonable future remove-from-main candidates after link checks and su
 | `docs/progress/new-sic/coach-lite-preview-audit.md` | Removed from `main` after durable legacy-preview facts were preserved in `docs/progress/new-sic/README.md`, the legacy-doc strategy, and current source maps. |
 | `docs/progress/new-sic/session-builder-core/completion-audit.md` | Removed from `main` after its durable Session Builder runtime-boundary, creation-path, parked-scope, deterministic-generation, and deployment-sequencing facts were preserved in `docs/progress/new-sic/session-builder-core/README.md` and current Club Vivo product docs. |
 | `docs/progress/new-sic/session-builder-core/output-quality-evaluation.md` and `docs/progress/new-sic/session-builder-core/output-quality-recheck.md` | Removed from `main` after durable fixture-review findings were preserved in `docs/progress/new-sic/session-builder-core/README.md`: five runnable fixtures improved after deterministic template work, mixed-age validation remained unsolved, diagram specs and save/export structure still needed follow-up, and no runtime/source, AI/RAG, Match-to-Match, or public Training Brief API work was introduced. |
+| `docs/progress/new-sic/session-builder-core/diagram-language-research.md` | Removed from `main` after durable diagram-quality findings were preserved in `docs/progress/new-sic/session-builder-core/README.md` and current Club Vivo diagram standards: diagrams should explain activity space, players, ball, equipment, action, timing, and scoring/reset through soccer-native symbols, compact legends, structured story steps, and no shipped DiagramSequence, Match-to-Match, or AI/RAG claims. |
 | `docs/progress/chapter-2-public-face-closeout.md` | Removed from `main` after durable public-face cleanup facts were summarized in current docs and this strategy. |
 | `docs/progress/chapter-2-repo-cleanup-closeout.md` | Removed from `main` after durable repo-cleanup facts were summarized in current docs and this strategy. |
 | `docs/progress/chapter-2-cleanup-workspace-closeout.md` | Removed from `main` after durable workspace/showroom-prune facts were summarized in current docs and this strategy. |
@@ -132,7 +133,8 @@ Top noisy clusters:
 4. Session Builder quality evidence
    - The broad Session Builder core completion audit has been removed from `main` after its durable facts were summarized in the folder index and current product docs.
    - The first output-quality evaluation and follow-up recheck have been removed from `main` after durable fixture and recheck findings were summarized in the folder index.
-   - `output-quality-fixtures.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs before any later removal.
+   - The diagram-language research has been removed from `main` after durable soccer-diagram findings were summarized in the folder index and current diagram standards.
+   - `output-quality-fixtures.md` and `template-quality-matrix.md` are valuable but better summarized into current product and architecture docs before any later removal.
 5. Old cleanup/audit docs
    - `progress-history-audit.md`, `docs-readiness-duplication-audit.md`, and `coach-lite-preview-audit.md` overlap with newer Chapter 2 cleanup audits and legacy-doc strategies.
    - Status: progress history, readiness duplication, and Coach Lite preview audits have been removed from `main` after preserving their durable findings.
