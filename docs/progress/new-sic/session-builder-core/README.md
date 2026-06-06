@@ -25,7 +25,6 @@ This folder does not claim AI/RAG, RAG/vector search, Match-to-Match Prescriptio
 
 | File | Classification | Evidence Value |
 | --- | --- | --- |
-| `completion-audit.md` | Completion audit | Defines historical Session Builder core completion criteria, current-at-the-time runtime truth, quality gaps, and recommended product slices. |
 | `diagram-language-research.md` | Diagram language research | Captures soccer diagram symbol language, story-panel model, activity-specific diagram needs, and deterministic diagram guardrails. |
 | `output-quality-fixtures.md` | Output quality fixtures | Establishes representative coach prompts and a scoring rubric for repeatable Session Builder quality review. |
 | `output-quality-evaluation.md` | Output quality evaluation | Records the first fixture-based quality evaluation, including strengths, weak spots, and recommended template-improvement work. |
@@ -42,11 +41,22 @@ This folder does not claim AI/RAG, RAG/vector search, Match-to-Match Prescriptio
 - Template quality varied by objective/focus; strong paths should be promoted deliberately rather than generalized by assumption.
 - Future implementation should be sliced narrowly and keep auth, tenancy, persistence, infrastructure, API routes, public contracts, and CDK wiring out of scope unless separately approved.
 
+## Preserved Completion Findings
+
+The removed broad completion audit's durable facts are preserved here and in the current Club Vivo product docs:
+
+- Session Builder is the active product wedge, with Custom Build as the main creation path inside Coach Workspace.
+- Quick Soccer Game is the lighter creative lane that reuses the shared deterministic generation direction.
+- Match-to-Match Prescription is parked/future context and not active shipped runtime.
+- Generation remains deterministic/template-based unless current source validation proves otherwise.
+- There is no public Training Brief or prescription API, and no production AI/RAG, FAISS, Bedrock generation, or vector search for Session Builder output.
+- Diagram work is a deterministic, structured future direction; this evidence folder does not claim full shipped DiagramSequence runtime.
+- Deployment and domain polish are downstream of core product quality, current source validation, and smoke validation.
+
 ## Future Summarize-Before-Remove Candidates
 
 These detailed files may be future remove-from-main candidates only after their durable findings are summarized into current Club Vivo product or architecture docs:
 
-- `completion-audit.md`
 - `diagram-language-research.md`
 - `output-quality-fixtures.md`
 - `output-quality-evaluation.md`

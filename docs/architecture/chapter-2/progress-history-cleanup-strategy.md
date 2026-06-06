@@ -67,7 +67,7 @@ These files contain enough unique evidence that they should not be removed from 
 | `docs/progress/new-sic/deployment-readiness-checklist.md` | Deployment readiness checklist; compare with runbooks before removing from `main`. |
 | `docs/progress/new-sic/hosting-and-domain-launch-plan.md` | Hosting, domain, env-var, Cognito, backend, budget, and launch-sequence evidence. |
 | New SIC readiness/deployment cluster | Classified in `docs/progress/new-sic/README.md`; the core checklist, planning, and validation evidence files remain in place. Current release hygiene belongs to `docs/runbooks/how-to-ship.md`, and current smoke guidance belongs to `docs/runbooks/smoke-tests.md`. |
-| `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, diagram language, completion audit, and validation guardrails. |
+| `docs/progress/new-sic/session-builder-core/*.md` | Session Builder quality findings, fixture baselines, template gaps, diagram language, completion/runtime-boundary findings, and validation guardrails. |
 | `docs/progress/new-sic/match-to-match/*.md` | Prototype learning and parked-product guardrails; summarize into future/parking docs before removal. |
 
 Potential target owners for summarized material:
@@ -92,6 +92,7 @@ These are reasonable future remove-from-main candidates after link checks and su
 | `docs/progress/new-sic/new-sic-starting-point-plan.md` | Removed from `main` after its transition-baseline facts were consolidated in `docs/progress/new-sic/README.md`, `docs/progress/architect-process-summary.md`, and this strategy. |
 | `docs/progress/new-sic/docs-readiness-duplication-audit.md` | Removed from `main` after its durable readiness/deployment overlap findings were preserved in `docs/progress/new-sic/README.md` and this strategy. |
 | `docs/progress/new-sic/coach-lite-preview-audit.md` | Removed from `main` after durable legacy-preview facts were preserved in `docs/progress/new-sic/README.md`, the legacy-doc strategy, and current source maps. |
+| `docs/progress/new-sic/session-builder-core/completion-audit.md` | Removed from `main` after its durable Session Builder runtime-boundary, creation-path, parked-scope, deterministic-generation, and deployment-sequencing facts were preserved in `docs/progress/new-sic/session-builder-core/README.md` and current Club Vivo product docs. |
 | `docs/progress/chapter-2-public-face-closeout.md` | Removed from `main` after durable public-face cleanup facts were summarized in current docs and this strategy. |
 | `docs/progress/chapter-2-repo-cleanup-closeout.md` | Removed from `main` after durable repo-cleanup facts were summarized in current docs and this strategy. |
 | `docs/progress/chapter-2-cleanup-workspace-closeout.md` | Removed from `main` after durable workspace/showroom-prune facts were summarized in current docs and this strategy. |
@@ -128,7 +129,8 @@ Top noisy clusters:
    - `deployment-readiness-checklist.md`, `club-vivo-runtime-readiness-checklist.md`, `club-vivo-runtime-readiness-evidence.md`, and `hosting-and-domain-launch-plan.md` overlap with each other and with runbook responsibilities.
    - Status: classified in `docs/progress/new-sic/README.md` as historical evidence; the older overlap audit has been removed from `main` after preserving its durable findings.
 4. Session Builder quality evidence
-   - `completion-audit.md`, `output-quality-fixtures.md`, `output-quality-evaluation.md`, `output-quality-recheck.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs.
+   - The broad Session Builder core completion audit has been removed from `main` after its durable facts were summarized in the folder index and current product docs.
+   - `output-quality-fixtures.md`, `output-quality-evaluation.md`, `output-quality-recheck.md`, `template-quality-matrix.md`, and `diagram-language-research.md` are valuable but better summarized into current product and architecture docs.
 5. Old cleanup/audit docs
    - `progress-history-audit.md`, `docs-readiness-duplication-audit.md`, and `coach-lite-preview-audit.md` overlap with newer Chapter 2 cleanup audits and legacy-doc strategies.
    - Status: progress history, readiness duplication, and Coach Lite preview audits have been removed from `main` after preserving their durable findings.
